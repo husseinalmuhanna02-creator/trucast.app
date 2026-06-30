@@ -2,7 +2,7 @@
   "name": "trucast",
   "version": "0.0.1",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build --mode production"
   },
   "devDependencies": {
     "@capacitor/android": "^6.0.0",
