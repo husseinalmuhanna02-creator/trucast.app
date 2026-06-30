@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --bg-main: #000;
+  --bg-card: #09090b;
+  --bg-item: #18181b;
+  --text-main: #fff;
+  --text-muted: #71717a;
+  --border-main: #27272a;
+}
+
+.light {
+  --bg-main: #f4f4f5;
+  --bg-card: #ffffff;
+  --bg-item: #f1f1f1;
+  --text-main: #09090b;
+  --text-muted: #71717a;
+  --border-main: #e4e4e7;
+}
+
+/* Light mode overrides for common dark tailwind classes */
+.light .bg-zinc-950,
+.light .bg-black { 
+  background-color: var(--bg-main) !important; 
+}
+
+.light .bg-zinc-900 { 
+  background-color: var(--bg-card) !important; 
+}
+
+.light .bg-zinc-800 {
+  background-color: var(--bg-item) !important;
+}
+
+.light .text-white { 
+  color: var(--text-main) !important; 
+}
+
+.light .text-zinc-300 {
+  color: var(--text-main) !important;
+}
+
+.light .text-zinc-400,
+.light .text-zinc-500 { 
+  color: var(--text-muted) !important; 
+}
+
+.light .border-zinc-800,
+.light .border-zinc-700 { 
+  border-color: var(--border-main) !important; 
+}
+
+.light .shadow-xl {
+  shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Fix for icons and specific buttons in dark mode that should stay dark/light */
+.light .bg-blue-600 .text-white,
+.light .bg-red-600 .text-white,
+.light .bg-emerald-600 .text-white {
+  color: white !important;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#root {
+  width: 100%;
+}
+
+@layer utilities {
+  .animate-bounce-once {
+    animation: bounce-once 0.5s ease-in-out;
+  }
+
+  @keyframes bounce-once {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+
+  @keyframes scrollbar-bounce-top {
+    0% {
+      transform: translateY(0) scaleY(1);
+    }
+    30% {
+      transform: translateY(8px) scaleY(0.985);
+    }
+    60% {
+      transform: translateY(-2px) scaleY(1.005);
+    }
+    100% {
+      transform: translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes scrollbar-bounce-bottom {
+    0% {
+      transform: translateY(0) scaleY(1);
+    }
+    30% {
+      transform: translateY(-8px) scaleY(0.985);
+    }
+    60% {
+      transform: translateY(2px) scaleY(1.005);
+    }
+    100% {
+      transform: translateY(0) scaleY(1);
+    }
+  }
+
+  .custom-scrollbar.bounce-top {
+    animation: scrollbar-bounce-top 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .custom-scrollbar.bounce-bottom {
+    animation: scrollbar-bounce-bottom 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .custom-scrollbar.bounce-top::-webkit-scrollbar-thumb,
+  .custom-scrollbar.bounce-bottom::-webkit-scrollbar-thumb {
+    background: #3b82f6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transition: background 0.2s ease;
+  }
+}
+
+/* Custom transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Custom button active state */
+.send-comment-button:active {
+  transform: scale(0.9) !important;
+}
+

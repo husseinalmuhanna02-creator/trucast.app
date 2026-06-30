@@ -1,0 +1,6 @@
+{
+  "name": "TruCast",
+  "description": "TrueCast: A privacy-first social platform focused on absolute anonymity, media sanitization, and secure community discovery. Your freedom of expression is protected by absolute privacy.",
+  "requestFramePermissions": ["display-capture", "camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

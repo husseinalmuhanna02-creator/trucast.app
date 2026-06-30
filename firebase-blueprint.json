@@ -1,0 +1,401 @@
+{
+  "entities": {
+    "Post": {
+      "title": "Post",
+      "description": "A social media post with content/caption and optional media (image/video).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the author" },
+        "userName": { "type": "string", "description": "Display name of the author" },
+        "userPhoto": { "type": "string", "description": "Photo URL of the author" },
+        "content": { "type": "string", "description": "Legacy text content field" },
+        "caption": { "type": "string", "description": "Text description of the media post" },
+        "mediaUrl": { "type": "string", "description": "URL of the uploaded image or video" },
+        "mediaType": { "type": "string", "enum": ["image", "video"], "description": "Type of the media" },
+        "imageUrl": { "type": "string", "description": "Legacy image field" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp" },
+        "likesCount": { "type": "integer" }
+      },
+      "required": ["userId", "userName", "userPhoto", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A comment on a post or a reply to another comment.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the commenter" },
+        "userName": { "type": "string", "description": "Display name" },
+        "userPhoto": { "type": "string", "description": "Photo URL of the author" },
+        "content": { "type": "string", "description": "Comment text" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "parentId": { "type": "string", "description": "ID of the parent comment if this is a reply" },
+        "isPinned": { "type": "boolean", "description": "Whether the comment is pinned to top" },
+        "likesCount": { "type": "integer", "description": "Number of likes on this comment" }
+      },
+      "required": ["userId", "userName", "content", "createdAt"]
+    },
+    "Like": {
+      "title": "Like",
+      "description": "A like on a post.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "createdAt"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "A bookmarked post for a specific user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "postId": { "type": "string" },
+        "postContent": { "type": "string" },
+        "postImageUrl": { "type": "string" },
+        "postAuthorName": { "type": "string" },
+        "folderId": { "type": "string", "description": "Optional folder ID" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "postId", "createdAt"]
+    },
+    "Folder": {
+      "title": "Folder",
+      "description": "A category for saved posts.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "createdAt"]
+    },
+    "User": {
+      "title": "User Profile",
+      "description": "Public profile data for TruCast users.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "email": { "type": "string" },
+        "publicKey": { "type": "string", "description": "RSA Public Key for E2EE" },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "username": { "type": "string" },
+        "bio": { "type": "string" },
+        "followersCount": { "type": "integer" },
+        "followingCount": { "type": "integer" },
+        "isPremium": { "type": "boolean", "description": "Whether user has TruCast Premium" },
+        "isVerified": { "type": "boolean", "description": "Verification badge for celebrities/influencers" },
+        "stealthMode": { "type": "boolean", "description": "If true, hide read receipts and typing status" },
+        "premiumSettings": {
+          "type": "object",
+          "properties": {
+            "bubbleColor": { "type": "string" },
+            "chatWallpaper": { "type": "string" }
+          }
+        },
+        "profileCustomization": {
+          "type": "object",
+          "properties": {
+            "bgColor": { "type": "string" },
+            "fontFamily": { "type": "string" },
+            "textColor": { "type": "string" }
+          }
+        }
+      },
+      "required": ["uid", "displayName", "email"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "Represents a follow relationship.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user being followed or following" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "createdAt"]
+    },
+    "Reel": {
+      "title": "Reel",
+      "description": "Short AI video content.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "caption": { "type": "string" },
+        "likes": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "videoUrl", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "A conversation between users (Private, Group, or Channel).",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array", "items": { "type": "string" }, "description": "UIDs of members" },
+        "type": { "type": "string", "enum": ["private", "group", "channel", "saved"] },
+        "name": { "type": "string", "description": "Group or Channel name" },
+        "description": { "type": "string", "description": "Group or Channel description" },
+        "photoURL": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "admins": { "type": "array", "items": { "type": "string" } },
+        "lastMessage": { "type": "string" },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "lastSenderId": { "type": "string" },
+        "lastSenderName": { "type": "string" },
+        "isLocked": { "type": "boolean", "description": "Whether the chat requires a passcode to open" },
+        "passcode": { "type": "string", "description": "Passcode for locked chat" },
+        "disappearingTimer": { "type": "integer", "description": "Time in seconds for messages to disappear after read" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participants", "type", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A single message in a chat.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isEncrypted": { "type": "boolean" },
+        "encryptionData": { 
+          "type": "object",
+          "description": "Encrypted AES keys for participants"
+        },
+        "iv": { "type": "string", "description": "Initialization vector for AES encryption" },
+        "reactions": { 
+          "type": "object", 
+          "additionalProperties": { 
+            "type": "array", 
+            "items": { "type": "string" } 
+          } 
+        },
+        "disappearingTimer": { "type": "integer", "description": "Time in seconds for this message to disappear" },
+        "selfDestruct": { "type": "boolean", "description": "Whether the message should be deleted after read + timer" },
+        "timer": { "type": "integer", "description": "Countdown timer in seconds for self-destruction" },
+        "transcription": { "type": "string", "description": "AI-generated transcription for voice messages" },
+        "readAt": { "type": "string", "format": "date-time", "description": "Timestamp when message was read" }
+      },
+      "required": ["senderId", "text", "createdAt"]
+    },
+    "CallSession": {
+      "title": "CallSession",
+      "description": "Represents an active group voice/video call session.",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string" },
+        "title": { "type": "string" },
+        "active": { "type": "boolean" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "smartBoardEnabled": { "type": "boolean" },
+        "participantsCount": { "type": "integer" }
+      },
+      "required": ["chatId", "active", "startedAt"]
+    },
+    "CallParticipant": {
+      "title": "CallParticipant",
+      "description": "Represents a user in an active call.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "isMuted": { "type": "boolean" },
+        "isCameraOn": { "type": "boolean" },
+        "isHandRaised": { "type": "boolean" },
+        "isSpeaking": { "type": "boolean" },
+        "globalVolume": { "type": "integer" },
+        "role": { "type": "string", "enum": ["owner", "admin", "member"] },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "joinedAt"]
+    },
+    "Whiteboard": {
+      "title": "Whiteboard",
+      "description": "Whiteboard state for a call",
+      "type": "object",
+      "properties": {
+        "isActive": { "type": "boolean" },
+        "backgroundColor": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["isActive", "updatedAt"]
+    },
+    "WhiteboardElement": {
+      "title": "Whiteboard Element",
+      "description": "A single drawing path or text element on the whiteboard",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["path", "text"] },
+        "d": { "type": "string", "description": "SVG path data" },
+        "color": { "type": "string" },
+        "width": { "type": "number" },
+        "text": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "creatorId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "creatorId", "createdAt"]
+    },
+    "Username": {
+      "title": "Username",
+      "description": "A mapping of username to user UID for uniqueness.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" }
+      },
+      "required": ["uid"]
+    },
+    "LiveStream": {
+      "title": "LiveStream",
+      "description": "A live video broadcast session.",
+      "type": "object",
+      "properties": {
+        "hostId": { "type": "string" },
+        "hostName": { "type": "string" },
+        "hostPhoto": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "ended"] },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "endedAt": { "type": "string", "format": "date-time" },
+        "viewerCount": { "type": "integer" },
+        "cameraEnabled": { "type": "boolean" },
+        "micEnabled": { "type": "boolean" },
+        "moderatorIds": { "type": "array", "items": { "type": "string" } },
+        "moderators": { "type": "array", "items": { "type": "object" } },
+        "blockedIds": { "type": "array", "items": { "type": "string" } },
+        "blockedUsers": { "type": "array", "items": { "type": "object" } },
+        "mutedIds": { "type": "array", "items": { "type": "string" } },
+        "mutedUsers": { "type": "array", "items": { "type": "object" } },
+        "guestInvite": { "type": "object" },
+        "guest": { "type": "object" },
+        "pkBattle": { "type": "object" }
+      },
+      "required": ["hostId", "hostName", "title", "status", "startedAt"]
+    },
+    "LiveComment": {
+      "title": "LiveComment",
+      "description": "A real-time comment in a live stream.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "text", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A notification sent to a user, e.g., when a followed host starts a live stream.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "type": { "type": "string" },
+        "streamId": { "type": "string" },
+        "hostId": { "type": "string" },
+        "hostName": { "type": "string" },
+        "hostPhoto": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "body", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Notifications received by this user"
+    },
+    "/lives/{streamId}": {
+      "schema": "LiveStream",
+      "description": "Active and past live streams"
+    },
+    "/lives/{streamId}/comments/{commentId}": {
+      "schema": "LiveComment",
+      "description": "Comments in a live stream"
+    },
+    "/usernames/{username}": {
+      "schema": "Username",
+      "description": "Registry of taken usernames"
+    },
+    "/chats/{chatId}/calls/{callId}/whiteboard/current": {
+      "schema": "Whiteboard",
+      "description": "The current whiteboard state"
+    },
+    "/chats/{chatId}/calls/{callId}/whiteboard/current/elements/{elementId}": {
+      "schema": "WhiteboardElement",
+      "description": "The elements (paths, text) on the whiteboard"
+    },
+    "/chats/{chatId}/calls/{callId}": {
+      "schema": "CallSession",
+      "description": "Metadata for active calls"
+    },
+    "/chats/{chatId}/calls/{callId}/participants/{participantId}": {
+      "schema": "CallParticipant",
+      "description": "Participants within an active call"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/followers/{followerId}": {
+      "schema": "Follow",
+      "description": "Users who follow this user"
+    },
+    "/users/{userId}/following/{followingId}": {
+      "schema": "Follow",
+      "description": "Users this user is following"
+    },
+    "/folders/{folderId}": {
+      "schema": "Folder",
+      "description": "User created folders for organization"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Conversation metadata"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Individual messages"
+    },
+    "/reels/{reelId}": {
+      "schema": "Reel",
+      "description": "Short video content"
+    },
+    "/reels/{reelId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Comments on a reel"
+    },
+    "/reels/{reelId}/likes/{userId}": {
+      "schema": "Like",
+      "description": "Likes on a reel"
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "Global feed of posts"
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Comments attached to a post"
+    },
+    "/posts/{postId}/likes/{userId}": {
+      "schema": "Like",
+      "description": "Likes for a post, keyed by user ID for atomicity"
+    },
+    "/favorites/{favId}": {
+      "schema": "Favorite",
+      "description": "User specific bookmarked posts"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "name": "trucast",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "tsc && vite build && esbuild server.ts --bundle --platform=node --format=cjs --outfile=server.cjs --external:vite",
+    "lint": "tsc --noEmit",
+    "preview": "vite preview",
+    "start": "node server.cjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@google/genai": "^1.50.1",
+    "@google/generative-ai": "^0.24.1",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.1.0",
+    "cloudinary": "^2.10.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "express": "^5.2.1",
+    "firebase": "^10.8.0",
+    "firebase-admin": "^14.1.0",
+    "framer-motion": "^11.0.8",
+    "lucide-react": "^0.344.0",
+    "multer": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^2.2.1",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.1",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "esbuild": "^0.28.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4"
+  }
+}
