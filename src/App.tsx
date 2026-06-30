@@ -735,7 +735,7 @@ function PremiumSubscriptionModal({
 
   const handlePurchase = async () => {
     setLoading(true);
-    const success = await subscriptionService.purchasePremium(user.uid);
+    const success = await subscriptionService.purchasePremium(user?.uid);
     setLoading(false);
     if (success) {
       alert("تهانينا! أنت الآن عضو متميز في TruCast.");
@@ -1388,7 +1388,7 @@ function CommentsComponent({
       setUserProfile(null);
       return;
     }
-    const userRef = doc(db, 'users', currentUser.uid);
+    const userRef = doc(db, 'users', currentUser?.uid);
     getDoc(userRef).then((snap) => {
       if (snap.exists()) {
         setUserProfile(snap.data());
@@ -1510,7 +1510,7 @@ function CommentsComponent({
     setReplyTo(null);
     try {
       await addDoc(collection(db, path), {
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         userName: currentUser.displayName || "مستخدم",
         userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
         content: commentText,
@@ -1530,7 +1530,7 @@ function CommentsComponent({
 
   const handleLikeComment = async (comment: Comment) => {
     if (!currentUser) console.log("No user");
-    const path = `${collectionPath}/${postId}/comments/${comment.id}/likes/${currentUser.uid}`;
+    const path = `${collectionPath}/${postId}/comments/${comment.id}/likes/${currentUser?.uid}`;
     const commentRef = doc(db, collectionPath, postId, 'comments', comment.id);
     
     // Toggle session state immediately for instant feedback
@@ -1544,7 +1544,7 @@ function CommentsComponent({
         await deleteDoc(doc(db, path));
         await updateDoc(commentRef, { likesCount: increment(-1) });
       } else {
-        await setDoc(doc(db, path), { userId: currentUser.uid, createdAt: serverTimestamp() });
+        await setDoc(doc(db, path), { userId: currentUser?.uid, createdAt: serverTimestamp() });
         await updateDoc(commentRef, { likesCount: increment(1) });
       }
     } catch (e) {
@@ -2290,7 +2290,7 @@ function PostCard({
     if (!currentUser || (!showMenu && !isMovingToFolder)) return;
     const q = query(
       collection(db, 'folders'),
-      where('userId', '==', currentUser.uid),
+      where('userId', '==', currentUser?.uid),
       orderBy('createdAt', 'desc')
     );
     const unsub = onSnapshot(q, (snap) => {
@@ -2329,7 +2329,7 @@ function PostCard({
 
     // Check if favorited
     if (currentUser) {
-      const favId = `${currentUser.uid}_${post.id}`;
+      const favId = `${currentUser?.uid}_${post.id}`;
       const favRef = doc(db, 'favorites', favId);
       const unsubFav = onSnapshot(favRef, (docSnap) => {
         setIsFavorited(docSnap.exists());
@@ -2349,7 +2349,7 @@ function PostCard({
   
   const handleLike = async () => {
     if (!currentUser) console.log("No user");
-    const likeRef = doc(db, 'posts', post.id, 'likes', currentUser.uid);
+    const likeRef = doc(db, 'posts', post.id, 'likes', currentUser?.uid);
     const postRef = doc(db, 'posts', post.id);
     setGlobalLoading(true);
     try {
@@ -2358,13 +2358,13 @@ function PostCard({
         await updateDoc(postRef, { likesCount: increment(-1) });
       } else {
         await setDoc(likeRef, {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           createdAt: serverTimestamp()
         });
         await updateDoc(postRef, { likesCount: increment(1) });
       }
     } catch (e) {
-      handleFirestoreError(e, OperationType.WRITE, `posts/${post.id}/likes/${currentUser.uid}`);
+      handleFirestoreError(e, OperationType.WRITE, `posts/${post.id}/likes/${currentUser?.uid}`);
     } finally {
       setGlobalLoading(false);
     }
@@ -2383,16 +2383,16 @@ function PostCard({
     const updatedOptions = post.poll.options.map(opt => {
       let votes = opt.votes ? [...opt.votes] : [];
       if (opt.id === optionId) {
-        if (votes.includes(currentUser.uid)) {
+        if (votes.includes(currentUser?.uid)) {
           // Remove vote
-          votes = votes.filter(uid => uid !== currentUser.uid);
+          votes = votes.filter(uid => uid !== currentUser?.uid);
         } else {
           // Add vote
-          votes.push(currentUser.uid);
+          votes.push(currentUser?.uid);
         }
       } else {
         // Remove vote from other options if single choice
-        votes = votes.filter(uid => uid !== currentUser.uid);
+        votes = votes.filter(uid => uid !== currentUser?.uid);
       }
       return { ...opt, votes };
     });
@@ -2411,7 +2411,7 @@ function PostCard({
 
   const handleFavorite = async () => {
     if (!currentUser) console.log("No user");
-    const favId = `${currentUser.uid}_${post.id}`;
+    const favId = `${currentUser?.uid}_${post.id}`;
     const path = `favorites/${favId}`;
     setGlobalLoading(true);
     try {
@@ -2420,7 +2420,7 @@ function PostCard({
         await deleteDoc(favRef);
       } else {
         await setDoc(favRef, {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           postId: post.id,
           createdAt: serverTimestamp(),
           postContent: post.content || post.caption || "",
@@ -3968,7 +3968,7 @@ const LiveStreamScreen = ({
     const unsub = onSnapshot(doc(db, "lives", activeId), (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data() as LiveStream;
-        if (currentUser && data.blockedIds?.includes(currentUser.uid)) {
+        if (currentUser && data.blockedIds?.includes(currentUser?.uid)) {
           alert("🚫 تم حظرك من هذا البث بواسطة المضيف أو المشرفين.");
           onClose();
           return;
@@ -4004,7 +4004,7 @@ const LiveStreamScreen = ({
     setGlobalLoading(true);
     try {
       const liveRef = await addDoc(collection(db, "lives"), {
-        hostId: currentUser.uid,
+        hostId: currentUser?.uid,
         hostName: userProfile.displayName || "مستخدم",
         hostPhoto: userProfile.photoURL || "",
         title: title || "بث مباشر جديد",
@@ -4018,7 +4018,7 @@ const LiveStreamScreen = ({
       setHostStreamId(liveRef.id);
       setStream({
         id: liveRef.id,
-        hostId: currentUser.uid,
+        hostId: currentUser?.uid,
         hostName: userProfile.displayName || "مستخدم",
         hostPhoto: userProfile.photoURL || "",
         title: title || "بث مباشر جديد",
@@ -4031,7 +4031,7 @@ const LiveStreamScreen = ({
 
       // Send notifications to all followers (chunked for batches of up to 500)
       try {
-        const followersSnap = await getDocs(collection(db, "users", currentUser.uid, "followers"));
+        const followersSnap = await getDocs(collection(db, "users", currentUser?.uid, "followers"));
         if (!followersSnap.empty) {
           const docs = followersSnap.docs;
           const chunkSize = 400; // conservative batch limit
@@ -4046,7 +4046,7 @@ const LiveStreamScreen = ({
                 body: `بدأ المذيع ${userProfile.displayName || "مستخدم"} بثاً مباشراً جديداً: ${title || "بدون عنوان"}`,
                 type: "live_start",
                 streamId: liveRef.id,
-                hostId: currentUser.uid,
+                hostId: currentUser?.uid,
                 hostName: userProfile.displayName || "مستخدم",
                 hostPhoto: userProfile.photoURL || "",
                 read: false,
@@ -4112,7 +4112,7 @@ const LiveStreamScreen = ({
     const activeId = streamId || hostStreamId || stream?.id || 'test_local_stream';
     if (!newComment.trim() || !currentUser || isSending) return;
 
-    if (stream?.mutedIds?.includes(currentUser.uid)) {
+    if (stream?.mutedIds?.includes(currentUser?.uid)) {
       alert("⚠️ عذراً، لقد تم كتمك من الكتابة في هذا البث.");
       return;
     }
@@ -4122,7 +4122,7 @@ const LiveStreamScreen = ({
 
     try {
       await addDoc(collection(db, "lives", activeId, "comments"), {
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         userName: userProfile?.displayName || currentUser.displayName || "مستخدم",
         userPhoto: userProfile?.photoURL || currentUser.photoURL || "",
         text: commentText,
@@ -4310,7 +4310,7 @@ const LiveStreamScreen = ({
       await updateDoc(doc(db, "lives", activeId), {
         "guestInvite.status": "accepted",
         guest: {
-          uid: currentUser.uid,
+          uid: currentUser?.uid,
           name: userProfile?.displayName || currentUser.displayName || "ضيف",
           photo: userProfile?.photoURL || currentUser.photoURL || "",
           camEnabled: true,
@@ -4501,12 +4501,12 @@ const LiveStreamScreen = ({
         if (!poll || !poll.isActive) return;
 
         // Verify the user hasn't voted yet
-        if (poll.votedUserIds && poll.votedUserIds[currentUser.uid]) {
+        if (poll.votedUserIds && poll.votedUserIds[currentUser?.uid]) {
           return; // Voted already
         }
 
         const votedUserIds = { ...(poll.votedUserIds || {}) };
-        votedUserIds[currentUser.uid] = optionId;
+        votedUserIds[currentUser?.uid] = optionId;
 
         const updatedOptions = poll.options.map((opt: any) => {
           if (opt.id === optionId) {
@@ -4994,7 +4994,7 @@ const LiveStreamScreen = ({
           <div className="space-y-2.5">
             {(() => {
               const totalVotes = stream.poll.options.reduce((acc, curr) => acc + (curr.votes || 0), 0);
-              const userVotedOptionId = currentUser?.uid ? stream.poll.votedUserIds?.[currentUser.uid] : undefined;
+              const userVotedOptionId = currentUser?.uid ? stream.poll.votedUserIds?.[currentUser?.uid] : undefined;
               const hasVoted = !!userVotedOptionId;
               const isPollClosed = !stream.poll.isActive;
               const showResults = hasVoted || isPollClosed;
@@ -5049,7 +5049,7 @@ const LiveStreamScreen = ({
 
           <div className="flex justify-between items-center mt-3 pt-2.5 border-t border-white/5 text-[10px] text-zinc-400">
             <span>إجمالي الأصوات: {stream.poll.options.reduce((acc, curr) => acc + (curr.votes || 0), 0)}</span>
-            {currentUser?.uid && stream.poll.votedUserIds?.[currentUser.uid] && (
+            {currentUser?.uid && stream.poll.votedUserIds?.[currentUser?.uid] && (
               <span className="text-purple-400 font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3 text-purple-400" />
                 تم تسجيل صوتك
@@ -6543,7 +6543,7 @@ function Feed({ currentUser, onViewMedia, onNavigateToChat, onNavigateToSearch, 
       }
 
       await addDoc(collection(db, 'posts'), {
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         userName: currentUser.displayName || "مستخدم مجهول",
         userPhoto: currentUser.photoURL || "https://ui-avatars.com/api/?name=User",
         content: newPost,
@@ -6788,10 +6788,10 @@ function Feed({ currentUser, onViewMedia, onNavigateToChat, onNavigateToSearch, 
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
             {trendingCreators.map((user) => (
               <motion.div 
-                key={user.uid}
+                key={user?.uid}
                 whileHover={{ y: -5 }}
                 className="flex-shrink-0 w-36 bg-zinc-900/50 border border-zinc-800/50 rounded-3xl p-4 text-center group cursor-pointer hover:bg-zinc-800 transition-all hover:border-blue-500/30 shadow-lg"
-                onClick={() => onNavigateToUser(user.uid)}
+                onClick={() => onNavigateToUser(user?.uid)}
               >
                 <div className="relative mb-3 inline-block">
                   <img 
@@ -6804,7 +6804,7 @@ function Feed({ currentUser, onViewMedia, onNavigateToChat, onNavigateToSearch, 
                   )}
                 </div>
                 <h4 className="text-xs font-black text-white truncate px-1">{user.displayName}</h4>
-                <p className="text-[10px] text-zinc-500 font-bold truncate mt-1">@{user.username || user.uid.slice(0,6)}</p>
+                <p className="text-[10px] text-zinc-500 font-bold truncate mt-1">@{user.username || user?.uid.slice(0,6)}</p>
                 <button 
                   className="mt-3 w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-500 hover:text-white text-[10px] font-black rounded-xl transition-all"
                 >
@@ -6913,13 +6913,13 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
 
   useEffect(() => {
     if (!currentUser) console.log("No user");
-    const unsub = onSnapshot(doc(db, 'users', currentUser.uid), (doc) => {
+    const unsub = onSnapshot(doc(db, 'users', currentUser?.uid), (doc) => {
       if (doc.exists()) {
         setUserProfile(doc.data() as UserProfile);
         setLoading(false);
       }
     }, (err) => {
-      handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
+      handleFirestoreError(err, OperationType.GET, `users/${currentUser?.uid}`);
       setLoading(false);
     });
     return () => unsub();
@@ -6948,7 +6948,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
         } catch (authErr) {
           console.error("Failed to update auth photoURL:", authErr);
         }
-        await updateDoc(doc(db, 'users', currentUser.uid), { photoURL: base64 });
+        await updateDoc(doc(db, 'users', currentUser?.uid), { photoURL: base64 });
         setUpdatingPhoto(false);
       };
       reader.readAsDataURL(file);
@@ -6963,7 +6963,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     if (!currentUser) console.log("No user");
     const q = query(
       collection(db, 'posts'), 
-      where('userId', '==', currentUser.uid),
+      where('userId', '==', currentUser?.uid),
       orderBy('createdAt', 'desc')
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -6977,7 +6977,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     if (!currentUser) console.log("No user");
     const q = query(
       collection(db, 'folders'),
-      where('userId', '==', currentUser.uid),
+      where('userId', '==', currentUser?.uid),
       orderBy('createdAt', 'desc')
     );
     const unsub = onSnapshot(q, (snap) => {
@@ -6994,14 +6994,14 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     if (selectedFolderId) {
       q = query(
         collection(db, 'favorites'),
-        where('userId', '==', currentUser.uid),
+        where('userId', '==', currentUser?.uid),
         where('folderId', '==', selectedFolderId),
         orderBy('createdAt', 'desc')
       );
     } else {
       q = query(
         collection(db, 'favorites'),
-        where('userId', '==', currentUser.uid),
+        where('userId', '==', currentUser?.uid),
         orderBy('createdAt', 'desc')
       );
     }
@@ -7027,7 +7027,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     if (!newFolderName.trim() || !currentUser) return;
     try {
       await addDoc(collection(db, 'folders'), {
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         name: newFolderName.trim(),
         createdAt: serverTimestamp()
       });
@@ -7045,7 +7045,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
       // 1. Update all favorites in this folder to have null folderId
       const q = query(
         collection(db, 'favorites'), 
-        where('userId', '==', currentUser.uid),
+        where('userId', '==', currentUser?.uid),
         where('folderId', '==', folderId)
       );
       const snap = await getDocs(q);
@@ -7408,9 +7408,9 @@ function ProfileSetupScreen({ user, onComplete }: { user: FirebaseUser, onComple
         return;
       }
       // Register username mapping
-      await setDoc(doc(db, 'usernames', username), { uid: user.uid, createdAt: serverTimestamp() });
+      await setDoc(doc(db, 'usernames', username), { uid: user?.uid, createdAt: serverTimestamp() });
       
-      await updateDoc(doc(db, 'users', user.uid), {
+      await updateDoc(doc(db, 'users', user?.uid), {
         username: username,
         updatedAt: serverTimestamp()
       });
@@ -7705,7 +7705,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
     }
     
     let debugText = `🔍 معلومات التصحيح (Debug Log):
-• معرف المستخدم الحالي (currentUser.uid): ${currentUid}
+• معرف المستخدم الحالي (currentUser?.uid): ${currentUid}
 • طريقة الحفظ: سيرفر (Admin SDK) لتجاوز قيود المتصفح والقواعد
 • جاري تحديث الحساب...`;
     
@@ -8011,8 +8011,8 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
                         const keys = await generateEncryptionKeys();
                         const priStr = await exportPrivateKeyStr(keys.privateKey);
                         const pubStr = await exportPublicKeyStr(keys.publicKey);
-                        localStorage.setItem(`trucast_private_key_${auth.currentUser.uid}`, priStr);
-                        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                        localStorage.setItem(`trucast_private_key_${auth.currentUser?.uid}`, priStr);
+                        await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
                           publicKey: pubStr,
                           updatedAt: serverTimestamp()
                         });
@@ -8044,7 +8044,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
         const togglePrivacy = async (key: keyof NonNullable<UserProfile['privacySettings']>) => {
           if (!auth.currentUser) return;
           const newPrivacy = { ...currentPrivacy, [key]: !currentPrivacy[key] };
-          await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
             privacySettings: newPrivacy
           });
         };
@@ -8126,7 +8126,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
         const currentThemePreference = userProfile?.theme || 'dark';
         const toggleThemeSelection = async (t: 'light' | 'dark') => {
           if (!auth.currentUser) return;
-          await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
             theme: t
           });
         };
@@ -8151,7 +8151,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
 
         const handleUpdatePremiumSetting = async (key: string, value: any) => {
           if (!auth.currentUser) return;
-          const userRef = doc(db, 'users', auth.currentUser.uid);
+          const userRef = doc(db, 'users', auth.currentUser?.uid);
           await updateDoc(userRef, {
             [key]: value
           });
@@ -8292,7 +8292,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
                           key={iconName}
                           onClick={async () => {
                             if (!auth.currentUser) return;
-                            const userRef = doc(db, 'users', auth.currentUser.uid);
+                            const userRef = doc(db, 'users', auth.currentUser?.uid);
                             await updateDoc(userRef, {
                               [`customIcons.${navItem.id}`]: iconName
                             });
@@ -8329,7 +8329,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
                       key={color.value}
                       onClick={async () => {
                         if (!auth.currentUser) return;
-                        const userRef = doc(db, 'users', auth.currentUser.uid);
+                        const userRef = doc(db, 'users', auth.currentUser?.uid);
                         await updateDoc(userRef, {
                           'profileCustomization.bgColor': color.value,
                           'profileCustomization.textColor': color.text
@@ -8355,7 +8355,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main' }: {
                       key={font.value}
                       onClick={async () => {
                         if (!auth.currentUser) return;
-                        const userRef = doc(db, 'users', auth.currentUser.uid);
+                        const userRef = doc(db, 'users', auth.currentUser?.uid);
                         await updateDoc(userRef, {
                           'profileCustomization.fontFamily': font.value
                         });
@@ -8761,7 +8761,7 @@ function CreateMediaPostScreen({
     setIsUploading(true);
     setUploadProgress(0);
 
-    console.log("🚀 Starting post process for user:", currentUser.uid);
+    console.log("🚀 Starting post process for user:", currentUser?.uid);
 
     try {
       console.log("☁️ Attempting media upload to Cloudinary...");
@@ -8789,7 +8789,7 @@ function CreateMediaPostScreen({
       // Create Firestore doc
       if (collectionPath === 'reels') {
         await addDoc(collection(db, 'reels'), {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           userName: currentUser.displayName || "مستخدم",
           userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
           caption: caption,
@@ -8799,7 +8799,7 @@ function CreateMediaPostScreen({
         });
       } else {
         await addDoc(collection(db, 'posts'), {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           userName: currentUser.displayName || "مستخدم",
           userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
           caption: caption,
@@ -9290,8 +9290,8 @@ function SearchScreen({ onNavigateToUser, onViewMedia, currentUser }: {
                 ) : userResults.length > 0 ? (
                   userResults.map(user => (
                     <button 
-                      key={user.uid}
-                      onClick={() => onNavigateToUser(user.uid)}
+                      key={user?.uid}
+                      onClick={() => onNavigateToUser(user?.uid)}
                       className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-3xl hover:bg-zinc-800 transition-all group"
                     >
                       <div className="flex items-center gap-4">
@@ -9455,9 +9455,9 @@ function ReelsScreen({ onNavigateToUser, currentUser }: { onNavigateToUser: (uid
     // Handle like if not already liked
     if (!isLiked && currentUser && reels[currentIndex]) {
       const reelId = reels[currentIndex].id;
-      const likeRef = doc(db, 'reels', reelId, 'likes', currentUser.uid);
-      setDoc(likeRef, { userId: currentUser.uid, createdAt: serverTimestamp() })
-        .catch(e => handleFirestoreError(e, OperationType.WRITE, `reels/${reelId}/likes/${currentUser.uid}`));
+      const likeRef = doc(db, 'reels', reelId, 'likes', currentUser?.uid);
+      setDoc(likeRef, { userId: currentUser?.uid, createdAt: serverTimestamp() })
+        .catch(e => handleFirestoreError(e, OperationType.WRITE, `reels/${reelId}/likes/${currentUser?.uid}`));
     }
   };
 
@@ -9503,15 +9503,15 @@ function ReelsScreen({ onNavigateToUser, currentUser }: { onNavigateToUser: (uid
   const handleLike = async () => {
     if (!currentUser || !reels[currentIndex]) return;
     const reelId = reels[currentIndex].id;
-    const likeRef = doc(db, 'reels', reelId, 'likes', currentUser.uid);
+    const likeRef = doc(db, 'reels', reelId, 'likes', currentUser?.uid);
     try {
       if (isLiked) {
         await deleteDoc(likeRef);
       } else {
-        await setDoc(likeRef, { userId: currentUser.uid, createdAt: serverTimestamp() });
+        await setDoc(likeRef, { userId: currentUser?.uid, createdAt: serverTimestamp() });
       }
     } catch (e) {
-      handleFirestoreError(e, OperationType.WRITE, `reels/${reelId}/likes/${currentUser.uid}`);
+      handleFirestoreError(e, OperationType.WRITE, `reels/${reelId}/likes/${currentUser?.uid}`);
     }
   };
 
@@ -10145,9 +10145,9 @@ function CreateGroupScreen({ currentUser, onBack, onNavigateToChat }: {
       const newChat = await addDoc(chatsRef, {
         type: 'group',
         name: groupName.trim(),
-        participants: [currentUser.uid],
-        admins: [currentUser.uid],
-        creatorId: currentUser.uid,
+        participants: [currentUser?.uid],
+        admins: [currentUser?.uid],
+        creatorId: currentUser?.uid,
         unreadCount: {},
         updatedAt: serverTimestamp(),
         createdAt: serverTimestamp()
@@ -10223,9 +10223,9 @@ function CreateChannelScreen({ currentUser, onBack, onNavigateToChat }: {
         type: 'channel',
         name: channelName.trim(),
         description: description.trim(),
-        participants: [currentUser.uid],
-        admins: [currentUser.uid],
-        creatorId: currentUser.uid,
+        participants: [currentUser?.uid],
+        admins: [currentUser?.uid],
+        creatorId: currentUser?.uid,
         unreadCount: {},
         updatedAt: serverTimestamp(),
         createdAt: serverTimestamp()
@@ -10307,7 +10307,7 @@ function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, onNavigat
 
   useEffect(() => {
     if (!userId || !currentUser) return;
-    const followRef = doc(db, 'users', userId, 'followers', currentUser.uid);
+    const followRef = doc(db, 'users', userId, 'followers', currentUser?.uid);
     const unsubFollow = onSnapshot(followRef, (docSnap) => {
       setIsFollowing(docSnap.exists());
     });
@@ -10346,10 +10346,10 @@ function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, onNavigat
     setGlobalLoading(true);
     
     const batch = writeBatch(db);
-    const followerRef = doc(db, 'users', userId, 'followers', currentUser.uid);
-    const followingRef = doc(db, 'users', currentUser.uid, 'following', userId);
+    const followerRef = doc(db, 'users', userId, 'followers', currentUser?.uid);
+    const followingRef = doc(db, 'users', currentUser?.uid, 'following', userId);
     const targetUserRef = doc(db, 'users', userId);
-    const currentUserRef = doc(db, 'users', currentUser.uid);
+    const currentUserRef = doc(db, 'users', currentUser?.uid);
 
     try {
       if (isFollowing) {
@@ -10361,7 +10361,7 @@ function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, onNavigat
       } else {
         // Follow
         batch.set(followerRef, {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           userName: currentUser.displayName || 'مستخدم',
           userPhoto: currentUser.photoURL || '',
           createdAt: serverTimestamp()
@@ -10392,7 +10392,7 @@ function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, onNavigat
       const q = query(
         collection(db, 'chats'),
         where('type', '==', 'direct'),
-        where('participants', 'array-contains', currentUser.uid)
+        where('participants', 'array-contains', currentUser?.uid)
       );
       const snap = await getDocs(q);
       const existingChat = snap.docs.find(doc => {
@@ -10409,7 +10409,7 @@ function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, onNavigat
       // إنشاء محادثة مباشرة جديدة فقط إذا لم توجد محادثة سابقة
       const docRef = await addDoc(collection(db, 'chats'), { 
         type: 'direct', 
-        participants: [currentUser.uid, userId], 
+        participants: [currentUser?.uid, userId], 
         unreadCount: {},
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
@@ -10690,7 +10690,7 @@ function DiscoverScreen({ currentUser, onClose, onNavigateToChat }: {
     try {
       const chatRef = doc(db, 'chats', chat.id);
       await updateDoc(chatRef, {
-        participants: arrayUnion(currentUser.uid),
+        participants: arrayUnion(currentUser?.uid),
         updatedAt: serverTimestamp()
       });
       onNavigateToChat(chat.id);
@@ -10813,10 +10813,10 @@ function ChatListScreen({
   const handleToggleArchive = async (chatId: string, currentArchivedBy: string[] = []) => {
     if (!currentUser) console.log("No user");
     const chatRef = doc(db, 'chats', chatId);
-    const isArchived = currentArchivedBy.includes(currentUser.uid);
+    const isArchived = currentArchivedBy.includes(currentUser?.uid);
     const updatedArchivedBy = isArchived 
-      ? currentArchivedBy.filter(uid => uid !== currentUser.uid)
-      : [...currentArchivedBy, currentUser.uid];
+      ? currentArchivedBy.filter(uid => uid !== currentUser?.uid)
+      : [...currentArchivedBy, currentUser?.uid];
     
     try {
       await updateDoc(chatRef, { archivedBy: updatedArchivedBy });
@@ -10831,7 +10831,7 @@ function ChatListScreen({
     const chatsRef = collection(db, 'chats');
     const q = query(
       chatsRef, 
-      where('participants', 'array-contains', currentUser.uid),
+      where('participants', 'array-contains', currentUser?.uid),
       orderBy('updatedAt', 'desc')
     );
 
@@ -10842,7 +10842,7 @@ function ChatListScreen({
       // Fetch other user profile for each chat
       const chatsWithProfiles = await Promise.all(fetchedChats.map(async (chat) => {
         if (!chat.participants || !Array.isArray(chat.participants)) return chat;
-        const otherUserId = chat.participants.find(p => p !== currentUser.uid);
+        const otherUserId = chat.participants.find(p => p !== currentUser?.uid);
         if (otherUserId) {
           const userDoc = await getDoc(doc(db, 'users', otherUserId));
           if (userDoc.exists()) {
@@ -10880,7 +10880,7 @@ function ChatListScreen({
     const q = query(
       collection(db, 'chats'),
       where('type', '==', 'saved'),
-      where('participants', 'array-contains', currentUser.uid)
+      where('participants', 'array-contains', currentUser?.uid)
     );
     try {
       const snap = await getDocs(q);
@@ -10893,11 +10893,11 @@ function ChatListScreen({
 
       // Create new saved messages chat
       const docRef = await addDoc(collection(db, 'chats'), {
-        participants: [currentUser.uid],
+        participants: [currentUser?.uid],
         type: 'saved',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        creatorId: currentUser.uid,
+        creatorId: currentUser?.uid,
         name: 'الرسائل المحفوظة',
       });
       onNavigateToChat(docRef.id);
@@ -11334,7 +11334,7 @@ const WhiteboardStage = ({
         d: currentPath,
         color: tool === 'eraser' ? bgColor : color,
         width: tool === 'eraser' ? width * 4 : width,
-        creatorId: currentUser.uid,
+        creatorId: currentUser?.uid,
         createdAt: serverTimestamp() as Timestamp
       };
 
@@ -11359,7 +11359,7 @@ const WhiteboardStage = ({
       x: textInput.x,
       y: textInput.y,
       color: color,
-      creatorId: currentUser.uid,
+      creatorId: currentUser?.uid,
       createdAt: serverTimestamp() as Timestamp
     };
 
@@ -11643,7 +11643,7 @@ const StageScreen = ({
   const userParticipant = participants.find(p => p.userId === currentUser?.uid);
   const isPrivate = chat.type === 'private' || chat.type === 'direct';
   const isAdmin = isPrivate || !!((userParticipant?.role === 'owner' || userParticipant?.role === 'admin') || 
-                  (!!currentUser && (chat.creatorId === currentUser.uid || chat.admins?.includes(currentUser.uid))));
+                  (!!currentUser && (chat.creatorId === currentUser?.uid || chat.admins?.includes(currentUser?.uid))));
 
   useEffect(() => {
     if (!chat.id || !call.id) return;
@@ -11672,7 +11672,7 @@ const StageScreen = ({
 
   const toggleMic = async () => {
     if (!currentUser) console.log("No user");
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     if (me) {
       try {
         const newMutedState = !me.isMuted;
@@ -11689,7 +11689,7 @@ const StageScreen = ({
 
   const toggleCamera = async () => {
     if (!currentUser) console.log("No user");
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     if (!me) return;
 
     try {
@@ -11730,7 +11730,7 @@ const StageScreen = ({
 
   const raiseHand = async () => {
     if (!currentUser) console.log("No user");
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     if (me) {
       try {
         await updateDoc(doc(db, "chats", chat.id, "calls", call.id, "participants", me.id), {
@@ -11755,7 +11755,7 @@ const StageScreen = ({
       if (endForAll && isAdmin) {
         await updateDoc(doc(db, "chats", chat.id, "calls", call.id), { active: false });
       } else {
-        const me = participants.find(p => p.userId === currentUser.uid);
+        const me = participants.find(p => p.userId === currentUser?.uid);
         if (me) {
           await deleteDoc(doc(db, "chats", chat.id, "calls", call.id, "participants", me.id));
         }
@@ -11857,7 +11857,7 @@ const StageScreen = ({
 
   const toggleScreenShare = async () => {
     if (!currentUser) console.log("No user");
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     if (!me) return;
 
     if (isSharingScreen) {
@@ -11916,7 +11916,7 @@ const StageScreen = ({
 
   const stopScreenShare = async () => {
     if (!currentUser) console.log("No user");
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     
     // 1. Stop all screen tracks
     if (screenStreamRef.current) {
@@ -11961,7 +11961,7 @@ const StageScreen = ({
 
   useEffect(() => {
     if (!currentUser || !chat.id || !call.id) return;
-    const me = participants.find(p => p.userId === currentUser.uid);
+    const me = participants.find(p => p.userId === currentUser?.uid);
     if (!me || me.isMuted) return;
 
     // Simulate voice activity randomly
@@ -12660,7 +12660,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
   useEffect(() => {
     const decryptAll = async () => {
       if (!currentUser || !messages.length) return;
-      const privateKeyStr = localStorage.getItem(`trucast_private_key_${currentUser.uid}`);
+      const privateKeyStr = localStorage.getItem(`trucast_private_key_${currentUser?.uid}`);
       if (!privateKeyStr) return;
 
       try {
@@ -12670,7 +12670,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
 
         for (const msg of messages) {
           if (msg.isEncrypted && msg.encryptionData && msg.iv && !newDecrypted[msg.id]) {
-            const encryptedAESKey = msg.encryptionData[currentUser.uid];
+            const encryptedAESKey = msg.encryptionData[currentUser?.uid];
             if (encryptedAESKey) {
               try {
                 const rawAESKey = await decryptAESKeyWithRSA(encryptedAESKey, privateKey);
@@ -12718,7 +12718,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
 
   const startCall = async () => {
     if (!currentUser || !chatId || !chat) return;
-    const isAdmin = chat.creatorId === currentUser.uid || chat.admins?.includes(currentUser.uid);
+    const isAdmin = chat.creatorId === currentUser?.uid || chat.admins?.includes(currentUser?.uid);
     const isPrivate = chat.type === 'private' || chat.type === 'direct';
     
     if (!isAdmin && !isPrivate) return;
@@ -12734,8 +12734,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       const callRef = await addDoc(collection(db, 'chats', chatId, 'calls'), callData);
       
       // Join as first participant
-      await setDoc(doc(db, 'chats', chatId, 'calls', callRef.id, 'participants', currentUser.uid), {
-        userId: currentUser.uid,
+      await setDoc(doc(db, 'chats', chatId, 'calls', callRef.id, 'participants', currentUser?.uid), {
+        userId: currentUser?.uid,
         displayName: currentUser.displayName || "مستخدم",
         photoURL: currentUser.photoURL || "",
         isMuted: false,
@@ -12743,7 +12743,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
         isHandRaised: false,
         isSpeaking: false,
         globalVolume: 100,
-        role: isPrivate ? 'owner' : (chat.creatorId === currentUser.uid ? 'owner' : 'admin'),
+        role: isPrivate ? 'owner' : (chat.creatorId === currentUser?.uid ? 'owner' : 'admin'),
         joinedAt: serverTimestamp() as any
       });
       setShowStage(true);
@@ -12755,12 +12755,12 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
   const joinCall = async () => {
     if (!currentUser || !activeCall || !chat) return;
     try {
-      const partRef = doc(db, 'chats', chatId, 'calls', activeCall.id, 'participants', currentUser.uid);
+      const partRef = doc(db, 'chats', chatId, 'calls', activeCall.id, 'participants', currentUser?.uid);
       const snap = await getDoc(partRef);
       
       if (!snap.exists()) {
         await setDoc(partRef, {
-          userId: currentUser.uid,
+          userId: currentUser?.uid,
           displayName: currentUser.displayName || "مستخدم",
           photoURL: currentUser.photoURL || "",
           isMuted: true, // Join muted by default
@@ -12768,7 +12768,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
           isHandRaised: false,
           isSpeaking: false,
           globalVolume: 100,
-          role: chat.creatorId === currentUser.uid ? 'owner' : chat.admins?.includes(currentUser.uid) ? 'admin' : 'member',
+          role: chat.creatorId === currentUser?.uid ? 'owner' : chat.admins?.includes(currentUser?.uid) ? 'admin' : 'member',
           joinedAt: serverTimestamp() as any
         });
       }
@@ -12793,7 +12793,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       try {
         const chatRef = doc(db, 'chats', chatId);
         await updateDoc(chatRef, {
-          [`unreadCount.${currentUser.uid}`]: 0
+          [`unreadCount.${currentUser?.uid}`]: 0
         });
       } catch (e) {
         // Silently fail if rules don't allow or other issues
@@ -12812,7 +12812,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
         
       // Setup listener for other user profile if private/direct chat
         if ((chatData.type === 'private' || chatData.type === 'direct') && chatData.participants && Array.isArray(chatData.participants)) {
-          const otherUserId = chatData.participants.find(p => p !== currentUser.uid);
+          const otherUserId = chatData.participants.find(p => p !== currentUser?.uid);
           if (otherUserId) {
             if (unsubOtherUser) unsubOtherUser();
             unsubOtherUser = onSnapshot(doc(db, 'users', otherUserId), (userSnap) => {
@@ -12847,7 +12847,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
 
       // Mark messages as read in private/direct chats (Respect Stealth Mode)
       if (chat && (chat.type === 'private' || chat.type === 'direct') && currentUser && !currentUserProfile?.stealthMode) {
-        const unreadMessages = msgs.filter(m => m.senderId !== currentUser.uid && !m.readAt);
+        const unreadMessages = msgs.filter(m => m.senderId !== currentUser?.uid && !m.readAt);
         if (unreadMessages.length > 0) {
           unreadMessages.forEach(async (m) => {
             try {
@@ -12861,7 +12861,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
           // Reset unread count for current user
           const chatRef = doc(db, 'chats', chatId);
           updateDoc(chatRef, {
-            [`unreadCount.${currentUser.uid}`]: 0
+            [`unreadCount.${currentUser?.uid}`]: 0
           }).catch(() => {});
         }
       }
@@ -12888,10 +12888,10 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       const userList = reactions[emoji] || [];
       
       let updatedList;
-      if (userList.includes(currentUser.uid)) {
-        updatedList = userList.filter(id => id !== currentUser.uid);
+      if (userList.includes(currentUser?.uid)) {
+        updatedList = userList.filter(id => id !== currentUser?.uid);
       } else {
-        updatedList = [...userList, currentUser.uid];
+        updatedList = [...userList, currentUser?.uid];
       }
       
       const newReactions = { ...reactions };
@@ -12923,7 +12923,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
     }
 
     // Channel restriction
-    if (chat.type === 'channel' && !chat.admins?.includes(currentUser.uid)) {
+    if (chat.type === 'channel' && !chat.admins?.includes(currentUser?.uid)) {
       return;
     }
 
@@ -12951,7 +12951,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
         // Encrypt for sender
         if (senderPubKeyStr) {
           const senderPubKey = await importPublicKeyFromStr(senderPubKeyStr);
-          encryptionData[currentUser.uid] = await encryptAESKeyWithRSA(aesResult.rawKey, senderPubKey);
+          encryptionData[currentUser?.uid] = await encryptAESKeyWithRSA(aesResult.rawKey, senderPubKey);
         }
         isEncrypted = true;
       } catch (e) {
@@ -12968,7 +12968,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       // Add message
       const msgsRef = collection(db, 'chats', chatId, 'messages');
       const msgData: any = {
-        senderId: currentUser.uid,
+        senderId: currentUser?.uid,
         senderName: currentUser.displayName || "مستخدم",
         text,
         isEncrypted,
@@ -12994,14 +12994,14 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       const updates: any = {
         lastMessage: isEncrypted ? "🔐 رسالة مشفرة" : originalText,
         lastMessageAt: serverTimestamp(),
-        lastSenderId: currentUser.uid,
+        lastSenderId: currentUser?.uid,
         updatedAt: serverTimestamp()
       };
 
       // Increment unread count for other participants
       if (chat.participants) {
         chat.participants.forEach(pid => {
-          if (pid !== currentUser.uid) {
+          if (pid !== currentUser?.uid) {
             updates[`unreadCount.${pid}`] = increment(1);
           }
         });
@@ -13041,7 +13041,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
         await deleteDoc(msgRef);
       } else {
         await updateDoc(msgRef, {
-          deletedBy: arrayUnion(currentUser.uid)
+          deletedBy: arrayUnion(currentUser?.uid)
         });
       }
       setMessageActionMenu(null);
@@ -13054,7 +13054,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
     if (!currentUser || !messageActionMenu || !reportReason) return;
     try {
       await addDoc(collection(db, 'reports'), {
-        reporterId: currentUser.uid,
+        reporterId: currentUser?.uid,
         reportedUserId: messageActionMenu.senderId,
         messageId: messageActionMenu.id,
         reason: reportReason,
@@ -13076,7 +13076,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       const textToForward = forwardMessage.isEncrypted ? (decryptedMessages[forwardMessage.id] || "🔐 رسالة مشفرة") : forwardMessage.text;
       
       await addDoc(targetMsgsRef, {
-        senderId: currentUser.uid,
+        senderId: currentUser?.uid,
         senderName: currentUser.displayName || "مستخدم",
         text: textToForward,
         createdAt: serverTimestamp(),
@@ -13087,7 +13087,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       await updateDoc(chatRef, {
         lastMessage: textToForward,
         lastMessageAt: serverTimestamp(),
-        lastSenderId: currentUser.uid,
+        lastSenderId: currentUser?.uid,
         updatedAt: serverTimestamp()
       });
 
@@ -13210,7 +13210,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
     try {
       const msgsRef = collection(db, 'chats', chatId, 'messages');
       const msgData: any = {
-        senderId: currentUser.uid,
+        senderId: currentUser?.uid,
         senderName: currentUser.displayName || "مستخدم",
         text: type === 'image' ? "🖼️ صورة" : type === 'video' ? "🎥 فيديو" : type === 'audio' ? "🎤 بصمة صوتية" : "📎 ملف",
         fileUrl: url,
@@ -13226,13 +13226,13 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
       const updates: any = {
         lastMessage: msgData.text,
         lastMessageAt: serverTimestamp(),
-        lastSenderId: currentUser.uid,
+        lastSenderId: currentUser?.uid,
         updatedAt: serverTimestamp()
       };
 
       if (chat.participants) {
         chat.participants.forEach(pid => {
-          if (pid !== currentUser.uid) {
+          if (pid !== currentUser?.uid) {
             updates[`unreadCount.${pid}`] = increment(1);
           }
         });
@@ -13263,7 +13263,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
         .filter(doc => {
           const data = doc.data();
           const timestamp = data.timestamp?.toMillis() || now;
-          return doc.id !== currentUser.uid && (now - timestamp) < 6000;
+          return doc.id !== currentUser?.uid && (now - timestamp) < 6000;
         })
         .map(doc => doc.data().userName || "مستخدم");
       setTypingUsers(users);
@@ -13275,7 +13275,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
 
   const updateTypingStatus = async (isTyping: boolean) => {
     if (!chatId || !currentUser || currentUserProfile?.stealthMode) return;
-    const typingRef = doc(db, 'chats', chatId, 'typing', currentUser.uid);
+    const typingRef = doc(db, 'chats', chatId, 'typing', currentUser?.uid);
     try {
       if (isTyping) {
         await setDoc(typingRef, {
@@ -13732,7 +13732,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
                   </div>
                 ) : filtered.length > 0 ? (
                   filtered.map(user => (
-                    <div key={user.uid} className="flex items-center justify-between p-3.5 hover:bg-zinc-800/50 rounded-2xl transition-all group">
+                    <div key={user?.uid} className="flex items-center justify-between p-3.5 hover:bg-zinc-800/50 rounded-2xl transition-all group">
                       <div className="flex items-center gap-3">
                         <div className="relative">
                           <img 
@@ -13744,11 +13744,11 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, onBack, onN
                         </div>
                         <div>
                           <p className="text-sm font-black text-white">{user.displayName}</p>
-                          <p className="text-[10px] text-zinc-500 font-bold">@{user.username || user.uid.slice(0, 8)}</p>
+                          <p className="text-[10px] text-zinc-500 font-bold">@{user.username || user?.uid.slice(0, 8)}</p>
                         </div>
                       </div>
                       <button 
-                        onClick={() => handleAdd(user.uid)}
+                        onClick={() => handleAdd(user?.uid)}
                         className="p-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-500 transition-all active:scale-95 shadow-lg shadow-blue-600/20"
                       >
                         <UserPlus className="w-4 h-4" />
@@ -15770,7 +15770,7 @@ function ForwardChatList({ onSelect, currentUser }: { onSelect: (chatId: string)
 
   useEffect(() => {
     if (!currentUser) console.log("No user");
-    const q = query(collection(db, 'chats'), where('participants', 'array-contains', currentUser.uid));
+    const q = query(collection(db, 'chats'), where('participants', 'array-contains', currentUser?.uid));
     const unsub = onSnapshot(q, (snapshot) => {
       const chatList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
       setChats(chatList);
@@ -16054,14 +16054,14 @@ export default function App() {
     }
 
     const chatsRef = collection(db, 'chats');
-    const q = query(chatsRef, where('participants', 'array-contains', user.uid));
+    const q = query(chatsRef, where('participants', 'array-contains', user?.uid));
     
     const unsub = onSnapshot(q, (snapshot) => {
       let count = 0;
       snapshot.docs.forEach(doc => {
         const data = doc.data();
-        if (data.unreadCount && data.unreadCount[user.uid]) {
-          count += data.unreadCount[user.uid];
+        if (data.unreadCount && data.unreadCount[user?.uid]) {
+          count += data.unreadCount[user?.uid];
         }
       });
       setTotalUnreadCount(count);
@@ -16077,12 +16077,12 @@ export default function App() {
       setUserProfile(null);
       return;
     }
-    const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+    const unsub = onSnapshot(doc(db, 'users', user?.uid), (doc) => {
       if (doc.exists()) {
         setUserProfile(doc.data() as UserProfile);
       }
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
+      handleFirestoreError(error, OperationType.GET, `users/${user?.uid}`);
     });
     return () => unsub();
   }, [user]);
@@ -16099,7 +16099,7 @@ export default function App() {
   const markNotificationAsRead = async (notifId: string) => {
     if (!user) console.log("No user 1");
     try {
-      await updateDoc(doc(db, "users", user.uid, "notifications", notifId), {
+      await updateDoc(doc(db, "users", user?.uid, "notifications", notifId), {
         read: true
       });
     } catch (err) {
@@ -16119,7 +16119,7 @@ export default function App() {
 
     // 1. Message Notifications
     const chatsRef = collection(db, 'chats');
-    const qMessages = query(chatsRef, where('participants', 'array-contains', user.uid));
+    const qMessages = query(chatsRef, where('participants', 'array-contains', user?.uid));
     
     const unsubMessages = onSnapshot(qMessages, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -16129,7 +16129,7 @@ export default function App() {
           
           if (
             data.lastSenderId && 
-            data.lastSenderId !== user.uid && 
+            data.lastSenderId !== user?.uid && 
             data.lastMessageAt?.toMillis &&
             data.lastMessageAt.toMillis() > appStartTime.current &&
             settings.messages
@@ -16149,7 +16149,7 @@ export default function App() {
     });
 
     // 2. Follower Live Notifications
-    const notifsRef = collection(db, 'users', user.uid, 'notifications');
+    const notifsRef = collection(db, 'users', user?.uid, 'notifications');
     const qNotifs = query(notifsRef, where('read', '==', false));
     
     const unsubNotifs = onSnapshot(qNotifs, (snapshot) => {
@@ -16177,7 +16177,7 @@ export default function App() {
         }
       });
     }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, `users/${user.uid}/notifications`);
+      handleFirestoreError(error, OperationType.LIST, `users/${user?.uid}/notifications`);
     });
 
     return () => {
@@ -16191,7 +16191,7 @@ export default function App() {
     if (!user || userProfile === null) console.log("No profile 2");
 
     const setupEncryption = async () => {
-      const localPrivateKeyStr = localStorage.getItem(`trucast_private_key_${user.uid}`);
+      const localPrivateKeyStr = localStorage.getItem(`trucast_private_key_${user?.uid}`);
       
       if (!localPrivateKeyStr || !userProfile?.publicKey) {
         // If we don't have BOTH, we generate a new pair to be safe and consistent
@@ -16201,9 +16201,9 @@ export default function App() {
           const priStr = await exportPrivateKeyStr(keys.privateKey);
           const pubStr = await exportPublicKeyStr(keys.publicKey);
           
-          localStorage.setItem(`trucast_private_key_${user.uid}`, priStr);
+          localStorage.setItem(`trucast_private_key_${user?.uid}`, priStr);
           
-          await updateDoc(doc(db, 'users', user.uid), {
+          await updateDoc(doc(db, 'users', user?.uid), {
             publicKey: pubStr,
             updatedAt: serverTimestamp()
           });
@@ -16227,7 +16227,7 @@ export default function App() {
           const docSnap = await getDoc(docRef);
           if (!docSnap.exists()) {
             console.log(`Auto-registering legacy username: ${normalized}`);
-            await setDoc(docRef, { uid: user.uid, createdAt: serverTimestamp() });
+            await setDoc(docRef, { uid: user?.uid, createdAt: serverTimestamp() });
           }
         } catch (e) {
           console.error("Auto-registration check failed", e);
@@ -16344,7 +16344,7 @@ export default function App() {
     const updatePresence = async () => {
       if (auth.currentUser) {
         try {
-          await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
             lastSeen: serverTimestamp()
           });
         } catch (e) {
