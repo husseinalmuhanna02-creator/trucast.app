@@ -2288,10 +2288,12 @@ function PostCard({
 
   useEffect(() => {
     // Fetch Folders when menu is open or moving to folder
-    if (!currentUser || (!showMenu && !isMovingToFolder)) return;
+    if (!currentUser?.uid || (!showMenu && !isMovingToFolder)) return;
+    
     const q = query(
       collection(db, 'folders'),
-      where('userId', '==', currentUser?.uid),
+      where('userId', '==', currentUser?.uid || "no-user-id"),
+      
       orderBy('createdAt', 'desc')
     );
     const unsub = onSnapshot(q, (snap) => {
