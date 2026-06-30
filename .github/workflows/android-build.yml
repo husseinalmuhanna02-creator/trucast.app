@@ -8,6 +8,7 @@ jobs:
       - uses: actions/setup-node@v3
         with: { node-version: '22' }
       - run: npm install --legacy-peer-deps && npm install -D typescript
+      - run: npm run build
       - run: rm -rf android
       - run: npx cap add android
       - run: npx cap sync android
