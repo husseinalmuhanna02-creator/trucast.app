@@ -35,6 +35,7 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+if (!variableToCheck) return;
   Loader2,
   Minimize2,
   Grid,
