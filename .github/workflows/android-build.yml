@@ -9,6 +9,7 @@ jobs:
         with: { node-version: '22' }
       - run: npm install
       - run: npm run build
+      - run: rm -rf android
       - run: npx cap add android
       - run: npx cap sync android
       - uses: actions/setup-java@v3
