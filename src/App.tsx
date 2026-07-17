@@ -35,7 +35,7 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
-if (!variableToCheck) return;
+
   Loader2,
   Minimize2,
   Grid,
@@ -367,6 +367,7 @@ function UserListSkeleton() {
 
 // Initialize Gemini API
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const login = () => { console.log("Login clicked"); };
 
 // --- Types ---
 interface PollOption {
@@ -419,8 +420,7 @@ interface UserProfile {
   displayName: string;
   photoURL: string;
   email: string;
-  publicKey?: string;
-  lastSeen?: any;
+
   username?: string;
   bio?: string;
   followersCount?: number;
