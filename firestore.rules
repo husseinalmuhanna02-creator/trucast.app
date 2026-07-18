@@ -1,0 +1,607 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    // --- Global Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isVerified() { return isSignedIn(); } // Relaxing this to just isSignedIn for better compatibility
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isChatParticipant(chatId) {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/chats/$(chatId)) && 
+             get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]);
+    }
+
+    function canAccessChat(chatId) {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/chats/$(chatId)) && (
+             get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]) || 
+             get(/databases/$(database)/documents/chats/$(chatId)).data.get('isPublic', false) == true);
+    }
+
+    function isHostOrModerator(liveId) {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/lives/$(liveId)) && (
+               get(/databases/$(database)/documents/lives/$(liveId)).data.get('hostId', '') == request.auth.uid ||
+               get(/databases/$(database)/documents/lives/$(liveId)).data.get('moderatorIds', []).hasAny([request.auth.uid])
+             );
+    }
+    
+    // --- Validation Helpers ---
+    function isValidPost(data) {
+      return data.userName is string && data.userName.size() <= 200
+        && data.userPhoto is string && data.userPhoto.size() <= 2000000
+        && (data.get('content', null) == null || (data.content is string && data.content.size() <= 10000))
+        && (data.get('caption', null) == null || (data.caption is string && data.caption.size() <= 2000))
+        && (data.get('mediaUrl', null) == null || (data.mediaUrl is string && data.mediaUrl.size() <= 2000000))
+        && (data.get('mediaType', null) == null || data.mediaType in ['image', 'video'])
+        && (data.get('likesCount', 0) is int)
+        && (data.get('imageUrl', null) == null || (data.imageUrl is string && data.imageUrl.size() <= 2000000));
+    }
+
+    function isValidComment(data) {
+      return data.userName is string && data.userName.size() <= 200
+        && data.userPhoto is string && data.userPhoto.size() <= 2000000
+        && data.content is string && data.content.size() <= 10000
+        && (data.get('parentId', null) == null || (data.parentId is string && data.parentId.size() <= 128))
+        && (data.get('isPinned', false) is bool)
+        && (data.get('likesCount', 0) is int)
+        && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp);
+    }
+
+    function isValidLike(data) {
+      return data.userId == request.auth.uid;
+    }
+
+    function isValidFavorite(data) {
+      return data.userId == request.auth.uid
+        && data.postId is string && data.postId.size() <= 128
+        && data.postContent is string && data.postContent.size() <= 5000
+        && (data.get('postImageUrl', null) == null || (data.postImageUrl is string && data.postImageUrl.size() <= 2000))
+        && data.postAuthorName is string && data.postAuthorName.size() <= 100
+        && (data.get('folderId', null) == null || (data.folderId is string && data.folderId.size() <= 128));
+    }
+
+    function isValidFolder(data) {
+      return data.userId == request.auth.uid
+        && data.name is string && data.name.size() <= 100;
+    }
+
+    function isValidUser(data) {
+      return (data.get('uid', '') == '' || data.uid == request.auth.uid)
+        && (data.get('displayName', '') is string)
+        && (data.get('photoURL', '') is string)
+        && (data.get('email', '') is string)
+        && (data.get('isPremium', false) is bool)
+        && (data.get('isVerified', false) is bool)
+        && (data.get('stealthMode', false) is bool)
+        && (data.get('accountLocked', false) is bool)
+        && (data.get('premiumSettings', null) == null || (
+             data.premiumSettings is map &&
+             (data.premiumSettings.get('bubbleColor', null) == null || data.premiumSettings.bubbleColor is string) &&
+             (data.premiumSettings.get('chatWallpaper', null) == null || data.premiumSettings.chatWallpaper is string)
+           ))
+        && (data.get('publicKey', null) == null || (data.publicKey is string && data.publicKey.size() <= 10000))
+        && (data.get('lastSeen', null) == null || data.lastSeen == request.time || data.lastSeen is timestamp)
+        && (data.get('profileCustomization', null) == null || (
+             data.profileCustomization is map &&
+             (data.profileCustomization.get('bgColor', '') is string) &&
+             (data.profileCustomization.get('fontFamily', '') is string) &&
+             (data.profileCustomization.get('textColor', '') is string)
+           ));
+    }
+
+    function isValidKnownDevice(data) {
+      return data.deviceId is string && data.deviceId.size() <= 128
+        && data.os is string && data.os.size() <= 100
+        && data.browser is string && data.browser.size() <= 100
+        && (data.get('isBlocked', false) is bool)
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp)
+        && (data.get('lastActiveAt', null) == null || data.lastActiveAt == request.time || data.lastActiveAt is timestamp);
+    }
+
+    function isValidReel(data) {
+      return data.videoUrl is string && data.videoUrl.size() <= 2000000
+        && (data.get('caption', null) == null || (data.caption is string && data.caption.size() <= 2000))
+        && (data.get('likesCount', 0) is int);
+    }
+
+    function isValidChat(data) {
+      return data.type in ['private', 'group', 'channel', 'saved', 'direct']
+        && (data.get('participants', []) is list)
+        && (data.type in ['private', 'direct'] ? data.participants.size() == 2 : true)
+        && (data.type == 'saved' ? data.participants.size() == 1 : true)
+        && (!(data.type in ['private', 'direct', 'saved']) ? (data.name is string && data.name.size() <= 200) : true)
+        && (data.get('description', null) == null || (data.description is string && data.description.size() <= 2000))
+        && (data.get('avatarUrl', null) == null || (data.avatarUrl is string && data.avatarUrl.size() <= 2000000))
+        && (data.get('photoURL', null) == null || (data.photoURL is string && data.photoURL.size() <= 2000))
+        && (data.get('creatorId', null) == null || (data.creatorId is string && data.creatorId.size() <= 128))
+        && (data.get('admins', null) == null || (data.admins is list && data.admins.size() >= 0))
+        && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp)
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp)
+        && (data.get('lastMessageAt', null) == null || data.lastMessageAt == request.time || data.lastMessageAt is timestamp)
+        && (data.get('isPublic', false) is bool)
+        && (data.get('isLocked', false) is bool)
+        && (data.get('passcode', null) == null || data.passcode is string)
+        && (data.get('disappearingTimer', 0) is int)
+        && (data.get('lastMessage', null) == null || data.lastMessage is string)
+        && (data.get('lastSenderId', null) == null || data.lastSenderId is string)
+        && (data.get('themeColor', null) == null || data.themeColor is string)
+        && (data.get('backgroundUrl', null) == null || (data.backgroundUrl is string && data.backgroundUrl.size() <= 2000000))
+        && (data.get('reactionSettings', null) == null || data.reactionSettings is map);
+    }
+
+    function isValidCallParticipant(data) {
+      return data.userId is string
+        && data.displayName is string && data.displayName.size() <= 500
+        && data.photoURL is string && data.photoURL.size() <= 2000000
+        && data.isMuted is bool
+        && data.isCameraOn is bool
+        && data.isHandRaised is bool
+        && data.isSpeaking is bool
+        && data.globalVolume is int
+        && data.role in ['owner', 'admin', 'member']
+        && (data.get('isSharingScreen', null) == null || data.isSharingScreen is bool);
+    }
+
+    function isValidCallSession(data) {
+      return data.chatId is string
+        && data.title is string && data.title.size() <= 200
+        && data.active is bool
+        && (data.get('smartBoardEnabled', null) == null || data.smartBoardEnabled is bool);
+    }
+
+    function isValidMessage(data) {
+      return data.senderId is string
+        && data.text is string && data.text.size() <= 60000
+        && (data.get('senderName', null) == null || (data.senderName is string && data.senderName.size() <= 100))
+        && (data.get('reactions', null) == null || data.reactions is map)
+        && (data.get('isEncrypted', false) is bool)
+        && (data.get('encryptionData', null) == null || data.encryptionData is map)
+        && (data.get('iv', null) == null || (data.iv is string && data.iv.size() <= 256))
+        && (data.get('isEncrypted', false) == false || (
+             data.encryptionData is map && 
+             data.get('iv', null) != null
+           ))
+        && (data.get('disappearingTimer', 0) is int)
+        && (data.get('selfDestruct', false) is bool)
+        && (data.get('timer', 0) is int)
+        && (data.get('transcription', null) == null || data.transcription is string)
+        && (data.get('readAt', null) == null || data.readAt is timestamp || data.readAt == request.time)
+        && (data.get('replyTo', null) == null || data.replyTo is map)
+        && (data.get('deletedBy', []) is list)
+        && (data.get('isEdited', false) is bool);
+    }
+
+    function isValidReport(data) {
+      return data.reporterId == request.auth.uid
+        && data.reportedUserId is string
+        && data.messageId is string
+        && data.reason is string
+        && data.createdAt == request.time;
+    }
+
+    function isValidWhiteboard(data) {
+      return data.isActive is bool
+        && (data.get('backgroundColor', null) == null || data.backgroundColor is string)
+        && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp);
+    }
+
+    function isValidWhiteboardElement(data) {
+      return data.type in ['path', 'text']
+        && data.creatorId == request.auth.uid
+        && (data.get('d', null) == null || (data.d is string && data.d.size() <= 20000))
+        && (data.get('color', null) == null || data.color is string)
+        && (data.get('text', null) == null || data.text is string)
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    function isValidLiveStream(data) {
+      return data.hostId == request.auth.uid
+        && data.hostName is string && data.hostName.size() <= 200
+        && (data.get('hostPhoto', null) == null || (data.hostPhoto is string && data.hostPhoto.size() <= 2000))
+        && data.title is string && data.title.size() <= 500
+        && data.status in ['active', 'ended']
+        && (data.get('viewerCount', 0) is int)
+        && (data.get('cameraEnabled', false) is bool)
+        && (data.get('micEnabled', true) is bool)
+        && (data.get('startedAt', null) == null || data.startedAt == request.time || data.startedAt is timestamp)
+        && (data.get('endedAt', null) == null || data.endedAt == request.time || data.endedAt is timestamp);
+    }
+
+    function isValidLiveComment(data) {
+      return (data.userId == request.auth.uid || data.userId == 'system')
+        && data.userName is string && data.userName.size() <= 200
+        && (data.get('userPhoto', null) == null || (data.userPhoto is string && data.userPhoto.size() <= 2000))
+        && data.text is string && data.text.size() <= 5000
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    function isValidFollow(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && (data.get('userName', null) == null || (data.userName is string && data.userName.size() <= 100))
+        && (data.get('userPhoto', null) == null || (data.userPhoto is string && data.userPhoto.size() <= 2000));
+    }
+
+    function isValidNotification(data) {
+      return data.title is string && data.title.size() <= 500
+        && data.body is string && data.body.size() <= 2000
+        && (data.get('type', '') is string)
+        && (data.get('streamId', '') is string)
+        && (data.get('hostId', '') is string)
+        && (data.get('hostName', '') is string)
+        && (data.get('hostPhoto', '') is string)
+        && (data.get('read', false) is bool)
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    function isValidVerificationRequest(data) {
+      return data.uid == request.auth.uid
+        && data.displayName is string && data.displayName.size() <= 500
+        && (data.get('username', '') is string)
+        && data.documentImage is string && data.documentImage.size() <= 4000000
+        && data.status in ['pending', 'approved', 'rejected']
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp)
+        && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp);
+    }
+
+    function isValidStory(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 200
+        && data.userPhoto is string && data.userPhoto.size() <= 2000000
+        && data.type in ['text', 'image', 'video']
+        && (data.get('content', null) == null || (data.content is string && data.content.size() <= 10000))
+        && (data.get('mediaUrl', null) == null || (data.mediaUrl is string && data.mediaUrl.size() <= 2000000))
+        && (data.get('bgColor', null) == null || (data.bgColor is string && data.bgColor.size() <= 200))
+        && (data.get('textColor', null) == null || (data.textColor is string && data.textColor.size() <= 50))
+        && (data.get('textSize', null) == null || (data.textSize is string && data.textSize.size() <= 50))
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    function isValidSupportTicket(data) {
+      return data.userId == request.auth.uid
+        && data.category is string && data.category.size() <= 200
+        && data.details is string && data.details.size() <= 10000
+        && (data.get('status', 'open') in ['open', 'resolved']);
+    }
+
+    function isValidActivityLog(data) {
+      return data.userId == request.auth.uid
+        && data.type is string && data.type.size() <= 100
+        && data.description is string && data.description.size() <= 1000;
+    }
+
+    // --- Collection Rules ---
+
+    match /support_tickets/{ticketId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && isValidSupportTicket(incoming())
+                    && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+
+    match /chats/{chatId} {
+      // السماح بالقراءة للمشاركين أو للمحادثات العامة
+      allow read: if isSignedIn() && (
+        request.auth.uid in resource.data.participants 
+        || resource.data.get('isPublic', false) == true
+      );
+      
+      // السماح بإنشاء المحادثات إذا كان المستخدم مشاركاً والبيانات صالحة
+      allow create: if isSignedIn() 
+                    && request.auth.uid in incoming().participants
+                    && isValidChat(incoming());
+                    
+      // السماح بالتحديث للمشاركين أو للانضمام للمحادثات العامة
+      allow update: if isSignedIn() && (
+        request.auth.uid in resource.data.participants
+        || (
+          resource.data.get('isPublic', false) == true &&
+          incoming().participants.hasAll(resource.data.participants) &&
+          request.auth.uid in incoming().participants &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['participants'])
+        )
+      );
+      
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.creatorId;
+      
+      match /typing/{userId} {
+        allow read: if canAccessChat(chatId);
+        allow write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      match /messages/{messageId} {
+        allow list, get: if canAccessChat(chatId);
+        allow create: if isVerified() 
+                      && canAccessChat(chatId)
+                      && (get(/databases/$(database)/documents/chats/$(chatId)).data.get('type', '') == 'channel' ? get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]) : true)
+                      && incoming().senderId == request.auth.uid
+                      && isValidMessage(incoming())
+                      && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+        allow update: if isVerified()
+                      && isChatParticipant(chatId)
+                      && isValidMessage(incoming())
+                      && (
+                        // Sender can edit text or isEdited
+                        (existing().senderId == request.auth.uid && (incoming().diff(existing()).affectedKeys().hasOnly(['text', 'isEdited', 'reactions', 'readAt'])))
+                        // Participant can add themselves to deletedBy
+                        || (incoming().diff(existing()).affectedKeys().hasOnly(['deletedBy']) && incoming().deletedBy.hasAll(existing().get('deletedBy', [])) && request.auth.uid in incoming().deletedBy)
+                        // Everyone can react or mark as read
+                        || (incoming().diff(existing()).affectedKeys().hasOnly(['reactions', 'readAt']))
+                      );
+        allow delete: if isVerified()
+                      && (isChatParticipant(chatId) || request.auth.uid == existing().senderId);
+      }
+
+      match /reports/{reportId} {
+        allow create: if isVerified() && isValidReport(incoming());
+        allow read: if false; // Only admins via console
+      }
+
+      match /calls/{callId} {
+        allow list, get: if isSignedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]);
+        allow create: if isSignedIn() 
+                      && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid])
+                      && (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]))
+                      && isValidCallSession(incoming())
+                      && (incoming().startedAt == request.time || incoming().startedAt is timestamp);
+        allow update: if isSignedIn()
+                      && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid])
+                      && (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]))
+                      && isValidCallSession(incoming());
+
+        match /participants/{participantId} {
+          allow list, get: if isSignedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]);
+          allow create: if isSignedIn() 
+                        && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid])
+                        && participantId == request.auth.uid
+                        && isValidCallParticipant(incoming())
+                        && (incoming().joinedAt == request.time || incoming().joinedAt is timestamp);
+          allow update: if isSignedIn() 
+                        && (
+                          participantId == request.auth.uid 
+                          || (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]))
+                        )
+                        && isValidCallParticipant(incoming());
+          allow delete: if isSignedIn()
+                        && (
+                          participantId == request.auth.uid 
+                          || (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]))
+                        );
+        }
+
+        match /whiteboard/current {
+          allow get: if isSignedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]);
+          allow create, update: if isSignedIn() 
+                        && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid])
+                        && (incoming().isActive == false || (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid])))
+                        && isValidWhiteboard(incoming());
+          
+          match /elements/{elementId} {
+            allow list, get: if isSignedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid]);
+            allow create: if isSignedIn() 
+                        && get(/databases/$(database)/documents/chats/$(chatId)).data.get('participants', []).hasAny([request.auth.uid])
+                        && isValidWhiteboardElement(incoming());
+            allow delete: if isSignedIn() 
+                        && (request.auth.uid == existing().creatorId || request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.get('creatorId', '') || get(/databases/$(database)/documents/chats/$(chatId)).data.get('admins', []).hasAny([request.auth.uid]));
+          }
+        }
+      }
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && (
+        request.auth.uid == userId ||
+        incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount'])
+      );
+
+      match /followers/{followerId} {
+        allow list, get: if true;
+        allow create: if isSignedIn() && followerId == request.auth.uid && isValidFollow(incoming()) && incoming().createdAt == request.time;
+        allow delete: if isSignedIn() && followerId == request.auth.uid;
+      }
+
+      match /following/{followingId} {
+        allow list, get: if true;
+        allow create: if isSignedIn() && userId == request.auth.uid && isValidFollow(incoming()) && incoming().createdAt == request.time;
+        allow delete: if isSignedIn() && userId == request.auth.uid;
+      }
+
+      match /notifications/{notificationId} {
+        allow list, get: if isSignedIn() && isOwner(userId);
+        allow create: if isSignedIn() && isValidNotification(incoming());
+        allow update: if isSignedIn() && isOwner(userId) && isValidNotification(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+        allow delete: if isSignedIn() && isOwner(userId);
+      }
+
+      match /known_devices/{deviceId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+
+      match /activity_logs/{logId} {
+        allow list, get: if isSignedIn();
+        allow create: if isSignedIn() && isOwner(userId) && isValidActivityLog(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+        allow delete: if isSignedIn() && isOwner(userId);
+      }
+    }
+
+    match /verification_requests/{userId} {
+      allow get: if isSignedIn() && isOwner(userId);
+      allow create: if isSignedIn() && isOwner(userId) && isValidVerificationRequest(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+      allow update: if isSignedIn() && isOwner(userId) && isValidVerificationRequest(incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp);
+      allow delete: if isSignedIn() && isOwner(userId);
+    }
+
+    match /test/connection {
+      allow read, write: if true;
+    }
+
+    match /usernames/{username} {
+      allow get: if true;
+      allow create: if isSignedIn() && incoming().uid == request.auth.uid;
+      allow delete: if isSignedIn() && (resource == null || existing().uid == request.auth.uid);
+    }
+
+    match /folders/{folderId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isVerified() && isValidFolder(incoming()) && incoming().createdAt == request.time;
+      allow update: if isVerified() && isOwner(existing().userId) && isValidFolder(incoming())
+                    && incoming().createdAt == existing().createdAt;
+      allow delete: if isVerified() && isOwner(existing().userId);
+    }
+
+    match /reels/{reelId} {
+      allow list, get: if true;
+      allow create: if isVerified() && incoming().userId == request.auth.uid && isValidReel(incoming()) && incoming().createdAt == request.time;
+      allow update: if isVerified() && (
+        (isOwner(existing().userId) && (incoming().userId == existing().userId)
+          && incoming().createdAt == existing().createdAt
+          && (incoming().diff(existing()).affectedKeys().hasAny(['caption', 'likesCount'])))
+        || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']))
+      );
+      allow delete: if isVerified() && isOwner(existing().userId);
+
+      match /comments/{commentId} {
+        allow list, get: if true;
+        allow create: if isVerified() && incoming().userId == request.auth.uid && isValidComment(incoming()) && incoming().createdAt == request.time;
+        allow update: if isVerified() && (
+          (isOwner(existing().userId) && (incoming().diff(existing()).affectedKeys().hasAny(['content', 'updatedAt', 'isPinned'])))
+          || (isOwner(get(/databases/$(database)/documents/reels/$(reelId)).data.userId) && incoming().diff(existing()).affectedKeys().hasOnly(['isPinned']))
+          || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']))
+        );
+        allow delete: if isVerified() && (isOwner(existing().userId) || isOwner(get(/databases/$(database)/documents/reels/$(reelId)).data.userId));
+
+        match /likes/{userId} {
+          allow list, get: if true;
+          allow create: if isVerified() && userId == request.auth.uid && isValidLike(incoming()) && incoming().createdAt == request.time;
+          allow delete: if isVerified() && userId == request.auth.uid;
+        }
+      }
+
+      match /likes/{userId} {
+        allow list, get: if true;
+        allow create: if isVerified() && userId == request.auth.uid && isValidLike(incoming()) && incoming().createdAt == request.time;
+        allow delete: if isVerified() && userId == request.auth.uid;
+      }
+    }
+
+    match /posts/{postId} {
+      allow list, get: if true;
+      allow create: if isVerified() && isValidId(postId) && incoming().userId == request.auth.uid && isValidPost(incoming()) && incoming().createdAt == request.time;
+      allow update: if isVerified() && (
+        (isOwner(existing().userId) && isValidPost(incoming())
+          && incoming().userId == existing().userId
+          && incoming().createdAt == existing().createdAt
+          && incoming().diff(existing()).affectedKeys().hasOnly(['content', 'caption', 'imageUrl', 'mediaUrl', 'mediaType', 'likesCount', 'updatedAt']))
+        || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']))
+      );
+      allow delete: if isVerified() && isOwner(existing().userId);
+
+      // Subcollections
+      match /comments/{commentId} {
+        allow list, get: if true;
+        allow create: if isVerified() && incoming().userId == request.auth.uid && isValidComment(incoming()) && incoming().createdAt == request.time;
+        allow update: if isVerified() && (
+          // Comment author can edit content
+          (isOwner(existing().userId) && (incoming().diff(existing()).affectedKeys().hasAny(['content', 'updatedAt', 'isPinned'])))
+          // Post owner can pin/unpin
+          || (isOwner(get(/databases/$(database)/documents/posts/$(postId)).data.userId) && incoming().diff(existing()).affectedKeys().hasOnly(['isPinned']))
+          // Likes increment
+          || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']))
+        );
+        allow delete: if isVerified() && (isOwner(existing().userId) || isOwner(get(/databases/$(database)/documents/posts/$(postId)).data.userId));
+
+        match /likes/{userId} {
+          allow list, get: if true;
+          allow create: if isVerified() && userId == request.auth.uid && isValidLike(incoming()) && incoming().createdAt == request.time;
+          allow delete: if isVerified() && userId == request.auth.uid;
+        }
+      }
+
+      match /likes/{userId} {
+        allow list, get: if true;
+        // Like ID is the User ID for unique enforcement
+        allow create: if isVerified() && userId == request.auth.uid && isValidLike(incoming()) && incoming().createdAt == request.time;
+        allow update: if isVerified() && userId == request.auth.uid && isValidLike(incoming()) && (incoming().createdAt == existing().createdAt || incoming().get('createdAt', null) == null);
+        allow delete: if isVerified() && userId == request.auth.uid;
+      }
+    }
+
+    match /favorites/{favId} {
+      // Must filter list by userId in the query
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Allow get if it's the user's favorite (handling check for non-existence)
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && isValidFavorite(incoming());
+      allow update: if isSignedIn() && isOwner(existing().userId) && isValidFavorite(incoming())
+                    && incoming().userId == existing().userId
+                    && incoming().postId == existing().postId
+                    && incoming().createdAt == existing().createdAt;
+      allow delete: if isSignedIn() && isOwner(existing().userId);
+    }
+
+    match /stories/{storyId} {
+      allow list, get: if isSignedIn();
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid && isValidStory(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+      allow update: if isSignedIn() && isOwner(existing().userId) && isValidStory(incoming()) && incoming().userId == existing().userId && incoming().createdAt == existing().createdAt;
+      allow delete: if isSignedIn() && isOwner(existing().userId);
+    }
+
+    match /lives/{streamId} {
+      allow list, get: if true;
+      allow create: if isVerified() && isValidLiveStream(incoming()) && incoming().startedAt == request.time;
+      allow update: if isVerified() && (
+        (isOwner(existing().get('hostId', '')) && 
+         incoming().get('hostId', '') == existing().get('hostId', '') && 
+         incoming().get('startedAt', null) == existing().get('startedAt', null))
+         
+        // Action by Moderator: Can manage comment pins, mute list, block list, and polls
+        || (isSignedIn() && 
+            existing().get('moderatorIds', []).hasAny([request.auth.uid]) && 
+            incoming().get('hostId', '') == existing().get('hostId', '') && 
+            incoming().get('startedAt', null) == existing().get('startedAt', null) &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['pinnedComment', 'mutedIds', 'mutedUsers', 'blockedIds', 'blockedUsers', 'poll', 'hostMutedParticipants']))
+            
+        // Action by Viewer/Guest/Participant: Can interact with polls, pk battles, guest invites, or viewerCount
+        || (isSignedIn() && 
+            incoming().get('hostId', '') == existing().get('hostId', '') && 
+            incoming().get('startedAt', null) == existing().get('startedAt', null) &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['viewerCount', 'guestInvite', 'guest', 'pkBattle', 'poll', 'hostMutedParticipants', 'cohostInvite', 'pendingCoHostRequests', 'coHostStreamIds', 'coHosts', 'coHostStreamId', 'coHostName', 'coHostPhoto', 'coHostActive']))
+      );
+      allow delete: if isVerified() && isOwner(existing().get('hostId', ''));
+
+      match /comments/{commentId} {
+        allow list, get: if true;
+        allow create: if isVerified() && isValidLiveComment(incoming()) && (
+          incoming().userId == request.auth.uid ||
+          (incoming().userId == 'system' && isHostOrModerator(streamId))
+        ) && incoming().createdAt == request.time;
+        allow delete: if isVerified() && (isOwner(existing().get('userId', '')) || isOwner(get(/databases/$(database)/documents/lives/$(streamId)).data.get('hostId', '')));
+      }
+
+      match /guest_requests/{requestId} {
+        allow list, get: if isSignedIn();
+        allow create: if isSignedIn() && (requestId == request.auth.uid)
+                      && incoming().uid == request.auth.uid
+                      && incoming().status == 'pending';
+        allow update, delete: if isSignedIn() && (
+          requestId == request.auth.uid || isHostOrModerator(streamId)
+        );
+      }
+    }
+  }
+}

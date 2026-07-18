@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --bg-main: #000;
+  --bg-card: #09090b;
+  --bg-item: #18181b;
+  --text-main: #fff;
+  --text-muted: #71717a;
+  --border-main: #27272a;
+}
+
+.light {
+  --bg-main: #f4f4f5;
+  --bg-card: #ffffff;
+  --bg-item: #f1f1f1;
+  --text-main: #09090b;
+  --text-muted: #71717a;
+  --border-main: #e4e4e7;
+}
+
+/* Light mode overrides for common dark tailwind classes */
+.light .bg-zinc-950,
+.light .bg-black { 
+  background-color: var(--bg-main) !important; 
+}
+
+.light .bg-zinc-900 { 
+  background-color: var(--bg-card) !important; 
+}
+
+.light .bg-zinc-800 {
+  background-color: var(--bg-item) !important;
+}
+
+.light .text-white,
+.light .text-zinc-50,
+.light .text-zinc-100,
+.light .text-zinc-200,
+.light .text-zinc-300,
+.light .text-slate-50,
+.light .text-slate-100,
+.light .text-slate-200,
+.light .text-slate-300,
+.light .text-neutral-50,
+.light .text-neutral-100,
+.light .text-neutral-200,
+.light .text-neutral-300 { 
+  color: var(--text-main) !important; 
+}
+
+.light .text-zinc-400,
+.light .text-zinc-500,
+.light .text-slate-400,
+.light .text-slate-500,
+.light .text-neutral-400,
+.light .text-neutral-500 { 
+  color: var(--text-muted) !important; 
+}
+
+.light .border-zinc-900,
+.light .border-zinc-800,
+.light .border-zinc-700,
+.light .border-slate-800,
+.light .border-slate-700 { 
+  border-color: var(--border-main) !important; 
+}
+
+.light .bg-zinc-900\/50,
+.light .bg-zinc-950\/80,
+.light .bg-zinc-900\/80,
+.light .bg-black\/80,
+.light .bg-black\/50,
+.light .bg-black\/40 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.light .shadow-xl {
+  shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Fix for icons and specific buttons in dark mode that should stay dark/light */
+.light .bg-blue-500 .text-white,
+.light .bg-blue-600 .text-white,
+.light .md\:bg-blue-600 .text-white,
+.light .bg-red-500 .text-white,
+.light .bg-red-600 .text-white,
+.light .bg-emerald-500 .text-white,
+.light .bg-emerald-600 .text-white,
+.light .bg-blue-500 *,
+.light .bg-blue-600 *,
+.light .md\:bg-blue-600 *,
+.light .bg-red-500 *,
+.light .bg-red-600 *,
+.light .bg-emerald-500 *,
+.light .bg-emerald-600 * {
+  color: white !important;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#root {
+  width: 100%;
+}
+
+@layer utilities {
+  .animate-bounce-once {
+    animation: bounce-once 0.5s ease-in-out;
+  }
+
+  @keyframes bounce-once {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+
+  @keyframes scrollbar-bounce-top {
+    0% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(6px);
+    }
+    60% {
+      transform: translateY(-1px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scrollbar-bounce-bottom {
+    0% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-6px);
+    }
+    60% {
+      transform: translateY(1px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .custom-scrollbar.bounce-top {
+    animation: scrollbar-bounce-top 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: top center;
+    position: relative;
+    z-index: 10;
+    scroll-behavior: smooth;
+  }
+
+  .custom-scrollbar.bounce-bottom {
+    animation: scrollbar-bounce-bottom 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: bottom center;
+    position: relative;
+    z-index: 10;
+    scroll-behavior: smooth;
+  }
+
+  .custom-scrollbar.bounce-top::-webkit-scrollbar-thumb,
+  .custom-scrollbar.bounce-bottom::-webkit-scrollbar-thumb {
+    background: #3b82f6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transition: background 0.2s ease;
+  }
+}
+
+/* Custom transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Custom button active state */
+.send-comment-button:active {
+  transform: scale(0.9) !important;
+}
+
+/* Increase border-radius for .rounded-3xl to look softer and more fluid */
+.rounded-3xl {
+  border-radius: 2.25rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 16px -6px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Chat Screen Light Mode Robustness */
+.light .chat-sent-bubble {
+  background: #2563eb !important; /* bg-blue-600 */
+}
+.light .chat-sent-bubble,
+.light .chat-sent-bubble * {
+  color: #ffffff !important;
+}
+.light .chat-sent-bubble svg {
+  fill: #2563eb !important;
+}
+
+.light .chat-received-bubble {
+  background-color: #e4e4e7 !important; /* bg-zinc-200 */
+  border-color: #d4d4d8 !important; /* border-zinc-300 */
+}
+.light .chat-received-bubble,
+.light .chat-received-bubble * {
+  color: #09090b !important; /* text-zinc-900 */
+}
+.light .chat-received-bubble svg {
+  fill: #e4e4e7 !important;
+}
+
+/* Ensure names and subtext of messages outside bubble are properly visible */
+.light .chat-message-time {
+  color: #52525b !important; /* text-zinc-600 */
+}
+.light .chat-sender-name {
+  color: #1d4ed8 !important; /* text-blue-700 */
+}
+
+/* Input bar light mode styles */
+.light .chat-input-field {
+  background-color: #f4f4f5 !important;
+  color: #09090b !important;
+  border-color: #e4e4e7 !important;
+}
+.light .chat-input-field::placeholder {
+  color: #71717a !important;
+}
+
+
