@@ -3,12 +3,21 @@ import GroupCallScreen from './components/GroupCallScreen';
 import LiveStreamScreen from './components/LiveStreamScreen';
 import PrivateCallScreen from './components/PrivateCallScreen';
 
+// تصدير الشاشة المفقودة التي يطلبها المكون GroupCallScreen
+export function UserProfileScreen() {
+  return (
+    <div className="p-4 bg-slate-800 rounded-lg text-center">
+      <h2 className="text-xl font-bold">ملف المستخدم (قيد التطوير)</h2>
+    </div>
+  );
+}
+
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<'group' | 'live' | 'private'>('group');
 
   return (
     <div className="flex h-screen w-screen flex-col bg-slate-900 text-white overflow-hidden">
-      {/* شريط التنقل العلوي المؤقت للتجربة */}
+      {/* شريط التنقل العلوي للتجربة */}
       <div className="flex justify-around bg-slate-800 p-3 border-b border-slate-700 text-sm font-semibold z-50">
         <button 
           onClick={() => setCurrentScreen('group')} 
@@ -30,7 +39,7 @@ export default function App() {
         </button>
       </div>
 
-      {/* عرض الشاشة المختارة ديناميكياً */}
+      {/* عرض الشاشة ديناميكياً */}
       <div className="flex-1 w-full h-full relative overflow-y-auto">
         {currentScreen === 'group' && <GroupCallScreen />}
         {currentScreen === 'live' && <LiveStreamScreen />}
