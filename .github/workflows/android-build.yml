@@ -11,7 +11,7 @@ jobs:
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
       - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu @capacitor/cli @capacitor/android
-      - run: TSC_COMPILE_ON_ERROR=true npm run build || true
+      - run: npx vite build
       - run: rm -rf android
       - run: npx cap init TruCast com.trucast.app --web-dir=dist || true
       - run: npx cap add android
