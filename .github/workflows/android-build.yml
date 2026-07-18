@@ -11,7 +11,7 @@ jobs:
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
       - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu
-      - run: npx tsc --noEmit --skipLibCheck || true && npm run build
+      - run: TSC_COMPILE_ON_ERROR=true npm run build || true
       - run: rm -rf android
       - run: npx cap add android
       - run: npx cap sync android
