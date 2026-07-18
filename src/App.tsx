@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import GroupCallScreen from './components/GroupCallScreen';
-import LiveStreamScreen from './components/LiveStreamScreen';
-import PrivateCallScreen from './components/PrivateCallScreen';
+import { GroupCallScreen } from './components/GroupCallScreen';
+import { LiveStreamScreen } from './components/LiveStreamScreen';
+import { PrivateCallScreen } from './components/PrivateCallScreen';
 
-// تصدير الشاشة المفقودة التي يطلبها المكون GroupCallScreen
+// تصدير الشاشة المفقودة
 export function UserProfileScreen() {
   return (
     <div className="p-4 bg-slate-800 rounded-lg text-center">
@@ -41,9 +41,9 @@ export default function App() {
 
       {/* عرض الشاشة ديناميكياً */}
       <div className="flex-1 w-full h-full relative overflow-y-auto">
-        {currentScreen === 'group' && <GroupCallScreen />}
-        {currentScreen === 'live' && <LiveStreamScreen />}
-        {currentScreen === 'private' && <PrivateCallScreen />}
+        {currentScreen === 'group' && GroupCallScreen && React.createElement(GroupCallScreen)}
+        {currentScreen === 'live' && LiveStreamScreen && React.createElement(LiveStreamScreen)}
+        {currentScreen === 'private' && PrivateCallScreen && React.createElement(PrivateCallScreen)}
       </div>
     </div>
   );
