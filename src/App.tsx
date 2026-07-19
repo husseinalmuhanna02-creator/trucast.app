@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { GroupCallScreen } from './components/GroupCallScreen';
-import { LiveStreamScreen } from './components/LiveStreamScreen';
-import { PrivateCallScreen } from './components/PrivateCallScreen';
 
-// تصدير مسمى كما يطلبه GroupCallScreen
+// 1. استيراد مسمى (بأقواس) لأن GroupCallScreen يطلبه هكذا
+import { GroupCallScreen } from './components/GroupCallScreen';
+
+// 2. استيراد افتراضي (بدون أقواس) لأن LiveStreamScreen و Private يطلبونه هكذا
+import LiveStreamScreen from './components/LiveStreamScreen';
+import PrivateCallScreen from './components/PrivateCallScreen';
+
+// تصدير الشاشة الوهمية التي يطلبها GroupCallScreen
 export function UserProfileScreen() {
-  return <div className="p-4 text-center">User Profile</div>;
+  return <div className="p-4 text-center">User Profile (قيد التطوير)</div>;
 }
 
 export default function App() {
