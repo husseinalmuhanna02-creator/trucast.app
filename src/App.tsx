@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, signInWithPopup, User } from 'firebase/auth';
-import { auth, googleProvider } from './firebase'; 
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from 'firebase/auth';
+import { auth } from './firebase'; 
 
 import { GroupCallScreen } from './components/GroupCallScreen';
 import { LiveStreamScreen } from './components/LiveStreamScreen';
 import { PrivateCallScreen } from './components/PrivateCallScreen';
 
-// 1. إعادة تصدير UserProfileScreen لحل مشكلة الاستيراد في GroupCallScreen
 export function UserProfileScreen({ user }: { user: User | null }) {
   if (!user) return null;
   return (
     <div className="flex flex-col items-center justify-center h-full p-8">
-      {user.photoURL && (
-        <img src={user.photoURL} alt="Profile" className="w-24 h-24 rounded-full mb-4 border-2 border-blue-500 shadow-lg" />
-      )}
-      <h2 className="text-2xl font-bold mb-2">{user.displayName || 'مستخدم TruCast'}</h2>
+      <div className="w-24 h-24 rounded-full mb-4 bg-blue-600 flex items-center justify-center shadow-lg text-white text-3xl font-bold">
+        {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+      </div>
+      <h2 className="text-xl font-bold mb-2 text-white">حسابي</h2>
       <p className="text-gray-400 mb-8">{user.email}</p>
       <button 
         onClick={() => auth.signOut()} 
-        className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold transition-colors"
+        className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold transition-colors shadow-lg"
       >
         تسجيل الخروج
       </button>
@@ -26,7 +25,6 @@ export function UserProfileScreen({ user }: { user: User | null }) {
   );
 }
 
-// 2. اللوحة الرئيسية (Dashboard) التي تحتوي على جميع الخيارات
 function Dashboard({ onNavigate }: { onNavigate: (tab: any) => void }) {
   return (
     <div className="p-6 flex flex-col items-center justify-center h-full space-y-8">
@@ -50,11 +48,16 @@ function Dashboard({ onNavigate }: { onNavigate: (tab: any) => void }) {
   );
 }
 
-// 3. التطبيق الأساسي
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState<'dashboard' | 'group' | 'live' | 'private' | 'profile'>('dashboard');
+
+  // حالات شاشة تسجيل الدخول
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -64,31 +67,74 @@ export default function App() {
     return unsubscribe;
   }, []);
 
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    try {
+      if (isLoginMode) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error: any) {
+      console.error(error);
+      setAuthError('تأكد من صحة البيانات أو من أن كلمة المرور تزيد عن 6 أحرف.');
+    }
+  };
+
   if (loading) {
     return <div className="flex h-screen items-center justify-center bg-slate-900 text-white font-bold text-xl">جاري التحميل...</div>;
   }
 
-  // واجهة تسجيل الدخول
+  // واجهة تسجيل الدخول المدمجة (لن تفتح متصفحاً خارجياً)
   if (!user) {
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-900 text-white p-6">
-        <div className="bg-blue-600 p-4 rounded-full mb-6">
-          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-        </div>
-        <h1 className="text-4xl font-extrabold mb-2">TruCast</h1>
-        <p className="text-slate-400 mb-10 text-center">منصتك الآمنة للمكالمات والبث المباشر</p>
-        <button onClick={() => signInWithPopup(auth, googleProvider)} className="bg-white text-slate-900 font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-3 hover:bg-slate-100 transition-colors">
-          <svg className="w-6 h-6" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0124 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
-          تسجيل الدخول باستخدام جوجل
-        </button>
+        <h1 className="text-4xl font-extrabold mb-8 text-blue-500">TruCast</h1>
+        
+        <form onSubmit={handleEmailAuth} className="w-full max-w-sm bg-slate-800 p-6 rounded-3xl shadow-2xl flex flex-col gap-5 border border-slate-700">
+          <h2 className="text-2xl font-bold text-center text-white mb-2">
+            {isLoginMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
+          </h2>
+          
+          {authError && <div className="bg-red-500/20 text-red-400 p-3 rounded-lg text-sm text-center border border-red-500/50">{authError}</div>}
+
+          <input 
+            type="email" 
+            placeholder="البريد الإلكتروني" 
+            value={email} 
+            onChange={e => setEmail(e.target.value)} 
+            className="p-4 rounded-xl bg-slate-900 text-white border border-slate-600 focus:outline-none focus:border-blue-500 transition-colors" 
+            required 
+          />
+          <input 
+            type="password" 
+            placeholder="كلمة المرور" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            className="p-4 rounded-xl bg-slate-900 text-white border border-slate-600 focus:outline-none focus:border-blue-500 transition-colors" 
+            required 
+            minLength={6} 
+          />
+          
+          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-transform transform active:scale-95 shadow-lg mt-2">
+            {isLoginMode ? 'دخول' : 'إنشاء حساب'}
+          </button>
+          
+          <button 
+            type="button" 
+            onClick={() => { setIsLoginMode(!isLoginMode); setAuthError(''); }} 
+            className="text-sm text-slate-400 hover:text-white mt-2 pb-2"
+          >
+            {isLoginMode ? 'لا تملك حساباً؟ أنشئ حساب جديد' : 'لديك حساب بالفعل؟ سجل دخولك'}
+          </button>
+        </form>
       </div>
     );
   }
 
   return (
     <div className="flex h-screen w-screen flex-col bg-slate-900 text-white overflow-hidden pb-16 relative">
-      
-      {/* منطقة عرض الشاشات */}
       <div className="flex-1 w-full h-full relative overflow-y-auto">
         {currentTab === 'dashboard' && <Dashboard onNavigate={setCurrentTab} />}
         {currentTab === 'group' && <GroupCallScreen />}
@@ -97,22 +143,20 @@ export default function App() {
         {currentTab === 'profile' && <UserProfileScreen user={user} />}
       </div>
 
-      {/* الشريط السفلي موجود دائماً للوصول السريع */}
-      <div className="absolute bottom-0 left-0 w-full flex justify-around items-center bg-slate-800 h-16 border-t border-slate-700 z-50">
-        <button onClick={() => setCurrentTab('dashboard')} className={`flex flex-col items-center justify-center w-full h-full ${currentTab === 'dashboard' ? 'text-blue-500' : 'text-slate-400'}`}>
+      <div className="absolute bottom-0 left-0 w-full flex justify-around items-center bg-slate-800 h-16 border-t border-slate-700 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <button onClick={() => setCurrentTab('dashboard')} className={`flex flex-col items-center justify-center w-full h-full transition-colors ${currentTab === 'dashboard' ? 'text-blue-500' : 'text-slate-400'}`}>
            <span className="font-bold text-sm">الرئيسية</span>
         </button>
-        <button onClick={() => setCurrentTab('group')} className={`flex flex-col items-center justify-center w-full h-full ${currentTab === 'group' ? 'text-blue-500' : 'text-slate-400'}`}>
+        <button onClick={() => setCurrentTab('group')} className={`flex flex-col items-center justify-center w-full h-full transition-colors ${currentTab === 'group' ? 'text-blue-500' : 'text-slate-400'}`}>
            <span className="font-bold text-sm">مجموعة</span>
         </button>
-        <button onClick={() => setCurrentTab('live')} className={`flex flex-col items-center justify-center w-full h-full ${currentTab === 'live' ? 'text-blue-500' : 'text-slate-400'}`}>
-           <span className="font-bold text-sm">بث مباشر</span>
+        <button onClick={() => setCurrentTab('live')} className={`flex flex-col items-center justify-center w-full h-full transition-colors ${currentTab === 'live' ? 'text-blue-500' : 'text-slate-400'}`}>
+           <span className="font-bold text-sm">بث</span>
         </button>
-        <button onClick={() => setCurrentTab('profile')} className={`flex flex-col items-center justify-center w-full h-full ${currentTab === 'profile' ? 'text-blue-500' : 'text-slate-400'}`}>
+        <button onClick={() => setCurrentTab('profile')} className={`flex flex-col items-center justify-center w-full h-full transition-colors ${currentTab === 'profile' ? 'text-blue-500' : 'text-slate-400'}`}>
            <span className="font-bold text-sm">حسابي</span>
         </button>
       </div>
-
     </div>
   );
 }
