@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import GroupCallScreen from './components/GroupCallScreen';
-import LiveStreamScreen from './components/LiveStreamScreen';
-import PrivateCallScreen from './components/PrivateCallScreen';
-
-// إضافة تعريف بسيط لتجنب خطأ التصدير المفقود
-export function UserProfileScreen() {
-  return <div className="p-4 text-center">User Profile</div>;
-}
+import { GroupCallScreen } from './components/GroupCallScreen';
+import { LiveStreamScreen } from './components/LiveStreamScreen';
+import { PrivateCallScreen } from './components/PrivateCallScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<'group' | 'live' | 'private'>('group');
