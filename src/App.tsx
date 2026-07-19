@@ -3,6 +3,11 @@ import { GroupCallScreen } from './components/GroupCallScreen';
 import { LiveStreamScreen } from './components/LiveStreamScreen';
 import { PrivateCallScreen } from './components/PrivateCallScreen';
 
+// تصدير مسمى كما يطلبه GroupCallScreen
+export function UserProfileScreen() {
+  return <div className="p-4 text-center">User Profile</div>;
+}
+
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<'group' | 'live' | 'private'>('group');
 
