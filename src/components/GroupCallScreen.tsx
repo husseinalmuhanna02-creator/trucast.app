@@ -1714,6 +1714,15 @@ export const GroupCallScreen = ({
     };
   }, [currentUser, call.id, chat.id]);
 
+  if (callError) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-6">
+      <h3 className="text-xl font-bold text-red-500">حدث خطأ في المكالمة:</h3>
+      <p>{callError}</p>
+      <button onClick={onClose} className="bg-zinc-800 p-4 rounded-xl mt-4">إغلاق</button>
+    </div>
+  );
+  }
   if (!client || !streamCall) {
     return (
       <div className="fixed inset-0 w-full h-screen bg-slate-950 text-white p-6 z-[999] flex flex-col items-center justify-center font-sans">
