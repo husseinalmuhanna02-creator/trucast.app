@@ -1642,6 +1642,7 @@ export const GroupCallScreen = ({
   const [streamCall, setStreamCall] = useState<any>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const { t } = useLanguage();
+  const [callError, setCallError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!currentUser) return;
