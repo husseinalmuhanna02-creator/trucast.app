@@ -1691,7 +1691,8 @@ export const GroupCallScreen = ({
         }
         setStreamCall(myCall);
       } catch (err: any) {
-        console.error("Error joining Stream Video Call in GroupCallScreen:", err);
+      console.error("Error joining Stream Video Call in GroupCallScreen:", err);
+      setCallError(err.message || "حدث خطأ غير معروف");
       }
     };
 
