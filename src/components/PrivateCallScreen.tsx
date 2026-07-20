@@ -32,7 +32,6 @@ import {
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import { getApiUrl } from '../config';
 
-// Simple whiteboard sub-component
 const WhiteboardPanel = ({ onClose }: { onClose: () => void }) => {
   const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -123,7 +122,6 @@ const WhiteboardPanel = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-// Sub-component to safely consume Stream Video contexts/hooks
 const PrivateCallContent = ({ 
   currentUser,
   chat,
@@ -397,7 +395,6 @@ const PrivateCallContent = ({
     </div>
   );
 };
-
 export const PrivateCallScreen = ({
   currentUser,
   chat,
@@ -415,7 +412,6 @@ export const PrivateCallScreen = ({
   const [client, setClient] = useState<StreamVideoClient | null>(null);
   const [streamCall, setStreamCall] = useState<any>(null);
   
-  // المتغير الجديد لالتقاط الأخطاء وعرضها للمستخدم
   const [callError, setCallError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -491,7 +487,6 @@ export const PrivateCallScreen = ({
         setStreamCall(myCall);
       } catch (err: any) {
         console.error("Error joining Stream Video Call:", err);
-        // تسجيل الخطأ ليظهر على الشاشة بدل الدوران اللانهائي
         setCallError(err.message || "حدث خطأ غير معروف أثناء تهيئة المكالمة");
       }
     };
@@ -505,7 +500,6 @@ export const PrivateCallScreen = ({
     };
   }, [currentUser, call.id, chat.id]);
 
-  // عرض واجهة الخطأ إذا فشل الاتصال
   if (callError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-6 relative font-sans" dir="rtl">
@@ -517,4 +511,40 @@ export const PrivateCallScreen = ({
         </div>
         <h3 className="text-xl font-black mb-3 text-red-400">فشل بدء المكالمة</h3>
         <p className="text-zinc-300 font-bold text-sm text-center max-w-sm mb-8 leading-relaxed">
-          {callEr
+          {callError}
+        </p>
+        <button onClick={onClose} className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-black transition-colors">
+          عودة للدردشة
+        </button>
+      </div>
+    );
+  }
+
+  if (!client || !streamCall) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-6 relative">
+        <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-zinc-900/85 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-full transition-all border border-zinc-800/50">
+          <X className="w-5 h-5" />
+        </button>
+        <div className="flex flex-col items-center max-w-sm text-center">
+          <div className="relative mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+            <Video className="w-6 h-6 text-indigo-500 absolute inset-0 m-auto animate-pulse" />
+          </div>
+          <h3 className="text-xl font-black mb-2">{t("جاري بدء الاتصال...")}</h3>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-screen bg-slate-950 flex flex-col relative overflow-hidden">
+      <StreamVideo client={client}>
+        <StreamCall call={streamCall}>
+          <PrivateCallContent currentUser={currentUser} chat={chat} callSession={call} onClose={onClose} />
+        </StreamCall>
+      </StreamVideo>
+    </div>
+  );
+};
+            
