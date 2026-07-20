@@ -377,7 +377,7 @@ const GroupCallContent = ({
   // Subscribe to participants in firestore to sync raised hands in real-time
   useEffect(() => {
     if (!chat?.id || !callSession?.id) return;
-    const partsColRef = collection(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants');
+    const partsColRef = collection(db, 'chats', chat.id, 'calls', callSession.id, 'participants');
     const unsubscribe = onSnapshot(partsColRef, (snapshot) => {
       const raisedIds: string[] = [];
       snapshot.docs.forEach(docSnap => {
@@ -397,7 +397,7 @@ const GroupCallContent = ({
   useEffect(() => {
     if (!chat?.id || !callSession?.id || !call) return;
 
-    const callDocRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id);
+    const callDocRef = doc(db, 'chats', chat.id, 'calls', callSession.id);
     const unsubscribe = onSnapshot(callDocRef, async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
@@ -543,7 +543,7 @@ const GroupCallContent = ({
         });
 
         // Update hand raise state and mute state in Firestore
-        const partRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants', targetUserId);
+        const partRef = doc(db, 'chats', chat.id, 'calls', callSession.id, 'participants', targetUserId);
         await updateDoc(partRef, {
           isHandRaised: false,
           isMuted: false,
@@ -579,7 +579,7 @@ const GroupCallContent = ({
         });
 
         // Update hand raise state and mute state in Firestore
-        const partRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants', targetUserId);
+        const partRef = doc(db, 'chats', chat.id, 'calls', callSession.id, 'participants', targetUserId);
         await updateDoc(partRef, {
           isHandRaised: false,
           isMuted: true,
@@ -635,14 +635,14 @@ const GroupCallContent = ({
     try {
       if (chat?.id && callSession?.id) {
         // Mark the call session as inactive
-        await updateDoc(doc(db, 'chats', chat?.id, 'calls', callSession?.id), { 
+        await updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), { 
           active: false,
           status: 'ended',
           endedAt: serverTimestamp()
         }).catch(err => console.warn("Firestore status update failed:", err));
         
         // Clear active call fields on parent chat
-        await updateDoc(doc(db, 'chats', chat?.id), {
+        await updateDoc(doc(db, 'chats', chat.id), {
           activeCallId: null,
           activeCallHostId: null,
           activeCallHostName: null,
@@ -1154,7 +1154,7 @@ const GroupCallContent = ({
                               }
                               
                               if (chat?.id) {
-                                const chatRef = doc(db, 'chats', chat?.id);
+                                const chatRef = doc(db, 'chats', chat.id);
                                 await updateDoc(chatRef, {
                                   participants: arrayRemove(targetUserId),
                                   bannedMembers: arrayUnion(targetUserId)
@@ -1162,7 +1162,7 @@ const GroupCallContent = ({
                               }
 
                               if (chat?.id && callSession?.id) {
-                                const partRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants', targetUserId);
+                                const partRef = doc(db, 'chats', chat.id, 'calls', callSession.id, 'participants', targetUserId);
                                 try {
                                   await deleteDoc(partRef);
                                 } catch (partErr) {
@@ -1345,7 +1345,7 @@ const GroupCallContent = ({
                           }
                           // Update hand raise state in Firestore
                           if (currentUser?.uid && chat?.id && callSession?.id) {
-                            const partRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants', currentUser.uid);
+                            const partRef = doc(db, 'chats', chat.id, 'calls', callSession.id, 'participants', currentUser.uid);
                             updateDoc(partRef, {
                               isHandRaised: true
                             }).catch((err) => console.warn("Failed to update hand raise in firestore:", err));
@@ -1401,7 +1401,7 @@ const GroupCallContent = ({
                 }
                 // Update hand raise state in Firestore
                 if (currentUser?.uid && chat?.id && callSession?.id) {
-                  const partRef = doc(db, 'chats', chat?.id, 'calls', callSession?.id, 'participants', currentUser.uid);
+                  const partRef = doc(db, 'chats', chat.id, 'calls', callSession.id, 'participants', currentUser.uid);
                   updateDoc(partRef, {
                     isHandRaised: true
                   }).catch((err) => console.warn("Failed to update hand raise in firestore:", err));
@@ -1677,7 +1677,7 @@ export const GroupCallScreen = ({
         setClient(streamClient);
 
         // Second: Join the dynamic group call channel
-        const channelName = call?.id || chat?.id || "group_call";
+        const channelName = call.id || chat.id || "group_call";
         myCall = streamClient.call('default', channelName);
 
         await myCall.join({ create: true });
@@ -1710,7 +1710,7 @@ export const GroupCallScreen = ({
         });
       }
     };
-  }, [currentUser, call?.id, chat?.id]);
+  }, [currentUser, call.id, chat.id]);
 
   if (!client || !streamCall) {
     return (

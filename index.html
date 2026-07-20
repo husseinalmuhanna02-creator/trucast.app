@@ -2,26 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TruCast</title>
-    <script>
-      // أداة لاصطياد الأخطاء وعرضها على الشاشة لتسهيل تتبعها عبر الهاتف
-      window.addEventListener("error", function(e) {
-        var d = document.createElement("div");
-        d.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:#8b0000;color:white;z-index:9999;padding:20px;overflow:auto;font-family:monospace;direction:ltr;text-align:left;";
-        d.innerHTML = "<h3>🔴 App Crashed!</h3><p><b>Error:</b> " + e.message + "</p><p><b>File:</b> " + e.filename + "</p>";
-        document.body.appendChild(d);
-      });
-      window.addEventListener("unhandledrejection", function(e) {
-        var d = document.createElement("div");
-        d.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:#cc5500;color:white;z-index:9999;padding:20px;overflow:auto;font-family:monospace;direction:ltr;text-align:left;";
-        d.innerHTML = "<h3>🟠 Promise Failed!</h3><p><b>Reason:</b> " + (e.reason ? (e.reason.message || JSON.stringify(e.reason)) : "Unknown") + "</p>";
-        document.body.appendChild(d);
-      });
-    </script>
   </head>
-  <body>
+  <body class="bg-black text-white">
     <div id="root"></div>
+    <script>
+      window.process = window.process || { env: {} };
+      window.process.env = window.process.env || {};
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

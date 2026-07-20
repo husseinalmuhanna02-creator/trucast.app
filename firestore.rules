@@ -182,8 +182,16 @@ service cloud.firestore {
 
     function isValidReport(data) {
       return data.reporterId == request.auth.uid
-        && data.reportedUserId is string
-        && data.messageId is string
+        && (data.get('reportedUserId', null) == null || data.reportedUserId is string)
+        && (data.get('reportedId', null) == null || data.reportedId is string)
+        && (data.get('messageId', null) == null || data.messageId is string)
+        && (data.get('postId', null) == null || data.postId is string)
+        && (data.get('reporterName', null) == null || data.reporterName is string)
+        && (data.get('reportedName', null) == null || data.reportedName is string)
+        && (data.get('postContent', null) == null || data.postContent is string)
+        && (data.get('type', null) == null || data.type is string)
+        && (data.get('details', null) == null || data.details is string)
+        && (data.get('status', null) == null || data.status is string)
         && data.reason is string
         && data.createdAt == request.time;
     }

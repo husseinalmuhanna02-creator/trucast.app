@@ -4,13 +4,13 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyDT9rmhGW6TEBKk6S0GQ9GZvn4DnQuBuJ4",
+  authDomain: "trucast-3d3d2.firebaseapp.com",
+  projectId: "trucast-3d3d2",
+  storageBucket: "trucast-3d3d2.firebasestorage.app",
+  messagingSenderId: "160134519481",
+  appId: "1:160134519481:web:3475459a5c3c54d0db1968",
+  measurementId: "G-K9ZQRQR46N"
 };
 
 const app = initializeApp(firebaseConfig);
