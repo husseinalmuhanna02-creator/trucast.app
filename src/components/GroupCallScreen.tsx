@@ -1652,45 +1652,15 @@ export const GroupCallScreen = ({
     let myCall: any = null;
 
         const initStream = async () => {
-    try {
-      if (!active) return;
+  try {
+    if (!active) return;
+    // ... باقي الكود
+  } catch (err: any) {
+    // ...
+  }
+};
+initStream();
 
-      const apiKey = "93v2eu284nry"; 
-      
-      const user = {
-        id: currentUser.uid,
-        name: currentUser.displayName || 'مستخدم TruCast',
-        image: currentUser.photoURL || '',
-      };
-
-      const client = new StreamVideoClient({
-        apiKey,
-        user,
-        tokenProvider: async (): Promise<string> => token,
-      });
-
-      streamClient = client;
-      setClient(streamClient);
-
-      const channelName = call.id || chat.id || "group_call";
-      myCall = streamClient.call('default', channelName);
-
-      await myCall.join({ create: true });
-      await myCall.camera.disable(); // إغلاق الكاميرا فوراً بعد الانضمام
-
-      if (!active) {
-        myCall.leave().catch(() => {});
-        streamClient.disconnectUser().catch(() => {});
-        return;
-      }
-      setStreamCall(myCall);
-    } catch (err: any) {
-      console.error("Error joining Stream Video Call:", err);
-      setCallError(err.message || "حدث خطأ غير معروف");
-    }
-  };
-
-  initStream();
         const initStream = async () => {
   try {
     if (!active) return;
