@@ -1644,57 +1644,39 @@ export const GroupCallScreen = ({
   const { t } = useLanguage();
   const [callError, setCallError] = useState<string | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     if (!currentUser) return;
 
     let active = true;
-    let streamClient: StreamVideoClient | null = null;
-    let myCall: any = null;
 
-        const initStream = async () => {
-  try {
-    if (!active) return;
-    
-    // كل خطوات التهيئة والـ client هنا...
+    const initStream = async () => {
+      try {
+        if (!active) return;
+        if (!client) return;
 
-    const channelName = call?.id || chat?.id || "group_call";
-    myCall = client?.call('default', channelName);
+        const channelName = call?.id || chat?.id || "group_call";
+        const myCall = client.call('default', channelName);
 
-    if (myCall) {
-  await myCall.join({ create: true });
-  await myCall.camera.disable();
-}
-
-    if (!active) {
-      myCall.leave().catch(() => {});
-      client?.disconnectUser().catch(() => {});
-      return;
-    }
-    setStreamCall(myCall);
-  } catch (err: any) {
-    console.error("Error joining Stream Video Call:", err);
+        if (myCall) {
+          await myCall.join({ create: true });
+          await myCall.camera.disable();
+          
+          if (active) {
+            setStreamCall(myCall);
+          }
+        }
+      } catch (err: any) {
+        console.error("Error joining Stream Video Call:", err);
         setCallError(err.message || "حدث خطأ غير معروف");
-  }
-};
-
-initStream();
-
-    // Cleanup and leave call to release hardware immediately
-    return () => {
-      active = false;
-      if (myCall) {
-        myCall.leave().catch((err: any) => {
-          console.warn("Error leaving call in GroupCallScreen:", err);
-        });
-      }
-      if (client) {
-        client.disconnectUser().catch((err: any) => {
-          console.warn("Error disconnecting stream user:", err);
-        });
       }
     };
-    }, [currentUser, call, chat]);
 
+        initStream();
+
+    return () => {
+      active = false;
+    };
+  }, [currentUser, client, call, chat]);
 
   if (callError) {
   return (
