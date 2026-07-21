@@ -1676,18 +1676,40 @@ export const GroupCallScreen = ({
       console.error("Failed to initialize stream:", error);
     }
   };
-      try {
-        const response = await fetch(getApiUrl('/api/stream/credentials'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUser.uid }),
-        });
-        if (!response.ok) throw new Error('Failed to fetch stream credentials');
-        const { apiKey, token } = await response.json();
+        const initStream = async () => {
+    try {
+      if (!active) return;
 
-        if (!active) return;
+      const apiKey = "93v2eu284nry"; 
+      
+      const user = {
+        id: currentUser.uid,
+        name: currentUser.displayName || 'مستخدم TruCast',
+        image: currentUser.photoURL || '',
+      };
 
-        const user = {
+      console.log("Initializing Stream with user:", user);
+
+      // إنشاء عميل الفيديو للـ Stream مباشرة باستخدام الـ API Key و Token مؤقت (Development Token)
+      // ملاحظة: Stream يوفر طريقة لتوليد توكن تطويري للعميل مباشرة في وضع الاختبار
+      const client = new StreamVideoClient({
+        apiKey,
+        user,
+        token: StreamVideoClient.generateUserToken({ user_id: currentUser.uid }),
+      });
+
+      streamClient = client;
+      
+      // الانضمام للمكالمة مباشرة
+      const callInstance = client.call('default', callId);
+      await callInstance.join({ create: true });
+      myCall = callInstance;
+
+    } catch (error) {
+      console.error("Failed to initialize stream:", error);
+    }
+  };
+    const user = {
           id: currentUser.uid,
           name: currentUser.displayName || t('مستخدم'),
           image: currentUser.photoURL || '',
