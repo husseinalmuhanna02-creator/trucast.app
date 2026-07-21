@@ -1665,7 +1665,7 @@ export const GroupCallScreen = ({
 
     if (!active) {
       myCall.leave().catch(() => {});
-      streamClient.disconnectUser().catch(() => {});
+      client?.disconnectUser().catch(() => {});
       return;
     }
     setStreamCall(myCall);
