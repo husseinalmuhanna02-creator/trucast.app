@@ -1671,10 +1671,11 @@ export const GroupCallScreen = ({
     setStreamCall(myCall);
   } catch (err: any) {
     console.error("Error joining Stream Video Call:", err);
-    setCallError(err.message || "حدث خطأ غير معروف");
-    };
+        setCallError(err.message || "حدث خطأ غير معروف");
+  }
+};
 
-    initStream();
+initStream();
 
     // Cleanup and leave call to release hardware immediately
     return () => {
