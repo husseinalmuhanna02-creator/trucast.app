@@ -1691,22 +1691,29 @@ export const GroupCallScreen = ({
         setClient(streamClient);
 
         // Second: Join the dynamic group call channel
-        const channelName = call.id || chat.id || "group_call";
-        myCall = streamClient.call('default', channelName);
+        const initStream = async () => {
+  try {
+    if (!active) return;
+    
+    // كل خطوات التهيئة والـ client هنا...
 
-        await myCall.join({ create: true });
-        await myCall.camera.disable(); // إغلاق الكاميرا فوراً بعد الانضمام
+    const channelName = call.id || chat.id || "group_call";
+    myCall = streamClient.call('default', channelName);
 
-        if (!active) {
-          myCall.leave().catch(() => {});
-          streamClient.disconnectUser().catch(() => {});
-          return;
-        }
-        setStreamCall(myCall);
-      } catch (err: any) {
-      console.error("Error joining Stream Video Call in GroupCallScreen:", err);
-      setCallError(err.message || "حدث خطأ غير معروف");
-      }
+    await myCall.join({ create: true });
+    await myCall.camera.disable();
+
+    if (!active) {
+      myCall.leave().catch(() => {});
+      streamClient.disconnectUser().catch(() => {});
+      return;
+    }
+    setStreamCall(myCall);
+  } catch (err: any) {
+    console.error("Error joining Stream Video Call:", err);
+    setCallError(err.message || "حدث خطأ غير معروف");
+  }
+};
     };
 
     initStream();
