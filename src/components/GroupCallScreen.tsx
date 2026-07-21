@@ -1685,8 +1685,8 @@ initStream();
           console.warn("Error leaving call in GroupCallScreen:", err);
         });
       }
-      if (streamClient) {
-        streamClient.disconnectUser().catch((err: any) => {
+      if (client) {
+        client.disconnectUser().catch((err: any) => {
           console.warn("Error disconnecting stream user:", err);
         });
       }
