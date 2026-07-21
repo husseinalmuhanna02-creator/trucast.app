@@ -1649,24 +1649,35 @@ export const GroupCallScreen = ({
 
     let active = true;
 
-        const initStream = async () => {
+            const initStream = async () => {
       try {
         if (!active) return;
 
-        // 1. تهيئة العميل باستخدام المفتاح الخاص بك
         let activeClient = client;
         if (!activeClient) {
+          // جلب التصريح الأمني (Token) من الخادم
+          const response = await fetch('/api/stream/credentials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: currentUser.uid })
+          });
+          const data = await response.json();
+
+          if (!data.token) throw new Error("فشل في جلب التصريح الأمني");
+
+          // بناء العميل مع التصريح
           activeClient = new StreamVideoClient({ 
-            apiKey: "93v2eu284nry", 
+            apiKey: data.apiKey, 
             user: { 
               id: currentUser.uid, 
               name: currentUser.displayName || 'TruCast User' 
-            }
+            },
+            token: data.token
           });
           setClient(activeClient);
         }
 
-        // 2. إنشاء المكالمة والانضمام إليها
+        // الانضمام للمكالمة
         const channelName = call?.id || chat?.id || "group_call";
         const myCall = activeClient.call('default', channelName);
 
@@ -1675,7 +1686,7 @@ export const GroupCallScreen = ({
           await myCall.camera.disable();
           
           if (active) {
-            setStreamCall(myCall); // هذا سيخفي شاشة التحميل فوراً ويبدأ المكالمة
+            setStreamCall(myCall);
           }
         }
       } catch (err: any) {
