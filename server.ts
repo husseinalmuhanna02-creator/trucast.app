@@ -126,26 +126,14 @@ async function startServer() {
   }
 
   // API Routes
-  app.post('/api/stream/credentials', (req, res) => {
+    app.post('/api/stream/credentials', (req, res) => {
     const { userId } = req.body;
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
 
-    const customAppId = process.env.VITE_STREAM_APP_ID;
-    const streamSecret = process.env.STREAM_API_SECRET;
-
-    let apiKey = "20b134d1bc94473d9d300e8f3bf0040e"; // Fallback to demo app ID
-    let secret = "dev-signature"; // Default dummy secret for demo app ID
-
-    if (customAppId && customAppId !== "20b134d1bc94473d9d300e8f3bf0040e") {
-      if (streamSecret) {
-        apiKey = customAppId;
-        secret = streamSecret;
-      } else {
-        console.warn(`⚠️ VITE_STREAM_APP_ID is configured as "${customAppId}" but STREAM_API_SECRET is missing. Falling back to demo App ID "${apiKey}" to prevent token signature invalid errors.`);
-      }
-    }
+    const apiKey = "93v2eu284nry"; 
+    const secret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc"; 
 
     try {
       const token = generateStreamToken(userId, secret);
