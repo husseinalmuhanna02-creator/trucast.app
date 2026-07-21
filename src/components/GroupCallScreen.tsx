@@ -1651,7 +1651,31 @@ export const GroupCallScreen = ({
     let streamClient: StreamVideoClient | null = null;
     let myCall: any = null;
 
-    const initStream = async () => {
+      const initStream = async () => {
+    try {
+      if (!active) return;
+
+      // استخدام بيانات الـ API Key مباشرة من ملف الإعدادات
+      const apiKey = "93v2eu284nry"; 
+      
+      const user = {
+        id: currentUser.uid,
+        name: currentUser.displayName || 'مستخدم TruCast',
+        image: currentUser.photoURL || '',
+      };
+
+      // إذا كنت تستخدم التوكن المؤقت أو التوليد المباشر للاتصال بالمكالمة:
+      // ملاحظة: في بيئة العرض، يمكنك استخدام الدالة المباشرة لإنشاء العميل (StreamVideoClient)
+      
+      console.log("Initializing Stream with user:", user);
+      
+      // هنا يتم ربط العميل بالمكالمة مباشرة
+      // ... (أكمل باقي إعدادات المكالمة الخاصة بك هنا)
+
+    } catch (error) {
+      console.error("Failed to initialize stream:", error);
+    }
+  };
       try {
         const response = await fetch(getApiUrl('/api/stream/credentials'), {
           method: 'POST',
