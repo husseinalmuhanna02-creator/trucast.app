@@ -1649,20 +1649,33 @@ export const GroupCallScreen = ({
 
     let active = true;
 
-    const initStream = async () => {
+        const initStream = async () => {
       try {
         if (!active) return;
-        if (!client) return;
 
+        // 1. تهيئة العميل باستخدام المفتاح الخاص بك
+        let activeClient = client;
+        if (!activeClient) {
+          activeClient = new StreamVideoClient({ 
+            apiKey: "93v2eu284nry", 
+            user: { 
+              id: currentUser.uid, 
+              name: currentUser.displayName || 'TruCast User' 
+            }
+          });
+          setClient(activeClient);
+        }
+
+        // 2. إنشاء المكالمة والانضمام إليها
         const channelName = call?.id || chat?.id || "group_call";
-        const myCall = client.call('default', channelName);
+        const myCall = activeClient.call('default', channelName);
 
         if (myCall) {
           await myCall.join({ create: true });
           await myCall.camera.disable();
           
           if (active) {
-            setStreamCall(myCall);
+            setStreamCall(myCall); // هذا سيخفي شاشة التحميل فوراً ويبدأ المكالمة
           }
         }
       } catch (err: any) {
