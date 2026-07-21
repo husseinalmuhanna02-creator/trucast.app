@@ -1654,16 +1654,6 @@ export const GroupCallScreen = ({
         const initStream = async () => {
   try {
     if (!active) return;
-    // ... باقي الكود
-  } catch (err: any) {
-    // ...
-  }
-};
-initStream();
-
-        const initStream = async () => {
-  try {
-    if (!active) return;
     
     // كل خطوات التهيئة والـ client هنا...
 
