@@ -1651,11 +1651,10 @@ export const GroupCallScreen = ({
     let streamClient: StreamVideoClient | null = null;
     let myCall: any = null;
 
-      const initStream = async () => {
+        const initStream = async () => {
     try {
       if (!active) return;
 
-      // استخدام بيانات الـ API Key مباشرة من ملف الإعدادات
       const apiKey = "93v2eu284nry"; 
       
       const user = {
@@ -1664,33 +1663,34 @@ export const GroupCallScreen = ({
         image: currentUser.photoURL || '',
       };
 
-      // إذا كنت تستخدم التوكن المؤقت أو التوليد المباشر للاتصال بالمكالمة:
-      // ملاحظة: في بيئة العرض، يمكنك استخدام الدالة المباشرة لإنشاء العميل (StreamVideoClient)
-      
-      console.log("Initializing Stream with user:", user);
-      
-      // هنا يتم ربط العميل بالمكالمة مباشرة
-      // ... (أكمل باقي إعدادات المكالمة الخاصة بك هنا)
+      const client = new StreamVideoClient({
+        apiKey,
+        user,
+        tokenProvider: async (): Promise<string> => token,
+      });
 
-    } catch (error) {
-      console.error("Failed to initialize stream:", error);
+      streamClient = client;
+      setClient(streamClient);
+
+      const channelName = call.id || chat.id || "group_call";
+      myCall = streamClient.call('default', channelName);
+
+      await myCall.join({ create: true });
+      await myCall.camera.disable(); // إغلاق الكاميرا فوراً بعد الانضمام
+
+      if (!active) {
+        myCall.leave().catch(() => {});
+        streamClient.disconnectUser().catch(() => {});
+        return;
+      }
+      setStreamCall(myCall);
+    } catch (err: any) {
+      console.error("Error joining Stream Video Call:", err);
+      setCallError(err.message || "حدث خطأ غير معروف");
     }
   };
-    const user = {
-          id: currentUser.uid,
-          name: currentUser.displayName || t('مستخدم'),
-          image: currentUser.photoURL || '',
-        };
 
-        streamClient = new StreamVideoClient({
-          apiKey,
-          user,
-          tokenProvider: async (): Promise<string> => token,
-        });
-
-        setClient(streamClient);
-
-        // Second: Join the dynamic group call channel
+  initStream();
         const initStream = async () => {
   try {
     if (!active) return;
