@@ -1657,7 +1657,7 @@ export const GroupCallScreen = ({
     
     // كل خطوات التهيئة والـ client هنا...
 
-    const channelName = call.id || chat.id || "group_call";
+    const channelName = call?.id || chat?.id || "group_call";
     myCall = streamClient.call('default', channelName);
 
     await myCall.join({ create: true });
