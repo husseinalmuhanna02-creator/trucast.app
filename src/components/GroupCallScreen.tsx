@@ -1690,7 +1690,7 @@ export const GroupCallScreen = ({
         });
       }
     };
-  }, [currentUser, call.id, chat.id]);
+  }, [currentUser?.uid, call?.id, chat?.id]);
 
   if (callError) {
   return (
