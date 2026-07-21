@@ -1660,8 +1660,10 @@ export const GroupCallScreen = ({
     const channelName = call?.id || chat?.id || "group_call";
     myCall = client?.call('default', channelName);
 
-    await myCall.join({ create: true });
-    await myCall.camera.disable();
+    if (myCall) {
+  await myCall.join({ create: true });
+  await myCall.camera.disable();
+}
 
     if (!active) {
       myCall.leave().catch(() => {});
