@@ -1649,30 +1649,54 @@ export const GroupCallScreen = ({
 
     let active = true;
 
-            const initStream = async () => {
+                const initStream = async () => {
       try {
         if (!active) return;
 
         let activeClient = client;
         if (!activeClient) {
-          // جلب التصريح الأمني (Token) من الخادم
-          const response = await fetch('/api/stream/credentials', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: currentUser.uid })
-          });
-          const data = await response.json();
+          
+          // دالة تشفير وتوليد التصريح (Token) داخلياً عبر المتصفح
+          const generateToken = async (userId: string, secret: string) => {
+            const header = { alg: 'HS256', typ: 'JWT' };
+            const payload = { user_id: userId };
+            
+            const b64Url = (str: string) => btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+            
+            const encodedHeader = b64Url(JSON.stringify(header));
+            const encodedPayload = b64Url(JSON.stringify(payload));
+            const dataToSign = `${encodedHeader}.${encodedPayload}`;
+            
+            const encoder = new TextEncoder();
+            const key = await crypto.subtle.importKey(
+              'raw', 
+              encoder.encode(secret),
+              { name: 'HMAC', hash: 'SHA-256' },
+              false, 
+              ['sign']
+            );
+            
+            const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(dataToSign));
+            const signatureString = String.fromCharCode(...new Uint8Array(signature));
+            const encodedSignature = btoa(signatureString).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+            
+            return `${dataToSign}.${encodedSignature}`;
+          };
 
-          if (!data.token) throw new Error("فشل في جلب التصريح الأمني");
+          const apiKey = "93v2eu284nry";
+          const secret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
+          
+          // توليد الـ Token تلقائياً في المتصفح
+          const validToken = await generateToken(currentUser.uid, secret);
 
-          // بناء العميل مع التصريح
+          // بناء العميل بالتصريح المولد
           activeClient = new StreamVideoClient({ 
-            apiKey: data.apiKey, 
+            apiKey: apiKey, 
             user: { 
               id: currentUser.uid, 
               name: currentUser.displayName || 'TruCast User' 
             },
-            token: data.token
+            token: validToken
           });
           setClient(activeClient);
         }
@@ -1690,6 +1714,11 @@ export const GroupCallScreen = ({
           }
         }
       } catch (err: any) {
+        console.error("Error joining Stream Video Call:", err);
+        setCallError(err.message || "حدث خطأ غير معروف");
+      }
+    };
+
         console.error("Error joining Stream Video Call:", err);
         setCallError(err.message || "حدث خطأ غير معروف");
       }
