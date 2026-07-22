@@ -349,10 +349,11 @@ const GroupCallContent = ({
     setIsWhiteboardActive(false);
   };
   
-  const toggleCamera = async () => {
+    const toggleCamera = async () => {
     try {
-      if (call) {
-        await call.camera.toggle();
+      const activeCall = call || (callSession as any);
+      if (activeCall?.camera) {
+        await activeCall.camera.toggle();
       }
     } catch (err) {
       console.error("Error toggling camera:", err);
@@ -361,8 +362,9 @@ const GroupCallContent = ({
 
   const toggleMic = async () => {
     try {
-      if (call) {
-        await call.microphone.toggle();
+      const activeCall = call || (callSession as any);
+      if (activeCall?.microphone) {
+        await activeCall.microphone.toggle();
       }
     } catch (err) {
       console.error("Error toggling microphone:", err);
@@ -371,8 +373,9 @@ const GroupCallContent = ({
 
   const toggleScreenShare = async () => {
     try {
-      if (call) {
-        await call.screenShare.toggle();
+      const activeCall = call || (callSession as any);
+      if (activeCall?.screenShare) {
+        await activeCall.screenShare.toggle();
       }
     } catch (err) {
       console.error("Error toggling screen share:", err);
