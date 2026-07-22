@@ -348,7 +348,37 @@ const GroupCallContent = ({
     setSelectedProfileId(null);
     setIsWhiteboardActive(false);
   };
+  
+  const toggleCamera = async () => {
+    try {
+      if (call) {
+        await call.camera.toggle();
+      }
+    } catch (err) {
+      console.error("Error toggling camera:", err);
+    }
+  };
 
+  const toggleMic = async () => {
+    try {
+      if (call) {
+        await call.microphone.toggle();
+      }
+    } catch (err) {
+      console.error("Error toggling microphone:", err);
+    }
+  };
+
+  const toggleScreenShare = async () => {
+    try {
+      if (call) {
+        await call.screenShare.toggle();
+      }
+    } catch (err) {
+      console.error("Error toggling screen share:", err);
+    }
+  };
+  
   const navigation = {
     goBack: () => {
       resetCallUIStates();
