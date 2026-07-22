@@ -619,16 +619,6 @@ const GroupCallContent = ({
     }
   };
 
-  const toggleScreenShare = async () => {
-    try {
-      if (call) {
-        await call.screenShare.toggle();
-      }
-    } catch (err) {
-      console.error("Error toggling screen share in GroupCallContent:", err);
-    }
-  };
-
   const handleLeaveClick = () => {
     if (isOwnerOrAdmin) {
       setShowLeaveConfirm(true);
