@@ -504,23 +504,41 @@ const GroupCallContent = ({
     setTimeout(() => setShowToast(null), 3000);
   };
 
-  const toggleCamera = async () => {
+    const toggleCamera = async () => {
     try {
-      if (call) {
-        await call.camera.toggle();
-      }
+      const activeCall = call || streamCall;
+      if (activeCall) await activeCall.camera.toggle();
     } catch (err) {
-      console.error("Error toggling camera in GroupCallContent:", err);
+      console.error("Error toggling camera:", err);
     }
   };
 
   const toggleMic = async () => {
     try {
-      if (call) {
-        await call.microphone.toggle();
+      const activeCall = call || streamCall;
+      if (activeCall) await activeCall.microphone.toggle();
+    } catch (err) {
+      console.error("Error toggling microphone:", err);
+    }
+  };
+
+  const toggleScreenShare = async () => {
+    try {
+      const activeCall = call || streamCall;
+      if (activeCall) await activeCall.screenShare.toggle();
+    } catch (err) {
+      console.error("Error toggling screen share:", err);
+    }
+  };
+
+  const handleLeaveCall = async () => {
+    try {
+      const activeCall = call || streamCall;
+      if (activeCall) {
+        await activeCall.leave();
       }
     } catch (err) {
-      console.error("Error toggling microphone in GroupCallContent:", err);
+      console.error("Error leaving call:", err);
     }
   };
 
