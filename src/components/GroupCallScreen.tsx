@@ -1737,9 +1737,7 @@ export const GroupCallScreen = ({
         joinedCall.leave().catch(console.error);
       }
     };
-  }, []);
 
-    };
   }, [currentUser, client, call, chat]);
 
   if (callError) {
