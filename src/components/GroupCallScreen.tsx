@@ -349,9 +349,9 @@ const GroupCallContent = ({
     setIsWhiteboardActive(false);
   };
   
-    const toggleCamera = async () => {
+      const toggleCamera = async () => {
     try {
-      const activeCall = call || (callSession as any);
+      const activeCall = call || streamCall;
       if (activeCall?.camera) {
         await activeCall.camera.toggle();
       }
@@ -362,7 +362,7 @@ const GroupCallContent = ({
 
   const toggleMic = async () => {
     try {
-      const activeCall = call || (callSession as any);
+      const activeCall = call || streamCall;
       if (activeCall?.microphone) {
         await activeCall.microphone.toggle();
       }
@@ -373,7 +373,7 @@ const GroupCallContent = ({
 
   const toggleScreenShare = async () => {
     try {
-      const activeCall = call || (callSession as any);
+      const activeCall = call || streamCall;
       if (activeCall?.screenShare) {
         await activeCall.screenShare.toggle();
       }
