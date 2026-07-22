@@ -349,36 +349,39 @@ const GroupCallContent = ({
     setIsWhiteboardActive(false);
   };
   
-      const toggleCamera = async () => {
+        const toggleCamera = async () => {
     try {
-      const activeCall = call || streamCall;
-      if (activeCall?.camera) {
-        await activeCall.camera.toggle();
-      }
-    } catch (err) {
-      console.error("Error toggling camera:", err);
+      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+      if (!activeCall.camera) return alert("❌ خطأ: الكاميرا غير مدعومة في هذا المتصفح/الجهاز.");
+      
+      await activeCall.camera.toggle();
+    } catch (err: any) {
+      alert("❌ فشل تشغيل الكاميرا:\n" + (err.message || String(err)));
     }
   };
 
   const toggleMic = async () => {
     try {
-      const activeCall = call || streamCall;
-      if (activeCall?.microphone) {
-        await activeCall.microphone.toggle();
-      }
-    } catch (err) {
-      console.error("Error toggling microphone:", err);
+      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+      if (!activeCall.microphone) return alert("❌ خطأ: المايكروفون غير مدعوم في هذا المتصفح/الجهاز.");
+      
+      await activeCall.microphone.toggle();
+    } catch (err: any) {
+      alert("❌ فشل تشغيل المايك:\n" + (err.message || String(err)));
     }
   };
 
   const toggleScreenShare = async () => {
     try {
-      const activeCall = call || streamCall;
-      if (activeCall?.screenShare) {
-        await activeCall.screenShare.toggle();
-      }
-    } catch (err) {
-      console.error("Error toggling screen share:", err);
+      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+      if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
+      
+      await activeCall.screenShare.toggle();
+    } catch (err: any) {
+      alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
     }
   };
   
