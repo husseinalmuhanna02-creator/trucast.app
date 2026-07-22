@@ -1662,35 +1662,29 @@ export const GroupCallScreen = ({
   const { t } = useLanguage();
   const [callError, setCallError] = useState<string | null>(null);
 
-    useEffect(() => {
+      useEffect(() => {
     if (!currentUser) return;
-
     let active = true;
+    let joinedCall: any = null;
 
-                    const initStream = async () => {
+    const initStream = async () => {
       try {
         if (!active) return;
 
         let activeClient = client;
         if (!activeClient) {
-          // دالة تشفير وتوليد التصريح (Token) داخلياً عبر المتصفح
           const generateToken = async (userId: string, secret: string) => {
             const header = { alg: 'HS256', typ: 'JWT' };
             const payload = { user_id: userId };
-            
             const b64Url = (str: string) => btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-            
             const encodedHeader = b64Url(JSON.stringify(header));
             const encodedPayload = b64Url(JSON.stringify(payload));
             const dataToSign = `${encodedHeader}.${encodedPayload}`;
             
             const encoder = new TextEncoder();
             const key = await crypto.subtle.importKey(
-              'raw', 
-              encoder.encode(secret),
-              { name: 'HMAC', hash: 'SHA-256' },
-              false, 
-              ['sign']
+              'raw', encoder.encode(secret),
+              { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
             );
             
             const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(dataToSign));
@@ -1702,7 +1696,6 @@ export const GroupCallScreen = ({
 
           const apiKey = "93v2eu284nry";
           const secret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
-          
           const validToken = await generateToken(currentUser.uid, secret);
 
           activeClient = new StreamVideoClient({ 
@@ -1724,7 +1717,10 @@ export const GroupCallScreen = ({
           await myCall.camera.disable();
           
           if (active) {
+            joinedCall = myCall;
             setStreamCall(myCall);
+          } else {
+            await myCall.leave();
           }
         }
       } catch (err: any) {
@@ -1733,10 +1729,16 @@ export const GroupCallScreen = ({
       }
     };
 
-        initStream();
+    initStream();
 
     return () => {
       active = false;
+      if (joinedCall) {
+        joinedCall.leave().catch(console.error);
+      }
+    };
+  }, []);
+
     };
   }, [currentUser, client, call, chat]);
 
