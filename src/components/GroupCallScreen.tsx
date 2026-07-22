@@ -1649,13 +1649,12 @@ export const GroupCallScreen = ({
 
     let active = true;
 
-                const initStream = async () => {
+                    const initStream = async () => {
       try {
         if (!active) return;
 
         let activeClient = client;
         if (!activeClient) {
-          
           // دالة تشفير وتوليد التصريح (Token) داخلياً عبر المتصفح
           const generateToken = async (userId: string, secret: string) => {
             const header = { alg: 'HS256', typ: 'JWT' };
@@ -1686,10 +1685,8 @@ export const GroupCallScreen = ({
           const apiKey = "93v2eu284nry";
           const secret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
           
-          // توليد الـ Token تلقائياً في المتصفح
           const validToken = await generateToken(currentUser.uid, secret);
 
-          // بناء العميل بالتصريح المولد
           activeClient = new StreamVideoClient({ 
             apiKey: apiKey, 
             user: { 
@@ -1701,7 +1698,6 @@ export const GroupCallScreen = ({
           setClient(activeClient);
         }
 
-        // الانضمام للمكالمة
         const channelName = call?.id || chat?.id || "group_call";
         const myCall = activeClient.call('default', channelName);
 
@@ -1715,12 +1711,7 @@ export const GroupCallScreen = ({
         }
       } catch (err: any) {
         console.error("Error joining Stream Video Call:", err);
-        setCallError(err.message || "حدث خطأ غير معروف");
-      }
-    };
-
-        console.error("Error joining Stream Video Call:", err);
-        setCallError(err.message || "حدث خطأ غير معروف");
+        setCallError(err.message || 'Call error');
       }
     };
 
