@@ -44,7 +44,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import { getApiUrl } from '../config';
-
+const ScreenShare = registerPlugin<{ startScreenShare(): Promise<any> }>('ScreenShare');
 // Interactive and synchronized whiteboard sub-component
 const WhiteboardPanel = ({ 
   call, 
