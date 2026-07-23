@@ -19,14 +19,14 @@ jobs:
           VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
-                  VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-    - run: cp android/app/src/main/AndroidManifest.xml backup_manifest.xml
-    - run: rm -rf android
-    - run: npx cap init TruCast com.trucast.app --web-dir=dist || true
-    - run: npx cap add android
-    - run: cp backup_manifest.xml android/app/src/main/AndroidManifest.xml
-    - run: npx cap sync android
-    - uses: actions/setup-java@v4
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+      - run: cp android/app/src/main/AndroidManifest.xml backup_manifest.xml
+      - run: rm -rf android
+      - run: npx cap init TruCast com.trucast.app --web-dir=dist || true
+      - run: npx cap add android
+      - run: cp backup_manifest.xml android/app/src/main/AndroidManifest.xml
+      - run: npx cap sync android
+      - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
