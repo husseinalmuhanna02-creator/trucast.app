@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+
+const ScreenShare = registerPlugin<{ startScreenShare(): Promise<any> }>('ScreenShare');
 import { useLanguage } from '../localization';
 import { User as FirebaseUser } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
