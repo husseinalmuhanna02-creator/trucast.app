@@ -375,16 +375,21 @@ const GroupCallContent = ({
   };
 
   const toggleScreenShare = async () => {
-    try {
-      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
-      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
-      if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
-      
-      await activeCall.screenShare.toggle();
-    } catch (err: any) {
-      alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
+  try {
+    const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+    if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+    if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
+
+    // طلب إذن تصوير الشاشة من أندرويد عبر الجسر قبل بدء البث
+    if (Capacitor.isNativePlatform()) {
+      await ScreenShare.startScreenShare();
     }
-  };
+
+    await activeCall.screenShare.toggle();
+  } catch (err: any) {
+    alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
+  }
+};
   
   const navigation = {
     goBack: () => {
