@@ -7,7 +7,6 @@ import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
 import { doc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
 import {
-  const ScreenShare = registerPlugin<{ startScreenShare(): Promise<any> }>('ScreenShare');
   StreamVideo,
   StreamCall,
   SpeakerLayout,
