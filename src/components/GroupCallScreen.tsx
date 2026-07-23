@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Capacitor, registerPlugin } from '@capacitor/core';
-
-const ScreenShare = registerPlugin<{ startScreenShare(): Promise<any> }>('ScreenShare');
 import { useLanguage } from '../localization';
 import { User as FirebaseUser } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
@@ -9,6 +7,7 @@ import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
 import { doc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
 import {
+  const ScreenShare = registerPlugin<{ startScreenShare(): Promise<any> }>('ScreenShare');
   StreamVideo,
   StreamCall,
   SpeakerLayout,
