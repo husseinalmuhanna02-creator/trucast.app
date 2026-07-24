@@ -381,9 +381,10 @@ const GroupCallContent = ({
     if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
 
     await activeCall.screenShare.toggle();
-} catch (err: any) {
-    alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
-}
+  } catch (err: any) {
+    alert("❌ فشل مشاركة الشاشة :\n" + (err.message || String(err)));
+  }
+};
   
   const navigation = {
     goBack: () => {
