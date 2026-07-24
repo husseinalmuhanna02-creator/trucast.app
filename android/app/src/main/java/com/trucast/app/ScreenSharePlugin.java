@@ -30,8 +30,8 @@ public class ScreenSharePlugin extends Plugin {
         }
     }
 
-    @ActivityCallback
-    private void handleScreenShareResult(PluginCall call, ActivityResult result) {
+        @ActivityCallback
+        public void handleScreenShareResult(PluginCall call, ActivityResult result) {
         if (result.getResultCode() == Activity.RESULT_OK) {
             JSObject ret = new JSObject();
             ret.put("status", "success");
