@@ -6,7 +6,9 @@ import { Chat, CallSession } from '../types';
 import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
 import { doc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
-import {
+import { db } from '../firebase';
+const ScreenShare = registerPlugin<{ startScreenShare(): Promise<{ status: string }> }>("ScreenShare");
+import { 
   StreamVideo,
   StreamCall,
   SpeakerLayout,
