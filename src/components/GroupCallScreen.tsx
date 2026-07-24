@@ -384,12 +384,6 @@ const GroupCallContent = ({
 } catch (err: any) {
     alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
 }
-
-    await activeCall.screenShare.toggle();
-  } catch (err: any) {
-    alert("❌ فشل مشاركة الشاشة:\n" + (err.message || String(err)));
-  }
-};
   
   const navigation = {
     goBack: () => {
