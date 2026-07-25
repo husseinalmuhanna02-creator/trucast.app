@@ -7,8 +7,17 @@
   src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 }
 
+@font-face {
+  font-family: 'Apple Color Emoji';
+  src: local('Apple Color Emoji'),
+       local('AppleColorEmoji'),
+       url('https://cdn.jsdelivr.net/gh/samuelngs/apple-emoji-linux@v14.0/AppleColorEmoji.ttf') format('truetype');
+  font-display: swap;
+  unicode-range: U+1F000-1F9FF, U+1F300-1F5FF, U+1F600-1F64F, U+1F680-1F6FF, U+2600-26FF, U+2700-27BF, U+1F900-1F9FF, U+1F1E6-1F1FF, U+200D, U+FE0F;
+}
+
 :root {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "SF Pro Display", "SF Pro Text", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
   --bg-main: #000;
   --bg-card: #09090b;
   --bg-item: #18181b;
@@ -114,10 +123,19 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "SF Pro Display", "SF Pro Text", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
   overflow-x: hidden;
   transition: background-color 0.3s, color 0.3s;
+}
+
+input, textarea, button, select {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "SF Pro Display", "SF Pro Text", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.emoji, [data-emoji], .apple-emoji {
+  font-family: "Apple Color Emoji", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
 }
 
 #root {
