@@ -29,6 +29,7 @@ jobs:
       - name: Build APK via Gradle
         run: |
          cd android
+         gradle wrapper
          chmod +x gradlew
          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
