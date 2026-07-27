@@ -375,27 +375,28 @@ const GroupCallContent = ({
   };
 
     const toggleScreenShare = async () => {
-    try {
-      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
-      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+  try {
+    const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+    if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
 
-      // التحقق مما إذا كان التطبيق يعمل كـ تطبيق هاتف (APK)
-      if (Capacitor.isNativePlatform()) {
-        // استدعاء جسر الأندرويد الذي برمجناه
-        const result = await ScreenShare.startScreenShare();
-      if (result.status === 'success') {
-          console.log("تم تفعيل خدمة مشاركة الشاشة بنجاح عبر الجسر!");
-          await activeCall.screenShare.toggle();
-        }
-      } else {
-        // إذا كان يعمل على المتصفح (الويب) نستخدم الطريقة الافتراضية
-        if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
-        await activeCall.screenShare.toggle();
+    if (Capacitor.isNativePlatform()) {
+      // إرسال معلومات المكالمة الحالية للجسر الناتيف
+      const result = await ScreenShare.startScreenShare({
+        callId: activeCall.id,
+        callType: activeCall.type || 'default'
+      });
+
+    if (result.status === 'success') {
+        console.log("تم تشغيل خدمة التقاط الشاشة الخلفية بنجاح!");
       }
-    } catch (err: any) {
-      alert("❌ فشل مشاركة الشاشة :\n" + (err.message || String(err)));
+    } else {
+      if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
+      await activeCall.screenShare.toggle();
     }
-  };
+  } catch (err: any) {
+    alert("❌ فشل مشاركة الشاشة \n" + (err.message || String(err)));
+  }
+};
   
   const navigation = {
     goBack: () => {
