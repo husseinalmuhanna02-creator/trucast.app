@@ -34,10 +34,14 @@ public class ScreenSharePlugin extends Plugin {
     @ActivityCallback
     public void handleScreenShareResult(PluginCall call, ActivityResult result) {
         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-            // تشغيل خدمة التقاط الشاشة في الخلفية وتمرير إذن النظام إليها
+            String callId = call.getString("callId", "");
+            String callType = call.getString("callType", "default");
+
             Intent serviceIntent = new Intent(getContext(), ScreenShareService.class);
             serviceIntent.putExtra("resultCode", result.getResultCode());
             serviceIntent.putExtra("data", result.getData());
+            serviceIntent.putExtra("callId", callId);
+            serviceIntent.putExtra("callType", callType);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 getContext().startForegroundService(serviceIntent);
