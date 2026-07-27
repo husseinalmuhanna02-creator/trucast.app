@@ -374,29 +374,31 @@ const GroupCallContent = ({
     }
   };
 
-    const toggleScreenShare = async () => {
-  try {
-    const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
-    if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
+      const toggleScreenShare = async () => {
+    try {
+      const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
+      if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
 
-    if (Capacitor.isNativePlatform()) {
-      // إرسال معلومات المكالمة الحالية للجسر الناتيف
-      const result = await ScreenShare.startScreenShare({
-        callId: activeCall.id,
-        callType: activeCall.type || 'default'
-      });
-
-    if (result.status === 'success') {
-        console.log("تم تشغيل خدمة التقاط الشاشة الخلفية بنجاح!");
+      // 1. تشغيل خدمة الأندرويد الخلفية إذا كنا على الهاتف
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await ScreenShare.startScreenShare({
+            callId: activeCall.id,
+            callType: activeCall.type || 'default'
+          });
+        } catch (nativeErr) {
+          console.warn("تنبيه الخدمة الخلفية:", nativeErr);
+        }
       }
-    } else {
-      if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
+
+      // 2. تفعيل مشاركة الشاشة في محرك المكالمات لبث الفيديو لجميع المشاركين
       await activeCall.screenShare.toggle();
+
+    } catch (err: any) {
+      console.error("خطأ مشاركة الشاشة:", err);
+      alert("❌ فشل مشاركة الشاشة \n" + (err.message || String(err)));
     }
-  } catch (err: any) {
-    alert("❌ فشل مشاركة الشاشة \n" + (err.message || String(err)));
-  }
-};
+  };
   
   const navigation = {
     goBack: () => {
