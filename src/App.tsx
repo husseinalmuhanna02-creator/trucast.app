@@ -1,3 +1,13 @@
+// ترقيع دالة مشاركة الشاشة لمتصفح الأندرويد
+if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
+  if (!navigator.mediaDevices.getDisplayMedia) {
+    navigator.mediaDevices.getDisplayMedia = async function (constraints) {
+      return await navigator.mediaDevices.getUserMedia({
+        video: { mediaSource: 'screen' } as any
+      });
+    };
+  }
+}
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './localization';
 import { 
