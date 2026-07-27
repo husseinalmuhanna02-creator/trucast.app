@@ -383,7 +383,7 @@ const GroupCallContent = ({
       if (Capacitor.isNativePlatform()) {
         // استدعاء جسر الأندرويد الذي برمجناه
         const result = await ScreenShare.startScreenShare();
-                if (result.status === 'success') {
+      if (result.status === 'success') {
           console.log("تم تفعيل خدمة مشاركة الشاشة بنجاح عبر الجسر!");
           await activeCall.screenShare.toggle();
         }
