@@ -374,18 +374,18 @@ const GroupCallContent = ({
     }
   };
 
-        const toggleScreenShare = async () => {
+          const toggleScreenShare = async () => {
     try {
       const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
       if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
 
       if (Capacitor.isNativePlatform()) {
-        // استخراج بيانات الجلسة والمستخدم للبث الناتيف
         const client = activeCall.client;
         const apiKey = client?.apiKey || '';
         const currentUser = client?.state?.user || {};
         const token = client?.token || '';
 
+        // 1. طلب إذن النظام وتشغيل خدمة الخلفية
         const result = await ScreenShare.startScreenShare({
           callId: activeCall.id,
           callType: activeCall.type || 'default',
@@ -394,8 +394,11 @@ const GroupCallContent = ({
           userToken: token
         });
 
-      if (result.status === 'success') {
-          console.log("تم تفعيل بث المشارك الشبح بنجاح!");
+        // 2. تفعيل بث الشاشة داخل المكالمة فور قبول إذن الأندرويد
+        if (result.status === 'success') {
+          if (activeCall.screenShare) {
+            await activeCall.screenShare.toggle();
+          }
         }
       } else {
         if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
