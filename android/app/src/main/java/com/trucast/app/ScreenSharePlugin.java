@@ -31,20 +31,21 @@ public class ScreenSharePlugin extends Plugin {
         }
     }
 
-    @ActivityCallback
+        @ActivityCallback
     private void screenCaptureResult(PluginCall call, ActivityResult result) {
-        // التحقق مما إذا كان المستخدم قد وافق على مشاركة الشاشة
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent serviceIntent = new Intent(getContext(), ScreenShareService.class);
             
-            // تمرير مفاتيح الاتصال
+            if (result.getData() != null) {
+                serviceIntent.putExtra("data", result.getData());
+            }
+            
             serviceIntent.putExtra("callId", call.getString("callId", ""));
             serviceIntent.putExtra("callType", call.getString("callType", "default"));
             serviceIntent.putExtra("apiKey", call.getString("apiKey", ""));
             serviceIntent.putExtra("userId", call.getString("userId", ""));
             serviceIntent.putExtra("userToken", call.getString("userToken", ""));
 
-            // بدء تشغيل الخدمة في الخلفية بأمان
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 getContext().startForegroundService(serviceIntent);
             } else {
@@ -55,7 +56,6 @@ public class ScreenSharePlugin extends Plugin {
             ret.put("status", "success");
             call.resolve(ret);
         } else {
-            // في حال ضغط المستخدم على "إلغاء"
             call.reject("تم رفض إذن مشاركة الشاشة من قبل المستخدم");
         }
     }
