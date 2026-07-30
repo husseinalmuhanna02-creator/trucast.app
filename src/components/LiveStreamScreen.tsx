@@ -5579,8 +5579,19 @@ export const LiveStreamScreen = ({
       setIsLoading(true);
       setError(null);
       try {
-    const apiKey = '93v2eu284nry';
-    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${btoa(JSON.stringify({ user_id: currentUser.uid }))}.devtoken`;
+            const apiKey = '93v2eu284nry';
+        
+        // جلب التوكن الآمن من السيرفر الخاص بك
+        const response = await fetch('/api/stream-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: currentUser.uid }),
+        });
+
+        const data = await response.json();
+        const token = data.token;
 
         if (!active) return;
 
