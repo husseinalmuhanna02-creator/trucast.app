@@ -5579,13 +5579,8 @@ export const LiveStreamScreen = ({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(getApiUrl('/api/stream/credentials'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUser.uid }),
-        });
-        if (!response.ok) throw new Error('Failed to fetch stream credentials');
-        const { apiKey, token } = await response.json();
+    const apiKey = '93v2eu284nry';
+    const token = StreamVideoClient.devToken(currentUser.uid);
 
         if (!active) return;
 
