@@ -5580,7 +5580,7 @@ export const LiveStreamScreen = ({
       setError(null);
       try {
     const apiKey = '93v2eu284nry';
-    const token = StreamVideoClient.devToken(currentUser.uid);
+    const token = currentUser.uid;
 
         if (!active) return;
 
