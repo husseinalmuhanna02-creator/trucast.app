@@ -423,13 +423,11 @@ const GroupCallContent = ({
             userToken: token
           });
 
-          // 2. تفعيل بث الشاشة داخل المكالمة فور قبول إذن الأندرويد
-            if (result.status === 'success') {
-            if (activeCall.screenShare) {
-              await activeCall.screenShare.enable(); 
-            }
+          // 2. السماح لخدمة الأندرويد بالعمل في الخلفية دون تضارب مع الويب
+          if (result.status === 'success') {
+             console.log("✅ خدمة المشارك الشبح تعمل الآن في الخلفية وتبث الشاشة!");
           } else {
-            console.log("لم يتم بدء البث: تم رفض الإذن من قبل المستخدم");
+             console.log("لم يتم بدء البث: تم رفض الإذن من قبل المستخدم");
           }
         } else {
           if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
