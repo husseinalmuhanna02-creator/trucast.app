@@ -352,7 +352,26 @@ async function startServer() {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
+import jwt from 'jsonwebtoken';
 
+const STREAM_SECRET = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
+
+app.post('/api/stream-token', (req, res) => {
+  try {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const token = jwt.sign({ user_id: userId }, STREAM_SECRET);
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
+});
+  
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
