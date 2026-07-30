@@ -424,10 +424,12 @@ const GroupCallContent = ({
           });
 
           // 2. تفعيل بث الشاشة داخل المكالمة فور قبول إذن الأندرويد
-          if (result.status === 'success') {
+            if (result.status === 'success') {
             if (activeCall.screenShare) {
-              await activeCall.screenShare.enable(); // استخدمنا enable بدلاً من toggle لضمان التشغيل
+              await activeCall.screenShare.enable(); 
             }
+          } else {
+            console.log("لم يتم بدء البث: تم رفض الإذن من قبل المستخدم");
           }
         } else {
           if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
