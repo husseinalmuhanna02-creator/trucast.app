@@ -5580,7 +5580,7 @@ export const LiveStreamScreen = ({
       setError(null);
       try {
     const apiKey = '93v2eu284nry';
-    const token = currentUser.uid;
+    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${btoa(JSON.stringify({ user_id: currentUser.uid }))}.devtoken`;
 
         if (!active) return;
 
