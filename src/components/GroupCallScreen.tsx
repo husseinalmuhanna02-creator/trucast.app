@@ -374,35 +374,65 @@ const GroupCallContent = ({
     }
   };
 
-          const toggleScreenShare = async () => {
+            const toggleScreenShare = async () => {
     try {
       const activeCall = typeof call !== 'undefined' ? call : (typeof streamCall !== 'undefined' ? streamCall : null);
       if (!activeCall) return alert("❌ خطأ: كائن المكالمة غير متصل.");
 
-      if (Capacitor.isNativePlatform()) {
-        const client = activeCall.client;
-        const apiKey = client?.apiKey || '';
-        const currentUser = client?.state?.user || {};
-        const token = client?.token || '';
+      // التحقق مما إذا كانت مشاركة الشاشة مفعلة حالياً
+      const isScreenSharing = activeCall.state.screenShareMode;
 
-        // 1. طلب إذن النظام وتشغيل خدمة الخلفية
-        const result = await ScreenShare.startScreenShare({
-          callId: activeCall.id,
-          callType: activeCall.type || 'default',
-          apiKey: apiKey,
-          userId: currentUser.id || '',
-          userToken: token
-        });
-
-        // 2. تفعيل بث الشاشة داخل المكالمة فور قبول إذن الأندرويد
-        if (result.status === 'success') {
-          if (activeCall.screenShare) {
-            await activeCall.screenShare.toggle();
-          }
+      if (isScreenSharing) {
+        // --- حالة الإيقاف ---
+        console.log("إيقاف مشاركة الشاشة...");
+        
+        // 1. إيقاف البث في Stream
+        if (activeCall.screenShare) {
+           await activeCall.screenShare.disable();
         }
+
+        // 2. إيقاف خدمة الأندرويد (إذا كنا على نظام أصلي)
+        if (Capacitor.isNativePlatform()) {
+             try {
+                // يجب أن نكون قد أضفنا دالة stopScreenShare في الـ Plugin، سنقوم بإضافتها لاحقاً إذا لم تكن موجودة.
+                // مؤقتاً، Stream سيتوقف عن البث، وهو الأهم.
+                if(ScreenShare.stopScreenShare) {
+                    await ScreenShare.stopScreenShare();
+                }
+             } catch(e) {
+                 console.log("تجاهل خطأ إيقاف خدمة الأندرويد مؤقتاً", e);
+             }
+        }
+        
       } else {
-        if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
-        await activeCall.screenShare.toggle();
+        // --- حالة التشغيل ---
+        console.log("بدء مشاركة الشاشة...");
+
+        if (Capacitor.isNativePlatform()) {
+          const client = activeCall.client;
+          const apiKey = client?.apiKey || '';
+          const currentUser = client?.state?.user || {};
+          const token = client?.token || '';
+
+          // 1. طلب إذن النظام وتشغيل خدمة الخلفية
+          const result = await ScreenShare.startScreenShare({
+            callId: activeCall.id,
+            callType: activeCall.type || 'default',
+            apiKey: apiKey,
+            userId: currentUser.id || '',
+            userToken: token
+          });
+
+          // 2. تفعيل بث الشاشة داخل المكالمة فور قبول إذن الأندرويد
+          if (result.status === 'success') {
+            if (activeCall.screenShare) {
+              await activeCall.screenShare.enable(); // استخدمنا enable بدلاً من toggle لضمان التشغيل
+            }
+          }
+        } else {
+          if (!activeCall.screenShare) return alert("❌ خطأ: مشاركة الشاشة غير مدعومة هنا.");
+          await activeCall.screenShare.enable();
+        }
       }
     } catch (err: any) {
       console.error("خطأ مشاركة الشاشة:", err);
