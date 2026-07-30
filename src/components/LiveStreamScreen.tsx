@@ -5593,7 +5593,7 @@ export const LiveStreamScreen = ({
         streamClient = new StreamVideoClient({
           apiKey,
           user,
-          tokenProvider: async (): Promise<string> => token,
+          token,
         });
 
         setClient(streamClient);
