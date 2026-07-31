@@ -351,10 +351,6 @@ app.post('/api/stream-token', (req, res) => {
   }
 });
 
-// الأسطر الموجودة لديك مسبقاً تأتي تحته مباشرة
-// Vite middleware for development
-if (process.env.NODE_ENV !== 'production') {
-  
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
