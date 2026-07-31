@@ -3383,9 +3383,9 @@ const LiveStreamContent = ({
         {(isHost || isModerator) && (
   <div className="w-full overflow-x-auto no-scrollbar py-1.5 flex items-center gap-2">
     {[
-      { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3 text-zinc-100" />, action: () => setActiveBottomSheet('background') },
-      { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3 text-zinc-400" />, action: () => triggerToast('جاري فتح قائمة الدعوات...') },
-      { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3 text-sky-400" />, action: () => triggerToast('البث المشترك مفعل') },
+      { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3 text-zinc-100" />, action: () => setActiveBottomSheet('moderation') },
+      { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3 text-zinc-400" />, action: () => setActiveBottomSheet('moderation') },
+      { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3 text-sky-400" />, action: () => setActiveBottomSheet('moderation') },
       ...(isGuestApproved ? [{ label: 'تحدي PK', emoji: '⚔️', icon: <Zap className="w-3 h-3 text-amber-400" />, action: () => setActiveBottomSheet('pk') }] : []),
       { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3 text-purple-400" />, action: () => setActiveBottomSheet('truth') },
     ].map((badge, idx) => (
