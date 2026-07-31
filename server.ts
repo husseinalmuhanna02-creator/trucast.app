@@ -337,7 +337,24 @@ async function startServer() {
       res.status(500).json({ error: 'Failed to generate signature' });
     }
   });
+// الصق هذا الكود هنا (فوق إعدادات Vite)
+app.post('/api/stream-token', (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+    const token = generateStreamToken(userId, "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc");
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
+});
 
+// الأسطر الموجودة لديك مسبقاً تأتي تحته مباشرة
+// Vite middleware for development
+if (process.env.NODE_ENV !== 'production') {
+  
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
@@ -352,18 +369,6 @@ async function startServer() {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
-app.post('/api/stream-token', (req, res) => {
-  try {
-    const { userId } = req.body;
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
-    }
-    const token = generateStreamToken(userId, "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc");
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to generate token' });
-  }
-});
   
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
