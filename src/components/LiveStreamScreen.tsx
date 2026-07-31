@@ -3383,20 +3383,12 @@ const LiveStreamContent = ({
         {(isHost || isModerator) && (
   <div className="w-full overflow-x-auto no-scrollbar py-1.5 flex items-center gap-2">
     {[
-      { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3" />, action: () => setActiveBottomSheet('settings') },
-      { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3" />, action: () => setActiveBottomSheet('invite') },
-      { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3" />, action: () => setActiveBottomSheet('cohost') },
-      
-      // شرط إظهار زر التحدي فقط عند وجود بث مشترك قائم
-      ...(isCoHosting ? [{ 
-        label: 'تحدي PK', 
-        emoji: '⚔️', 
-        icon: <Zap className="w-3 h-3" />, 
-        action: () => setActiveBottomSheet('pk') 
-      }] : []),
-
-      { label: 'إنشاء تصويت', emoji: '📊', icon: <BarChart2 className="w-3 h-3" />, action: () => setActiveBottomSheet('poll') },
-      { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3" />, action: () => setActiveBottomSheet('anonymous') }
+      { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3 text-zinc-400" />, action: () => setActiveBottomSheet('settings') },
+      { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3 text-zinc-400" />, action: () => setActiveBottomSheet('invite') },
+      { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3 text-sky-400" />, action: () => setActiveBottomSheet('cohost') },
+      { label: 'تحدي PK', emoji: '⚔️', icon: <Zap className="w-3 h-3 text-amber-400" />, action: () => setActiveBottomSheet('pk') },
+      { label: 'إنشاء تصويت', emoji: '📊', icon: <BarChart2 className="w-3 h-3 text-pink-400" />, action: () => setActiveBottomSheet('poll') },
+      { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3 text-purple-400" />, action: () => setActiveBottomSheet('anonymous') }
     ].map((badge, idx) => (
       <button
         key={idx}
