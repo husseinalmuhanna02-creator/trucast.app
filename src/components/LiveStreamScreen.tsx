@@ -3386,7 +3386,7 @@ const LiveStreamContent = ({
       { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3 text-red-400" />, action: () => setShowSettingsModal(true) },
               { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3 text-emerald-400" />, action: () => setShowInviteModal(true) },
               { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3 text-sky-400" />, action: () => setShowInviteModal(true) },
-              { label: 'تحدي PK', emoji: '⚔️', icon: <Zap className="w-3 h-3 text-amber-400" />, action: () => setActiveBottomSheet('pk') },
+              ...(hasCoHost ? [{ label: 'تحدي PK', emoji: '⚔️', icon: <Zap className="w-3 h-3 text-amber-500" />, action: () => setActiveBottomSheet('pk') }] : []),
               { label: 'إنشاء تصويت', emoji: '📊', icon: <BarChart2 className="w-3 h-3 text-pink-400" />, action: () => setShowPollModal(true) },
               { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3 text-violet-400" />, action: () => setActiveBottomSheet('truth') }
     ].map((badge, idx) => (
