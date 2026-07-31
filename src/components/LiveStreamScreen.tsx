@@ -3381,27 +3381,34 @@ const LiveStreamContent = ({
 
         {/* Interaction Badges (أزرار التفاعل السفلية) - Visible for Host & Moderators */}
         {(isHost || isModerator) && (
-          <div className="w-full overflow-x-auto no-scrollbar py-1.5 flex items-center gap-2 self-start scroll-smooth" style={{ direction: 'rtl' }}>
-            {[
-              { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3 text-red-400" />, action: () => setShowSettingsModal(true) },
-              { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3 text-emerald-400" />, action: () => setShowInviteModal(true) },
-              { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3 text-sky-400" />, action: () => setShowInviteModal(true) },
-              { label: 'تحدي PK', emoji: '⚔️', icon: <Zap className="w-3 h-3 text-amber-400" />, action: () => setActiveBottomSheet('pk') },
-              { label: 'إنشاء تصويت', emoji: '📊', icon: <BarChart2 className="w-3 h-3 text-pink-400" />, action: () => setShowPollModal(true) },
-              { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3 text-violet-400" />, action: () => setActiveBottomSheet('truth') }
-            ].map((badge, idx) => (
-              <button
-                key={idx}
-                onClick={badge.action}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 bg-black/50 hover:bg-black/75 text-white rounded-full border border-white/10 backdrop-blur-md shadow-md text-[10px] font-black transition-all hover:scale-105 active:scale-95 shrink-0"
-              >
-                <span>{badge.emoji}</span>
-                <span className="whitespace-nowrap">{badge.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
+  <div className="w-full overflow-x-auto no-scrollbar py-1.5 flex items-center gap-2">
+    {[
+      { label: 'إعدادات البث', emoji: '⚙️', icon: <Settings className="w-3 h-3" />, action: () => setActiveBottomSheet('settings') },
+      { label: 'دعوة ضيف', emoji: '👤', icon: <UserPlus className="w-3 h-3" />, action: () => setActiveBottomSheet('invite') },
+      { label: 'بث مشترك', emoji: '👥', icon: <Users className="w-3 h-3" />, action: () => setActiveBottomSheet('cohost') },
+      
+      // شرط إظهار زر التحدي فقط عند وجود بث مشترك قائم
+      ...(isCoHosting ? [{ 
+        label: 'تحدي PK', 
+        emoji: '⚔️', 
+        icon: <Zap className="w-3 h-3" />, 
+        action: () => setActiveBottomSheet('pk') 
+      }] : []),
 
+      { label: 'إنشاء تصويت', emoji: '📊', icon: <BarChart2 className="w-3 h-3" />, action: () => setActiveBottomSheet('poll') },
+      { label: 'وضع الصراحة', emoji: '🤫', icon: <HelpCircle className="w-3 h-3" />, action: () => setActiveBottomSheet('anonymous') }
+    ].map((badge, idx) => (
+      <button
+        key={idx}
+        onClick={badge.action}
+        className="flex items-center gap-1.5 px-3.5 py-1.5 bg-black/50 hover:bg-black/70 rounded-full text-xs text-white border border-white/10 whitespace-nowrap"
+      >
+        <span>{badge.emoji}</span>
+        <span className="whitespace-nowrap">{badge.label}</span>
+      </button>
+    ))}
+  </div>
+)}
         {/* Input area */}
         <div className="flex items-center gap-2 w-full mt-1" style={{ direction: 'rtl' }}>
           {/* Share Button (For everyone - Host, Moderators, Viewers) */}
