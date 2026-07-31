@@ -4420,11 +4420,11 @@ const LiveStreamContent = ({
         <div className="absolute inset-0 z-0" onClick={() => setActiveBottomSheet(null)} />
         
       <div
-        className={`bg-zinc-950/95 border-t border-white/10 rounded-t-[36px] w-full max-h-[80vh] overflow-y-auto p-4 relative z-10 transition-all duration-300 ${
-          activeBottomSheet ? 'translate-y-0' : 'translate-y-full'
-        }`}
-        style={{ transform: activeBottomSheet ? 'translateY(0)' : 'translateY(100%)' }}
-          >
+  className={`bg-zinc-950/95 border-t border-white/10 rounded-t-[36px] w-full max-h-[80vh] overflow-y-auto p-4 relative z-10 transition-all duration-300 ${
+    activeBottomSheet ? 'translate-y-0' : 'translate-y-full'
+  }`}
+  style={{ transform: activeBottomSheet ? 'translateY(0)' : 'translateY(100%)' }}
+>
           {/* Top notch handle */}
           <div className="w-12 h-1 bg-zinc-800 rounded-full mx-auto mb-5" />
           
