@@ -337,7 +337,7 @@ async function startServer() {
       res.status(500).json({ error: 'Failed to generate signature' });
     }
   });
-// الصق هذا الكود هنا (فوق إعدادات Vite)
+  
 app.post('/api/stream-token', (req, res) => {
   try {
     const { userId } = req.body;
