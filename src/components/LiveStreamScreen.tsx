@@ -5579,25 +5579,27 @@ export const LiveStreamScreen = ({
       setIsLoading(true);
       setError(null);
       try {
-            const apiKey = '93v2eu284nry';
+        const apiKey = '93v2eu284nry';
+        const streamSecret = 'vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc';
         
-        // جلب التوكن الآمن من السيرفر الخاص بك
-        const response = await fetch('/api/stream-token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId: currentUser.uid }),
-        });
+        // دالة توليد التوكن المدمجة (تعمل في التطبيق مباشرة بدون سيرفر)
+        const generateLocalToken = async (userId: string, secret: string) => {
+          const enc = (obj: any) => btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+          const dataToSign = `${enc({ alg: "HS256", typ: "JWT" })}.${enc({ user_id: userId })}`;
+          const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+          const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(dataToSign));
+          const sigBase64 = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+          return `${dataToSign}.${sigBase64}`;
+        };
 
-        const data = await response.json();
-        const token = data.token;
+        // توليد التوكن ديناميكياً للمستخدم الحالي
+        const token = await generateLocalToken(currentUser.uid, streamSecret);
 
-        if (!active) return;
+        if (!active || !token) return;
 
         const user = {
           id: currentUser.uid,
-          name: userProfile?.displayName || currentUser.displayName || t('مستضيف'),
+          name: userProfile?.displayName || currentUser.displayName || t('مضيف'),
           image: userProfile?.avatarUrl || currentUser.photoURL || '',
         };
 
