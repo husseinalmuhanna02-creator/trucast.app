@@ -3221,15 +3221,15 @@ const LiveStreamContent = ({
             dir="rtl"
           >
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-7 h-7 rounded-full overflow-hidden bg-zinc-900 border border-red-500/20 shrink-0">
-                {pinnedComment.userPhoto ? (
-                  <img src={pinnedComment.userPhoto} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[10px] text-zinc-400 font-bold bg-zinc-800">
-                    {(pinnedComment.userName || 'M').charAt(0)}
-                  </div>
-                )}
-              </div>
+                      <div className="w-7 h-7 rounded-full overflow-hidden bg-zinc-900 border border-zinc-800">
+          { (pinnedComment.userPhoto || pinnedComment.photoURL || pinnedComment.image || pinnedComment.avatarUrl) ? (
+            <img src={pinnedComment.userPhoto || pinnedComment.photoURL || pinnedComment.image || pinnedComment.avatarUrl} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[10px] text-zinc-500 font-bold uppercase">
+              {(pinnedComment.userName || 'M').charAt(0)}
+            </div>
+          )}
+        </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] font-black text-red-400">تعليق مثبت 📌</span>
