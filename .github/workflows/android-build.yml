@@ -1,16 +1,20 @@
 name: Build Android APK
+
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
-      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu @capacitor/cli @capacitor/android
+      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu || true
       - run: npx vite build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -20,30 +24,26 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-      - name: Prepare and Sync Android
+
+      - name: Sync Capacitor Android
         run: |
           rm -rf www || true
           mv dist www || true
-          cp android/app/src/main/AndroidManifest.xml saved_manifest.xml || true
-          cp -r android/app/src/main/java saved_java || true
-          cp -r android/app/src/main/res saved_res || true
-          rm -rf android || true
-          npx cap init TruCast com.trucast.app --web-dir www || true
-          npx cap add android || true
-          npx cap sync android || true
-          cp saved_manifest.xml android/app/src/main/AndroidManifest.xml || true
-          cp -r saved_java/* android/app/src/main/java/ || true
-          cp -r saved_res/* android/app/src/main/res/ || true
+          npx cap sync android
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
+
       - name: Build APK via Gradle
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
       - uses: actions/upload-artifact@v4
         with:
           name: TruCast-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          
