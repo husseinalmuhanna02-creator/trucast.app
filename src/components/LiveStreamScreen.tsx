@@ -5733,7 +5733,7 @@ export const LiveStreamScreen = ({
                 const liveRef = await addDoc(collection(db, "lives"), {
                   hostId: currentUser.uid,
                   hostName: userProfile?.displayName || currentUser.displayName || t("مستضيف"),
-                  hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "",
+                  hostPhoto: currentUser?.photoURL || userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || "https://www.gravatar.com/avatar/?d=mp",
                   title: titleText,
                   status: 'active',
                   startedAt: serverTimestamp(),
@@ -5768,7 +5768,7 @@ export const LiveStreamScreen = ({
                           streamId: generatedStreamId,
                           hostId: currentUser.uid,
                           hostName: userProfile?.displayName || currentUser.displayName || t("مستضيف"),
-                          hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "",
+                          hostPhoto: currentUser?.photoURL || userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || "https://www.gravatar.com/avatar/?d=mp",
                           read: false,
                           createdAt: serverTimestamp()
                         });
