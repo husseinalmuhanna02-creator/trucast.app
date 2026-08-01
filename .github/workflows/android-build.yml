@@ -24,6 +24,7 @@ jobs:
         run: |
           cp android/app/src/main/AndroidManifest.xml saved_manifest.xml
           cp -r android/app/src/main/java saved_java
+          cp -r android/app/src/main/res saved_res
           rm -rf android
           npx cap init TruCast com.trucast.app --web-dir www || true
           mv dist www || true
@@ -31,6 +32,7 @@ jobs:
           npx cap sync android
           cp saved_manifest.xml android/app/src/main/AndroidManifest.xml
           cp -r saved_java/* android/app/src/main/java/
+          cp -r saved_res/* android/app/src/main/res/
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
