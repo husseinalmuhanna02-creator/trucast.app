@@ -3347,7 +3347,6 @@ const LiveStreamContent = ({
     className="w-full h-full object-cover"
     referrerPolicy="no-referrer"
   />
-                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-zinc-400 font-bold bg-zinc-800">
                         {(item.userName || 'M').charAt(0)}
