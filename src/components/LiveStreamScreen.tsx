@@ -3340,12 +3340,13 @@ const LiveStreamContent = ({
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-violet-400 font-extrabold bg-zinc-900 border border-violet-500/20 select-none">
                         م
                       </div>
-                    ) : item.userPhoto ? (
-                      <img 
-                        src={item.userPhoto} 
-                        alt="" 
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
+                    ) : (item.userPhoto || item.photoURL || item.image || item.avatarUrl) ? (
+  <img
+    src={item.userPhoto || item.photoURL || item.image || item.avatarUrl}
+    alt=""
+    className="w-full h-full object-cover"
+    referrerPolicy="no-referrer"
+  />
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-zinc-400 font-bold bg-zinc-800">
