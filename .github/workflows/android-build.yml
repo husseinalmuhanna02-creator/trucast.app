@@ -20,11 +20,20 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-      - name: Sync Capacitor Android
+      - name: Prepare and Sync Android
         run: |
           rm -rf www || true
           mv dist www || true
-          npx cap sync android
+          cp android/app/src/main/AndroidManifest.xml saved_manifest.xml || true
+          cp -r android/app/src/main/java saved_java || true
+          cp -r android/app/src/main/res saved_res || true
+          rm -rf android || true
+          npx cap init TruCast com.trucast.app --web-dir www || true
+          npx cap add android || true
+          npx cap sync android || true
+          cp saved_manifest.xml android/app/src/main/AndroidManifest.xml || true
+          cp -r saved_java/* android/app/src/main/java/ || true
+          cp -r saved_res/* android/app/src/main/res/ || true
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
