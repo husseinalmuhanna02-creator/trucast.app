@@ -2137,7 +2137,7 @@ const LiveStreamContent = ({
         text,
         userId: currentUser.uid,
         userName: isCommentAnon ? "مستخدم مجهول" : (userProfile?.displayName || currentUser.displayName || "مستمع"),
-        userPhoto: isCommentAnon ? "" : (userProfile?.avatarUrl || currentUser.photoURL || ""),
+        userPhoto: isCommentAnon ? "" : (userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || ""),
         createdAt: serverTimestamp(),
         type: "text",
         isAnonymous: isCommentAnon
