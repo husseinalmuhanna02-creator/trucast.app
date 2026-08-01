@@ -30,6 +30,7 @@ jobs:
           mv dist www || true
           npx cap add android
           npx cap sync android
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
           cp saved_manifest.xml android/app/src/main/AndroidManifest.xml
           cp -r saved_java/* android/app/src/main/java/
           cp -r saved_res/* android/app/src/main/res/
