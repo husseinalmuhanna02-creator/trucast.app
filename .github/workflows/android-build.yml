@@ -22,7 +22,9 @@ jobs:
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
       - name: Sync Capacitor Android
         run: |
-         npx cap sync android
+          rm -rf www || true
+          mv dist www || true
+          npx cap sync android
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
