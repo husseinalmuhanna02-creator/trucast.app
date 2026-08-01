@@ -20,19 +20,9 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-      - name: Prepare Android & Restore Custom Code
+      - name: Sync Capacitor Android
         run: |
-          cp android/app/src/main/AndroidManifest.xml saved_manifest.xml
-          cp -r android/app/src/main/java saved_java
-          cp -r android/app/src/main/res saved_res
-          rm -rf android
-          npx cap init TruCast com.trucast.app --web-dir www || true
-          mv dist www || true
-          npx cap add android
-          npx cap sync android
-          cp saved_manifest.xml android/app/src/main/AndroidManifest.xml
-          cp -r saved_java/* android/app/src/main/java/
-          cp -r saved_res/* android/app/src/main/res/
+         npx cap sync android
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
