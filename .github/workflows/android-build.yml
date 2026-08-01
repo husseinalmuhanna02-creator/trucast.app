@@ -15,7 +15,7 @@ jobs:
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
       - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu || true
-      - run: npm install @capacitor/core @capacitor/android @capacitor/cli || true
+      - run: npm install @capacitor/core @capacitor/android @capacitor/cli @capacitor/assets || true
       - run: npx vite build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -31,6 +31,7 @@ jobs:
           rm -rf www || true
           mv dist www || true
           npx cap sync android
+          npx @capacitor/assets generate --android
 
       - uses: actions/setup-java@v4
         with:
