@@ -1256,7 +1256,7 @@ const LiveStreamContent = ({
             targetUserId,
             hostId: currentUser?.uid || call.currentUserId,
             hostName: userProfile?.displayName || currentUser?.displayName || 'المضيف',
-            hostPhoto: userProfile?.photoURL || currentUser?.photoURL || '',
+            hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || '',
             streamId: streamId || "live_stream",
             status: 'pending',
             createdAt: Date.now()
