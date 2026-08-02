@@ -30111,20 +30111,15 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(false);
 
   const login = async () => {
-    try {
-      setLoading(true);
-      const result = await signInWithRedirect(auth, googleProvider);
-      if (result.user) {
-        console.log("✅ Login successful:", result.user.email);
-        // We set loading back to true to wait for onAuthStateChanged to sync metadata
-        setLoading(true);
-      }
-    } catch (error: any) {
-      console.error("❌ Login failed:", error);
-      handleFirestoreError(error, OperationType.GET, 'auth/popup');
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    await signInWithRedirect(auth, googleProvider);
+  } catch (error: any) {
+    console.error("❌ Login failed:", error);
+    handleFirestoreError(error, OperationType.GET, 'auth/popup');
+    setLoading(false);
+  }
+};
 
   const handleFacebookLogin = async () => {
     try {
