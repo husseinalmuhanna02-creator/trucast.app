@@ -27,8 +27,6 @@ jobs:
 
       - name: Prepare and Sync Android
         run: |
-          rm -rf www || true
-          mv dist www || true
           if [ ! -d "android" ]; then
             npx @capacitor/cli add android
           fi
