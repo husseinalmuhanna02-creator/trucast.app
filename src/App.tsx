@@ -30113,7 +30113,7 @@ export default function App() {
   const login = async () => {
     try {
       setLoading(true);
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await signInWithRedirect(auth, googleProvider);
       if (result.user) {
         console.log("✅ Login successful:", result.user.email);
         // We set loading back to true to wait for onAuthStateChanged to sync metadata
@@ -30130,7 +30130,7 @@ export default function App() {
     try {
       setLoading(true);
       const provider = new FacebookAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithRedirect(auth, provider);
       if (result.user) {
         console.log("✅ Facebook Login successful:", result.user.email);
         setLoading(true);
@@ -30146,7 +30146,7 @@ export default function App() {
     try {
       setLoading(true);
       const provider = new TwitterAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithRedirect(auth, provider);
       if (result.user) {
         console.log("✅ Twitter Login successful:", result.user.email);
         setLoading(true);
