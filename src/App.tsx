@@ -30112,37 +30112,44 @@ export default function App() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [authLoading, setAuthLoading] = useState(false);
 
-  const login = async () => {
+  // 1. دالة تسجيل دخول جوجل
+const login = async () => {
   try {
     setLoading(true);
-    await signInWithRedirect(auth, googleProvider);
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
   } catch (error: any) {
     console.error("❌ Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/popup');
+  } finally {
     setLoading(false);
   }
 };
 
-  const handleFacebookLogin = async () => {
+// 2. دالة تسجيل دخول فيسبوك
+const handleFacebookLogin = async () => {
   try {
     setLoading(true);
     const provider = new FacebookAuthProvider();
-    await signInWithRedirect(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch (error: any) {
     console.error("❌ Facebook Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/facebook');
+  } finally {
     setLoading(false);
   }
 };
 
-  const handleTwitterLogin = async () => {
+// 3. دالة تسجيل دخول تويتر
+const handleTwitterLogin = async () => {
   try {
     setLoading(true);
     const provider = new TwitterAuthProvider();
-    await signInWithRedirect(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch (error: any) {
     console.error("❌ Twitter Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/twitter');
+  } finally {
     setLoading(false);
   }
 };
