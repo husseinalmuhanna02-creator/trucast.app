@@ -160,7 +160,7 @@ import { LiveStreamScreen as StreamLiveStreamScreen, useLiveStreamMedia } from '
 import { TruCastLogo } from './components/TruCastLogo';
 import { auth, db, googleProvider } from './firebase';
 import { 
-  signInWithPopup, 
+  signInWithRedirect, 
   onAuthStateChanged, 
   signOut,
   User as FirebaseUser,
