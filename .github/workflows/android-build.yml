@@ -14,7 +14,7 @@ jobs:
 
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
-      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu || true
+      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu
       - run: npm install @capacitor/core @capacitor/android @capacitor/cli @capacitor/assets || true
       - run: npx vite build
         env:
@@ -30,15 +30,10 @@ jobs:
         run: |
           rm -rf www || true
           mv dist www || true
-          cp android/app/src/main/AndroidManifest.xml saved_manifest.xml || true
-          cp -r android/app/src/main/java saved_java || true
-          rm -rf android || true
-          npx cap init TruCast com.trucast.app --web-dir www || true
-          npx cap add android || true
-          npx cap sync android || true
-          cp saved_manifest.xml android/app/src/main/AndroidManifest.xml || true
-          cp -r saved_java/* android/app/src/main/java/ || true
-          npx @capacitor/assets generate --android
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
 
       - uses: actions/setup-java@v4
         with:
