@@ -1,0 +1,15 @@
+{
+  "appId": "com.hussein.trucast",
+  "appName": "TruCast",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "*.firebaseapp.com",
+      "*.google.com",
+      "*.facebook.com",
+      "*.twitter.com",
+      "*.x.com"
+    ]
+  }
+}
