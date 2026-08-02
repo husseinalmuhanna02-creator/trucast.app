@@ -12,7 +12,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './localization';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
-import { GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { 
   BarChart, 
   Bar, 
@@ -30120,19 +30120,10 @@ const login = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    if (Capacitor.isNativePlatform()) {
-      const authDomain = auth.config.authDomain || 'trucast-app.firebaseapp.com';
-      try {
-        await Browser.open({ url: `https://${authDomain}/__/auth/handler` });
-      } catch (e) {
-        window.open(`https://${authDomain}/__/auth/handler`, '_system');
-      }
-    } else {
-      await signInWithRedirect(auth, provider);
-    }
+    await signInWithPopup(auth, provider);
   } catch (error: any) {
     console.error("❌ Login failed:", error);
-    alert("تعذر فتح تسجيل الدخول: " + (error?.message || error));
+    alert("تعذر تسجيل الدخول: " + (error?.message || error));
   } finally {
     setLoading(false);
   }
