@@ -12,7 +12,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './localization';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { 
   BarChart, 
   Bar, 
@@ -30120,7 +30120,13 @@ const login = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    await signInWithPopup(auth, provider);
+    if (Capacitor.isNativePlatform()) {
+      // في بيئة تطبيق الأندرويد/الهاتف
+      await signInWithRedirect(auth, provider);
+    } else {
+      // في بيئة المتصفح العادي
+      await signInWithPopup(auth, provider);
+    }
   } catch (error: any) {
     console.error("❌ Login failed:", error);
     alert("تعذر تسجيل الدخول: " + (error?.message || error));
