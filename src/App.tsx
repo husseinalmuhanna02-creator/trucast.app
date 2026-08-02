@@ -10,6 +10,8 @@ if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
 }
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './localization';
+import { Browser } from '@capacitor/browser';
+import { Capacitor } from '@capacitor/core';
 import { 
   BarChart, 
   Bar, 
