@@ -30122,20 +30122,16 @@ export default function App() {
 };
 
   const handleFacebookLogin = async () => {
-    try {
-      setLoading(true);
-      const provider = new FacebookAuthProvider();
-      const result = await signInWithRedirect(auth, provider);
-      if (result.user) {
-        console.log("✅ Facebook Login successful:", result.user.email);
-        setLoading(true);
-      }
-    } catch (error: any) {
-      console.error("❌ Facebook Login failed:", error);
-      handleFirestoreError(error, OperationType.GET, 'auth/facebook');
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const provider = new FacebookAuthProvider();
+    await signInWithRedirect(auth, provider);
+  } catch (error: any) {
+    console.error("❌ Facebook Login failed:", error);
+    handleFirestoreError(error, OperationType.GET, 'auth/facebook');
+    setLoading(false);
+  }
+};
 
   const handleTwitterLogin = async () => {
     try {
