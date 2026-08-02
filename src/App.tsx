@@ -30120,15 +30120,18 @@ const login = async () => {
     provider.setCustomParameters({ prompt: 'select_account' });
 
     if (Capacitor.isNativePlatform()) {
-      // فتح المصادقة عبر متصفح النظام الخارجي لتخطي حظر جوجل للـ WebView
       const authDomain = auth.config.authDomain || 'trucast-app.firebaseapp.com';
-      await Browser.open({ url: `https://${authDomain}/__/auth/handler` });
+      try {
+        await Browser.open({ url: `https://${authDomain}/__/auth/handler` });
+      } catch (e) {
+        window.open(`https://${authDomain}/__/auth/handler`, '_system');
+      }
     } else {
       await signInWithRedirect(auth, provider);
     }
   } catch (error: any) {
     console.error("❌ Login failed:", error);
-    handleFirestoreError(error, OperationType.GET, 'auth/popup');
+    alert("تعذر فتح تسجيل الدخول: " + (error?.message || error));
   } finally {
     setLoading(false);
   }
