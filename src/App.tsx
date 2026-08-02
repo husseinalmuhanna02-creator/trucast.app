@@ -30117,11 +30117,10 @@ const login = async () => {
   try {
     setLoading(true);
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (error: any) {
     console.error("❌ Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/popup');
-  } finally {
     setLoading(false);
   }
 };
@@ -30131,11 +30130,10 @@ const handleFacebookLogin = async () => {
   try {
     setLoading(true);
     const provider = new FacebookAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (error: any) {
     console.error("❌ Facebook Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/facebook');
-  } finally {
     setLoading(false);
   }
 };
@@ -30145,11 +30143,10 @@ const handleTwitterLogin = async () => {
   try {
     setLoading(true);
     const provider = new TwitterAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (error: any) {
     console.error("❌ Twitter Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/twitter');
-  } finally {
     setLoading(false);
   }
 };
