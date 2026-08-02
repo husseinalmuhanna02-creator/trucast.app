@@ -30134,20 +30134,16 @@ export default function App() {
 };
 
   const handleTwitterLogin = async () => {
-    try {
-      setLoading(true);
-      const provider = new TwitterAuthProvider();
-      const result = await signInWithRedirect(auth, provider);
-      if (result.user) {
-        console.log("✅ Twitter Login successful:", result.user.email);
-        setLoading(true);
-      }
-    } catch (error: any) {
-      console.error("❌ Twitter Login failed:", error);
-      handleFirestoreError(error, OperationType.GET, 'auth/twitter');
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const provider = new TwitterAuthProvider();
+    await signInWithRedirect(auth, provider);
+  } catch (error: any) {
+    console.error("❌ Twitter Login failed:", error);
+    handleFirestoreError(error, OperationType.GET, 'auth/twitter');
+    setLoading(false);
+  }
+};
 
   const handleResendVerification = async () => {
     const targetUser = unverifiedUser || auth.currentUser;
