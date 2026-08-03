@@ -1038,7 +1038,7 @@ const GroupCallContent = ({
                   </div>
                     </div>
   );
-})}
+})
 
       {/* 4. Smart Whiteboard Overlay */}
       {showWhiteboard && (
