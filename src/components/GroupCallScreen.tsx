@@ -992,9 +992,9 @@ const GroupCallContent = ({
                         {/* Center Avatar */}
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-                            {p.image ? (
-                              <img src={p.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                            ) : (
+                            {(p.image || p.userPhoto || p.photoURL || p.avatar) ? (
+  <img src={p.image || p.userPhoto || p.photoURL || p.avatar} alt="" className="w-full h-full object-cover" />
+) : (
                               <span className="text-xl font-black text-indigo-400">
                                 {(p.name || p.userId).charAt(0).toUpperCase()}
                               </span>
