@@ -999,8 +999,19 @@ const GroupCallContent = ({
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
                             {(() => {
   const isMeUser = p.userId === getAuth().currentUser?.uid || p.name === getAuth().currentUser?.displayName;
-  const savedPhoto = typeof window !== 'undefined' ? (localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto')) : null;
-  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || (isMeUser ? (getAuth().currentUser?.photoURL || savedPhoto) : null);
+
+const savedPhoto = typeof window !== 'undefined' ? (() => {
+  try {
+    const u = localStorage.getItem('user') || localStorage.getItem('currentUser') || localStorage.getItem('userData');
+    if (u) {
+      const parsed = JSON.parse(u);
+      if (parsed?.photoURL || parsed?.image || parsed?.avatar) return parsed.photoURL || parsed.image || parsed.avatar;
+    }
+  } catch (e) {}
+  return localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto') || localStorage.getItem('photoURL') || localStorage.getItem('avatar') || localStorage.getItem('photo') || localStorage.getItem('userPhoto');
+})() : null;
+
+const finalImage = p.image || (p as any)?.user?.image || p.userPhoto || p.photoURL || (p as any)?.custom?.photoURL || p.avatar || (isMeUser ? (getAuth().currentUser?.photoURL || savedPhoto) : null);
 
   return finalImage ? (
     <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />
