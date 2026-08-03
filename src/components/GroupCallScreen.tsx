@@ -798,10 +798,14 @@ const GroupCallContent = ({
                         <img src={p.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       ) : (
                         <span className="text-xs font-black text-zinc-400">
-                          {(p.name || p.userId).charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
+                            {(p?.image || p?.photoURL || p?.avatar || (p?.userId === getAuth().currentUser?.uid ? getAuth().currentUser?.photoURL : null)) ? (
+    <img src={p?.image || p?.photoURL || p?.avatar || getAuth().currentUser?.photoURL || ''} className="w-full h-full object-cover rounded-full" />
+  ) : (
+    (p?.name || p?.userId || 'U').charAt(0).toUpperCase()
+  )}
+</span>
+)}
+</div>
                     <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border border-zinc-900 ${(p as any).isMuted ? 'bg-red-500' : 'bg-emerald-500'}`} />
                   </div>
 
