@@ -5,7 +5,7 @@ import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
 import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
-import { doc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion } from 'firebase/firestore';
 const ScreenShare = registerPlugin<{ startScreenShare(): Promise<{ status: string }> }>("ScreenShare");
 import { 
   StreamVideo,
