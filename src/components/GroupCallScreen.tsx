@@ -1015,25 +1015,6 @@ const GroupCallContent = ({
           </div>
         </div>
       )}
-                    {isPCamEnabled ? (
-                      <ParticipantView
-                        participant={p}
-                        trackType="videoTrack"
-                        className={`w-full h-full object-cover ${isMe ? 'scale-x-[-1]' : ''}`}
-                        ParticipantViewUI={null}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 p-6 relative">
-                        {/* Audio track guarantee for remote users */}
-                        {!isMe && (
-                          <div className="absolute top-0 left-0 w-1 h-1 opacity-0 overflow-hidden pointer-events-none z-[-50]">
-                            <ParticipantView
-                              participant={p}
-                              trackType="none"
-                              ParticipantViewUI={null}
-                            />
-                          </div>
-                        )}
                         
                         {/* Center Avatar */}
                         <div className="relative">
