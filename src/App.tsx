@@ -13902,7 +13902,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-white font-black text-xs">{follower.userName || "مستخدم"}</p>
+                      <p className="text-white font-black text-xs">{follower.displayName || follower.name || follower.userName || follower.username || "مستخدم"}</p>
                     </div>
                     <img 
                       src={follower.userPhoto || `https://ui-avatars.com/api/?name=${follower.userName}&background=random`} 
@@ -21278,7 +21278,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="text-right">
-                            <p className="text-white font-black text-xs">{follower.userName || "مستخدم"}</p>
+                            <p className="text-white font-black text-xs">{follower.displayName || follower.name || follower.userName || follower.username || "مستخدم"}</p>
                           </div>
                           <img 
                             src={follower.userPhoto || `https://ui-avatars.com/api/?name=${follower.userName}&background=random`} 
