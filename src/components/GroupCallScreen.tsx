@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { useLanguage } from '../localization';
-import { User as FirebaseUser } from 'firebase/auth';
+import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
 import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
@@ -992,13 +992,21 @@ const GroupCallContent = ({
                         {/* Center Avatar */}
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-                            {(p.image || p.userPhoto || p.photoURL || p.avatar || getAuth().currentUser?.photoURL) ? (
-  <img src={p.image || p.userPhoto || p.photoURL || p.avatar || getAuth().currentUser?.photoURL || ''} alt="" className="w-full h-full object-cover" />
-) : (
-  <span className="text-xl font-black text-indigo-400">
-    {(p.name || p.userId).charAt(0).toUpperCase()}
-  </span>
-)}
+                            {(() => {
+  // جلب الصورة من Firebase مباشرة وبشكل آمن إذا كنت أنت المضيف
+  const authPhoto = isMe ? getAuth().currentUser?.photoURL : null;
+  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || authPhoto;
+
+  if (finalImage) {
+    return <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />;
+  }
+  
+  return (
+    <span className="text-xl font-black text-indigo-400">
+      {(p.name || p.userId || 'U').charAt(0).toUpperCase()}
+    </span>
+  );
+})()}
                           </div>
                           
                           {/* Pulsing indicator for active speaker when camera is off */}
