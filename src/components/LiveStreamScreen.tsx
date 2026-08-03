@@ -2623,8 +2623,8 @@ const LiveStreamContent = ({
           title="عرض الملف الشخصي للمضيف"
         >
           {(streamHostParticipant?.image || streamHostParticipant?.photoURL || streamHostParticipant?.userPhoto || streamHostParticipant?.avatar) ? (
-  <img src={streamHostParticipant.image || streamHostParticipant.photoURL || streamHostParticipant.userPhoto || streamHostParticipant.avatar} alt={(streamHostParticipant.name || "Host"} className="...
-          ) : (
+  <img src={streamHostParticipant.image || streamHostParticipant.photoURL || streamHostParticipant.userPhoto || streamHostParticipant.avatar} alt={streamHostParticipant.name || "Host"} className="w-full h-full object-cover" />
+) : (
             <span className="text-white font-black text-xs">{streamHostParticipant?.name?.charAt(0) || "H"}</span>
           )}
           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black" />
