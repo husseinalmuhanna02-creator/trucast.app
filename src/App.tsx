@@ -5957,10 +5957,10 @@ const LiveStreamScreen = ({
   };
 
   const toggleScreenShare = async () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-      alert('مشاركة الشاشة غير مدعومة في متصفحك الحالي.');
-      return;
-    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+  alert('مشاركة الشاشة متاحة حالياً عبر متصفح الكمبيوتر فقط.');
+  return;
+}
 
     if (isScreenSharing) {
       await stopScreenShare();
