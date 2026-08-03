@@ -1726,7 +1726,29 @@ export const GroupCallScreen = ({
   const [isMinimized, setIsMinimized] = useState(false);
   const { t } = useLanguage();
   const [callError, setCallError] = useState<string | null>(null);
+  const [myRealPhoto, setMyRealPhoto] = useState<string | null>(currentUser?.photoURL || null);
 
+useEffect(() => {
+  const fetchMyPhoto = async () => {
+    if (!currentUser?.uid) return;
+    if (currentUser.photoURL) {
+      setMyRealPhoto(currentUser.photoURL);
+      return;
+    }
+    try {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        const photo = data.photoURL || data.avatar || data.image || data.userPhoto || data.photo;
+        if (photo) setMyRealPhoto(photo);
+      }
+    } catch (e) {
+      console.error("Error fetching user photo:", e);
+    }
+  };
+  fetchMyPhoto();
+}, [currentUser]);
+  
       useEffect(() => {
     if (!currentUser) return;
     let active = true;
