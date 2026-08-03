@@ -1,4 +1,4 @@
-package com.hussein.trucast;
+package com.trucast.app;
 
 import android.os.Bundle;
 import android.webkit.PermissionRequest;
