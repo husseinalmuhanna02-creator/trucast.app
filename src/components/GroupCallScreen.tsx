@@ -1015,25 +1015,6 @@ const GroupCallContent = ({
           </div>
         </div>
       )}
-                        
-                        {/* Center Avatar */}
-                        <div className="relative">
-                          <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-                            {/* Center Avatar */}
-<div className="relative">
-  <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-    <SafeAvatar p={p} />
-  </div>
-</div>
-                          </div>
-                          
-                          {/* Pulsing indicator for active speaker when camera is off */}
-                          {isSpeaking && (
-                            <span className="absolute -inset-2 rounded-full border-2 border-indigo-500 animate-ping opacity-75 z-0" />
-                          )}
-                        </div>
-                      </div>
-                    )}
 
                     {/* Left/Bottom Controls Overlay for Admins (like mute options or status) */}
                     <div className="absolute top-3 left-3 flex gap-2 z-20">
