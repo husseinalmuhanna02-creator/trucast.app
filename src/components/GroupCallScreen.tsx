@@ -1000,7 +1000,7 @@ const GroupCallContent = ({
                             {(() => {
   const isMeUser = p.userId === getAuth().currentUser?.uid || p.name === getAuth().currentUser?.displayName;
   const savedPhoto = typeof window !== 'undefined' ? (localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto')) : null;
-  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || (isMeUser ? (myRealPhoto || getAuth().currentUser?.photoURL || savedPhoto) : null);
+  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || (isMeUser ? (getAuth().currentUser?.photoURL || savedPhoto) : null);
 
   return finalImage ? (
     <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />
