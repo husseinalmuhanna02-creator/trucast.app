@@ -993,15 +993,13 @@ const GroupCallContent = ({
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
                             {(() => {
-  // جلب الصورة من Firebase مباشرة وبشكل آمن إذا كنت أنت المضيف
-  const authPhoto = isMe ? getAuth().currentUser?.photoURL : null;
-  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || authPhoto;
+  const isMeUser = p.userId === getAuth().currentUser?.uid || p.name === getAuth().currentUser?.displayName;
+  const savedPhoto = typeof window !== 'undefined' ? (localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto')) : null;
+  const finalImage = p.image || p.userPhoto || p.photoURL || p.avatar || (isMeUser ? (getAuth().currentUser?.photoURL || savedPhoto) : null);
 
-  if (finalImage) {
-    return <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />;
-  }
-  
-  return (
+  return finalImage ? (
+    <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />
+  ) : (
     <span className="text-xl font-black text-indigo-400">
       {(p.name || p.userId || 'U').charAt(0).toUpperCase()}
     </span>
