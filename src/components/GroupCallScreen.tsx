@@ -46,6 +46,47 @@ import { motion, AnimatePresence } from 'framer-motion';
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import { getApiUrl } from '../config';
 // Interactive and synchronized whiteboard sub-component
+const SafeAvatar = ({ p }: { p: any }) => {
+  const [imgUrl, setImgUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchAvatar = async () => {
+      const authUser = getAuth().currentUser;
+      const isMe = p?.userId === authUser?.uid || p?.name === authUser?.displayName;
+
+      // 1. البحث في البيانات الجاهزة
+      let photo = p?.image || p?.userPhoto || p?.photoURL || p?.avatar || (isMe ? authUser?.photoURL : null);
+
+      // 2. الجلب الإجباري من Firestore إذا لم تكن الصورة جاهزة
+      if (!photo && isMe && authUser?.uid) {
+        try {
+          const d = await getDoc(doc(db, 'users', authUser.uid));
+          if (d.exists()) {
+            photo = d.data().photoURL || d.data().image || d.data().avatar || d.data().userPhoto;
+          }
+        } catch (e) {}
+      }
+
+      // 3. البحث في الذاكرة المحلية كحل أخير
+      if (!photo && isMe) {
+         photo = localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto');
+      }
+
+      setImgUrl(photo || null);
+    };
+
+    fetchAvatar();
+  }, [p]);
+
+  return imgUrl ? (
+    <img src={imgUrl} alt="Avatar" className="w-full h-full object-cover" />
+  ) : (
+    <span className="text-xl font-black text-indigo-400">
+      {(p?.name || p?.userId || 'U').charAt(0).toUpperCase()}
+    </span>
+  );
+};
+
 const WhiteboardPanel = ({ 
   call, 
   isOwnerOrAdmin, 
@@ -997,30 +1038,12 @@ const GroupCallContent = ({
                         {/* Center Avatar */}
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-                            {(() => {
-  const isMeUser = p.userId === getAuth().currentUser?.uid || p.name === getAuth().currentUser?.displayName;
-
-const savedPhoto = typeof window !== 'undefined' ? (() => {
-  try {
-    const u = localStorage.getItem('user') || localStorage.getItem('currentUser') || localStorage.getItem('userData');
-    if (u) {
-      const parsed = JSON.parse(u);
-      if (parsed?.photoURL || parsed?.image || parsed?.avatar) return parsed.photoURL || parsed.image || parsed.avatar;
-    }
-  } catch (e) {}
-  return localStorage.getItem('user_photo') || localStorage.getItem('userProfilePhoto') || localStorage.getItem('photoURL') || localStorage.getItem('avatar') || localStorage.getItem('photo') || localStorage.getItem('userPhoto');
-})() : null;
-
-const finalImage = p.image || (p as any)?.user?.image || p.userPhoto || p.photoURL || (p as any)?.custom?.photoURL || p.avatar || (isMeUser ? (getAuth().currentUser?.photoURL || savedPhoto) : null);
-
-  return finalImage ? (
-    <img src={finalImage} alt="Avatar" className="w-full h-full object-cover" />
-  ) : (
-    <span className="text-xl font-black text-indigo-400">
-      {(p.name || p.userId || 'U').charAt(0).toUpperCase()}
-    </span>
-  );
-})()}
+                            {/* Center Avatar */}
+<div className="relative">
+  <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
+    <SafeAvatar p={p} />
+  </div>
+</div>
                           </div>
                           
                           {/* Pulsing indicator for active speaker when camera is off */}
