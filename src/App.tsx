@@ -13630,7 +13630,14 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
               onNavigateToUser={onNavigateToUser}
             />
           )}
-          <h2 className={`text-3xl font-black mb-2 ${customization?.textColor || 'text-white'}`}>{currentUser?.displayName}</h2>
+          <h2 className={`text-3xl font-black mb-2 flex items-center justify-center gap-1.5 ${customization?.textColor || 'text-white'}`}>
+  <span>{userProfile?.displayName || currentUserData?.displayName || currentUser?.displayName}</span>
+  {(userProfile?.isVerified || userProfile?.isVerifiedUser || userProfile?.badge) && (
+    <svg className="w-5 h-5 text-blue-500 fill-current" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+    </svg>
+  )}
+</h2>
           {userProfile?.username && <p className="text-blue-500 font-bold mb-2 text-center -mt-1 underline decoration-blue-600/30 underline-offset-4">@{userProfile.username}</p>}
           <p className="text-zinc-500 text-sm mb-4">{currentUser?.email}</p>
           {userProfile?.bio && <p className="text-zinc-300 text-sm mb-6 max-w-md mx-auto leading-relaxed px-4">{userProfile.bio}</p>}
