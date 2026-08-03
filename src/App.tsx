@@ -17678,7 +17678,7 @@ function SearchScreen({ onNavigateToUser, onViewMedia, currentUser }: {
                         </div>
                         <div className="text-right">
                           <p className="text-white font-black text-lg flex items-center justify-end gap-1.5">
-                            <span>{user.displayName || t("مستخدم")}</span>
+                            <span>{user.displayName || user.name || user.userName || user.username || "مستخدم"}</span>
                             <VerifiedBadge isVerified={user.isVerified} />
                             <PremiumBadge isPremium={user.isPremium} />
                           </p>
