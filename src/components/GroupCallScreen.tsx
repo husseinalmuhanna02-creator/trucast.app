@@ -994,23 +994,17 @@ const GroupCallContent = ({
               participants.length <= 6 ? 'grid-cols-2 md:grid-cols-3 grid-rows-2' :
               'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-3'
             }`}>
-              {participants.map((p) => {
-                const isMe = p.userId === currentUser?.uid;
-                const isPCamEnabled = isMe ? isCamOn : !!(
-                  p.videoStream || 
-                  (p as any).isVideoEnabled || 
-                  (p as any).hasVideo || 
-                  (p as any).videoStreamTrack ||
-                  p.publishedTracks?.includes(2)
-                );
-                const isPMicEnabled = isMe ? isMicOn : !((p as any).isMuted);
-                const isSpeaking = p.isSpeaking;
+              {/* Center Avatar */}
+<div className="relative">
+  <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
+    <SafeAvatar p={p} />
+  </div>
 
-                return (
-                  <div 
-                    key={p.sessionId || p.userId} 
-                    className={`relative bg-zinc-900/40 backdrop-blur-md border rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center transition-all duration-300 ${
-                      isSpeaking 
+  {/* Pulsing indicator for active speaker when camera is off */}
+  {isSpeaking && (
+    <span className="absolute -inset-2 rounded-full border-2 border-indigo-500 animate-ping opacity-75 z-0" />
+  )}
+</div>
                         ? 'border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.25)] ring-2 ring-indigo-500/30' 
                         : 'border-white/5 hover:border-white/10'
                     }`}
