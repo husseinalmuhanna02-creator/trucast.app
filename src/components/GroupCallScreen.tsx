@@ -1036,12 +1036,9 @@ const GroupCallContent = ({
                       {isMe && <span className="text-[9px] bg-indigo-600/30 text-indigo-400 px-1.5 py-0.5 rounded font-black">{t("أنت")}</span>}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
+                    </div>
+  );
+})}
 
       {/* 4. Smart Whiteboard Overlay */}
       {showWhiteboard && (
