@@ -994,7 +994,6 @@ const GroupCallContent = ({
               participants.length <= 6 ? 'grid-cols-2 md:grid-cols-3 grid-rows-2' :
               'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-3'
             }`}>
-                  >
       {isPCamEnabled ? (
         <ParticipantView
           participant={p}
