@@ -1671,6 +1671,23 @@ const LiveStreamContent = ({
       }
     };
   }, [call, isHost, selectedFilter]);
+  const resolveAvatar = (participant?: any, hostPhotoFromStream?: string) => {
+  if (hostPhotoFromStream && !hostPhotoFromStream.includes('ui-avatars.com')) {
+    return hostPhotoFromStream;
+  }
+  
+  if (participant?.image && !participant.image.includes('ui-avatars.com')) {
+    return participant.image;
+  }
+
+  const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
+  const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const storedPhoto = localStorage.getItem('user_photo') || localStorage.getItem('userPhoto');
+
+  const fallback = firebaseAuthPhoto || localUser?.photoURL || storedPhoto;
+  
+  return (fallback && !fallback.includes('ui-avatars.com')) ? fallback : null;
+};
   const [selectedBackground, setSelectedBackground] = useState('none');
   const [customBackgroundImage, setCustomBackgroundImage] = useState<string | null>(null);
   const customBgInputRef = useRef<HTMLInputElement>(null);
