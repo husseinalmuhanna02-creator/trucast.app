@@ -2644,30 +2644,20 @@ const LiveStreamContent = ({
           title="عرض الملف الشخصي للمضيف"
         >
           {(() => {
-  const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
-  const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  
-  const finalAvatar = 
-    streamHostParticipant?.image || 
-    streamHostParticipant?.photoURL || 
-    firebaseAuthPhoto || 
-    currentUser?.photoURL || 
-    localUser?.photoURL || 
-    localStorage.getItem('userPhoto');
+  const hostAvatar = resolveAvatar(streamHostParticipant, (streamData as any)?.hostPhoto);
 
-  return finalAvatar ? (
-    <img
-      src={finalAvatar}
-      alt="Host Avatar"
-      referrerPolicy="no-referrer"
-      className="w-full h-full object-cover rounded-full"
-    />
-  ) : (
-    <span className="text-white font-black text-xs">
-      {(streamHostParticipant?.name || currentUser?.displayName || localUser?.displayName || "HU").slice(0, 2).toUpperCase()}
-    </span>
-  );
-})()}
+return hostAvatar ? (
+  <img
+    src={hostAvatar}
+    alt={streamHostParticipant?.name || "Host"}
+    referrerPolicy="no-referrer"
+    className="w-full h-full object-cover rounded-full"
+  />
+) : (
+  <span className="text-white font-black text-xs">
+    {(streamHostParticipant?.name?.charAt(0) || "H").toUpperCase()}
+  </span>
+);
           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black" />
         </div>
         <div className="flex flex-col justify-center">
