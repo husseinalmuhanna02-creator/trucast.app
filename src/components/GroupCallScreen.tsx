@@ -827,9 +827,9 @@ const GroupCallContent = ({
                   {/* Right side: Avatar */}
                   <div className="relative shrink-0">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-850 border border-white/10 flex items-center justify-center">
-                      {(p.image || p.user?.image || p.user?.photoURL || p.user?.custom?.avatar) ? (
+                      {((p.userId === currentUser?.uid ? currentUser?.photoURL : null) || p.image || p.user?.image || p.user?.photoURL || (p.custom as any)?.avatar) ? (
   <img 
-    src={p.image || p.user?.image || p.user?.photoURL || p.user?.custom?.avatar} 
+    src={(p.userId === currentUser?.uid ? currentUser?.photoURL : null) || p.image || p.user?.image || p.user?.photoURL || (p.custom as any)?.avatar} 
     alt={p.name || "User Avatar"} 
     className="w-full h-full object-cover"
     onError={(e) => {
@@ -1031,9 +1031,9 @@ const GroupCallContent = ({
                         {/* Center Avatar */}
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center shadow-lg relative z-10">
-                            {(p.image || p.user?.image || p.user?.photoURL || p.user?.custom?.avatar) ? (
+                            {((p.userId === currentUser?.uid ? currentUser?.photoURL : null) || p.image || p.user?.image || p.user?.photoURL || (p.custom as any)?.avatar) ? (
   <img 
-    src={p.image || p.user?.image || p.user?.photoURL || p.user?.custom?.avatar} 
+    src={(p.userId === currentUser?.uid ? currentUser?.photoURL : null) || p.image || p.user?.image || p.user?.photoURL || (p.custom as any)?.avatar} 
     alt={p.name || "User Avatar"} 
     className="w-full h-full object-cover"
     onError={(e) => {
