@@ -2569,9 +2569,16 @@ const LiveStreamContent = ({
                         <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
                         <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden shadow-2xl bg-zinc-800 flex items-center justify-center">
                           {(() => {
+  const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
   const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const avatarUrl = mainParticipant?.image || localUser?.photoURL || localStorage.getItem('userPhoto');
   
+  const avatarUrl = 
+    mainParticipant?.image || 
+    firebaseAuthPhoto || 
+    currentUser?.photoURL || 
+    localUser?.photoURL || 
+    localStorage.getItem('userPhoto');
+
   return avatarUrl ? (
     <img
       src={avatarUrl}
@@ -2628,8 +2635,16 @@ const LiveStreamContent = ({
           title="عرض الملف الشخصي للمضيف"
         >
           {(() => {
+  const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
   const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const finalAvatar = streamHostParticipant?.image || streamHostParticipant?.photoURL || localUser?.photoURL || localStorage.getItem('userPhoto');
+  
+  const finalAvatar = 
+    streamHostParticipant?.image || 
+    streamHostParticipant?.photoURL || 
+    firebaseAuthPhoto || 
+    currentUser?.photoURL || 
+    localUser?.photoURL || 
+    localStorage.getItem('userPhoto');
 
   return finalAvatar ? (
     <img
@@ -2640,7 +2655,7 @@ const LiveStreamContent = ({
     />
   ) : (
     <span className="text-white font-black text-xs">
-      {(streamHostParticipant?.name || localUser?.displayName || "HU").slice(0, 2).toUpperCase()}
+      {(streamHostParticipant?.name || currentUser?.displayName || localUser?.displayName || "HU").slice(0, 2).toUpperCase()}
     </span>
   );
 })()}
