@@ -28,11 +28,19 @@ jobs:
 
       - name: Prepare and Sync Android
         run: |
-         if [ ! -d "android" ]; then
-          npx @capacitor/cli add android
+         if [ -f "android/app/src/main/AndroidManifest.xml" ]; then
+          cp android/app/src/main/AndroidManifest.xml ./AndroidManifest.xml.bak
          fi
-          npx @capacitor/assets generate --android || true
-          npx @capacitor/cli sync android
+
+         rm -rf android
+         npx @capacitor/cli add android
+
+         if [ -f "./AndroidManifest.xml.bak" ]; then
+          cp ./AndroidManifest.xml.bak android/app/src/main/AndroidManifest.xml
+         fi
+
+         npx @capacitor/assets generate --android || true
+         npx @capacitor/cli sync android
 
       - uses: actions/setup-java@v4
         with:
