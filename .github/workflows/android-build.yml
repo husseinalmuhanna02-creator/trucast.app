@@ -36,10 +36,8 @@ jobs:
          npx @capacitor/cli add android
 
          if [ -f "./AndroidManifest.xml.bak" ]; then
-          cp ./AndroidManifest.xml.bak android/app/src/main/AndroidManifest.xml
+           cp ./AndroidManifest.xml.bak android/app/src/main/AndroidManifest.xml
          fi
-
-         sed -i 's/package="com.trucast.app"//g' android/app/src/main/AndroidManifest.xml
 
          npx @capacitor/assets generate --android || true
          npx @capacitor/cli sync android
