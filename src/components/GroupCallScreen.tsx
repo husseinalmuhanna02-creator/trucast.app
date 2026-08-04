@@ -751,9 +751,7 @@ const GroupCallContent = ({
     resetCallUIStates();
     navigation.goBack();
   };
-  // ... الدالة الموجودة لديك سابقاً executeEndCall ...
 
-  // 👇 ألصق الدوال الثلاث هنا تماماً (فوق السطر 755)
   const handleToggleMic = async () => {
     try {
       if (call) await call.microphone.toggle();
@@ -778,7 +776,6 @@ const GroupCallContent = ({
     }
   };
 
-  // 🔴 السطر 755 الموجود في صورتك:
   return (
     <div className="flex-1 flex flex-col md:flex-row ...">
       
