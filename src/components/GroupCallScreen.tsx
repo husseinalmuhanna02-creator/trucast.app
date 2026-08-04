@@ -777,9 +777,6 @@ const GroupCallContent = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row ...">
-      
-  return (
     <div className="flex-1 flex flex-col md:flex-row relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
       {/* 1. Sidebar Panel (Vertical Ladder Layout - شكل السلم) */}
