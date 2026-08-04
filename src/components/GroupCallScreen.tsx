@@ -1515,7 +1515,7 @@ const GroupCallContent = ({
          ) : (
           <>
             <button
-              onClick={toggleMic}
+              onClick={handleToggleMic}
               className={`p-4 rounded-2xl transition-all active:scale-95 ${
                 !isMicOn 
                   ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' 
@@ -1527,7 +1527,7 @@ const GroupCallContent = ({
             </button>
 
             <button
-              onClick={toggleScreenShare}
+              onClick={handleToggleScreenShare}
               className={`p-4 rounded-2xl transition-all active:scale-95 ${
                 isScreenSharing 
                   ? 'bg-blue-600 text-white hover:bg-blue-700' 
@@ -1547,7 +1547,7 @@ const GroupCallContent = ({
             </button>
 
             <button
-              onClick={toggleCamera}
+              onClick={handleToggleCamera}
               className={`p-4 rounded-2xl transition-all active:scale-95 ${
                 !isCamOn 
                   ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' 
