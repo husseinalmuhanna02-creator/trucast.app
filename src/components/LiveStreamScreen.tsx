@@ -2652,9 +2652,10 @@ const LiveStreamContent = ({
   />
 ) : (
   <span className="text-white font-black text-xs">
-    {(streamHostParticipant?.name?.charAt(0) || "H").toUpperCase()}
+    (streamHostParticipant?.name?.charAt(0) || "H").toUpperCase()
   </span>
 )}
+
           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black" />
         </div>
         <div className="flex flex-col justify-center">
