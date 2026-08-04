@@ -2491,7 +2491,7 @@ const LiveStreamContent = ({
                   {!isHostCamEnabled && (
                     <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-4">
                       <div className="w-16 h-16 rounded-full border border-red-500/20 bg-zinc-900 flex items-center justify-center mb-2">
-                        {hostPart?.image ? (
+                        {hostPart?.image || JSON.parse(localStorage.getItem('user') || '{}')?.photoURL ? (
                           <img src={hostPart.image} alt={hostPart.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                         ) : (
                           <Radio className="w-6 h-6 text-red-500 animate-pulse" />
