@@ -2583,7 +2583,6 @@ const LiveStreamContent = ({
     <Radio className="w-10 h-10 text-red-500 animate-pulse" />
   );
 })()}
-                          )}
                         </div>
                       </div>
                     )}
