@@ -2568,14 +2568,21 @@ const LiveStreamContent = ({
                       <div className="relative mb-6">
                         <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
                         <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden shadow-2xl bg-zinc-800 flex items-center justify-center">
-                          {mainParticipant?.image ? (
-                            <img 
-                              src={mainParticipant.image} 
-                              alt="Main participant" 
-                              className="w-full h-full object-cover"
-                              referrerPolicy="no-referrer"
-                            />
-                          ) : (
+                          {(() => {
+  const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const avatarUrl = mainParticipant?.image || localUser?.photoURL || localStorage.getItem('userPhoto');
+  
+  return avatarUrl ? (
+    <img
+      src={avatarUrl}
+      alt="Main participant"
+      className="w-full h-full object-cover"
+      referrerPolicy="no-referrer"
+    />
+  ) : (
+    <Radio className="w-10 h-10 text-red-500 animate-pulse" />
+  );
+})()}
                             <Radio className="w-10 h-10 text-red-500 animate-pulse" />
                           )}
                         </div>
