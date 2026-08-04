@@ -28,8 +28,6 @@ jobs:
 
       - name: Prepare and Sync Android
         run: |
-          rm -rf android
-          npx @capacitor/cli add android
           npx @capacitor/assets generate --android || true
           npx @capacitor/cli sync android
 
