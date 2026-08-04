@@ -28,6 +28,9 @@ jobs:
 
       - name: Prepare and Sync Android
         run: |
+         if [ ! -d "android" ]; then
+          npx @capacitor/cli add android
+         fi
           npx @capacitor/assets generate --android || true
           npx @capacitor/cli sync android
 
