@@ -751,7 +751,37 @@ const GroupCallContent = ({
     resetCallUIStates();
     navigation.goBack();
   };
+  // ... الدالة الموجودة لديك سابقاً executeEndCall ...
 
+  // 👇 ألصق الدوال الثلاث هنا تماماً (فوق السطر 755)
+  const handleToggleMic = async () => {
+    try {
+      if (call) await call.microphone.toggle();
+    } catch (error) {
+      console.error("خطأ في المايك:", error);
+    }
+  };
+
+  const handleToggleCamera = async () => {
+    try {
+      if (call) await call.camera.toggle();
+    } catch (error) {
+      console.error("خطأ في الكاميرا:", error);
+    }
+  };
+
+  const handleToggleScreenShare = async () => {
+    try {
+      if (call) await call.screenShare.toggle();
+    } catch (error) {
+      console.error("خطأ في مشاركة الشاشة:", error);
+    }
+  };
+
+  // 🔴 السطر 755 الموجود في صورتك:
+  return (
+    <div className="flex-1 flex flex-col md:flex-row ...">
+      
   return (
     <div className="flex-1 flex flex-col md:flex-row relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
