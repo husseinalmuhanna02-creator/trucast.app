@@ -2586,19 +2586,11 @@ const LiveStreamContent = ({
                         <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
                         <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden shadow-2xl bg-zinc-800 flex items-center justify-center">
                           {(() => {
-  const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
-  const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  
-  const avatarUrl = 
-    mainParticipant?.image || 
-    firebaseAuthPhoto || 
-    currentUser?.photoURL || 
-    localUser?.photoURL || 
-    localStorage.getItem('userPhoto');
+  const mainParticipantAvatar = resolveAvatar(mainParticipant, (streamData as any)?.hostPhoto);
 
-  return avatarUrl ? (
+  return mainParticipantAvatar ? (
     <img
-      src={avatarUrl}
+      src={mainParticipantAvatar}
       alt="Main participant"
       className="w-full h-full object-cover"
       referrerPolicy="no-referrer"
