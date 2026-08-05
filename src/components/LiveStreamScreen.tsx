@@ -2588,9 +2588,9 @@ const LiveStreamContent = ({
     {mainParticipant ? (
       <img
   src={
-    mainParticipant?.photoURL ||
-    (mainParticipant as any)?.avatar ||
-    (streamData as any)?.hostPhoto ||
+    (typeof mainParticipant?.photoURL === 'string' && mainParticipant.photoURL) ||
+    (typeof (mainParticipant as any)?.avatar === 'string' && (mainParticipant as any).avatar) ||
+    (typeof (streamData as any)?.hostPhoto === 'string' && (streamData as any).hostPhoto) ||
     `https://api.dicebear.com/7.x/avataaars/svg?seed=${mainParticipant?.name || 'host'}`
   }
   alt="Main participant"
@@ -2647,9 +2647,9 @@ const LiveStreamContent = ({
           {streamHostParticipant ? (
   <img
   src={
-    streamHostParticipant?.photoURL ||
-    (streamHostParticipant as any)?.avatar ||
-    (streamData as any)?.hostPhoto ||
+    (typeof streamHostParticipant?.photoURL === 'string' && streamHostParticipant.photoURL) ||
+    (typeof (streamHostParticipant as any)?.avatar === 'string' && (streamHostParticipant as any).avatar) ||
+    (typeof (streamData as any)?.hostPhoto === 'string' && (streamData as any).hostPhoto) ||
     `https://api.dicebear.com/7.x/avataaars/svg?seed=${streamHostParticipant?.name || 'host'}`
   }
   alt={streamHostParticipant?.name || "Host"}
