@@ -2587,7 +2587,7 @@ const LiveStreamContent = ({
   <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden flex items-center justify-center bg-zinc-800">
     {mainParticipant ? (
 <img
-  src={resolveAvatar(mainParticipant, streamData?.hostPhoto) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
+  src={resolveAvatar(mainParticipant) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
   alt="Main participant"
   className="w-full h-full object-cover"
   referrerPolicy="no-referrer"
@@ -2641,7 +2641,7 @@ const LiveStreamContent = ({
         >
           {streamHostParticipant ? (
   <img
-  src={resolveAvatar(streamHostParticipant, streamData?.hostPhoto) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
+  src={resolveAvatar(streamHostParticipant) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
   alt={streamHostParticipant?.name || "Host"}
   className="w-full h-full object-cover rounded-full"
   referrerPolicy="no-referrer"
