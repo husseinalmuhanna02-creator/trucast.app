@@ -2656,7 +2656,6 @@ const LiveStreamContent = ({
   referrerPolicy="no-referrer"
   className="w-full h-full object-cover rounded-full"
 />
-  />
 ) : (
   <span className="text-white font-black text-xs">H</span>
 )}
