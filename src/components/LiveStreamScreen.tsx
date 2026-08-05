@@ -1675,17 +1675,35 @@ const LiveStreamContent = ({
   if (hostPhotoFromStream && !hostPhotoFromStream.includes('ui-avatars.com')) {
     return hostPhotoFromStream;
   }
-  
-  if (participant?.image && !participant.image.includes('ui-avatars.com')) {
-    return participant.image;
+
+  const participantPhoto =
+    participant?.photoURL ||
+    participant?.photoUrl ||
+    participant?.avatar ||
+    participant?.avatarUrl ||
+    participant?.profilePicture ||
+    participant?.image;
+
+  if (participantPhoto && !participantPhoto.includes('ui-avatars.com')) {
+    return participantPhoto;
   }
 
   const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
   const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const storedPhoto = localStorage.getItem('user_photo') || localStorage.getItem('userPhoto');
+  const storedPhoto =
+    localStorage.getItem('user_photo') ||
+    localStorage.getItem('userPhoto');
 
-  const fallback = firebaseAuthPhoto || localUser?.photoURL || storedPhoto;
-  
+  const fallback =
+    firebaseAuthPhoto ||
+    localUser?.photoURL ||
+    localUser?.photoUrl ||
+    localUser?.avatar ||
+    localUser?.avatarUrl ||
+    localUser?.profilePicture ||
+    localUser?.image ||
+    storedPhoto;
+
   return (fallback && !fallback.includes('ui-avatars.com')) ? fallback : null;
 };
   const [selectedBackground, setSelectedBackground] = useState('none');
