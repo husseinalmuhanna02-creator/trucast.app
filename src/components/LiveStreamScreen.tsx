@@ -2646,10 +2646,16 @@ const LiveStreamContent = ({
         >
           {streamHostParticipant ? (
   <img
-    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${streamHostParticipant.name || 'host'}`}
-    alt={streamHostParticipant.name || "Host"}
-    referrerPolicy="no-referrer"
-    className="w-full h-full object-cover rounded-full"
+  src={
+    streamHostParticipant?.photoURL ||
+    (streamHostParticipant as any)?.avatar ||
+    (streamData as any)?.hostPhoto ||
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=${streamHostParticipant?.name || 'host'}`
+  }
+  alt={streamHostParticipant?.name || "Host"}
+  referrerPolicy="no-referrer"
+  className="w-full h-full object-cover rounded-full"
+/>
   />
 ) : (
   <span className="text-white font-black text-xs">H</span>
