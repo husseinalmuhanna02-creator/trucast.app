@@ -2639,17 +2639,15 @@ const LiveStreamContent = ({
           className="relative w-9 h-9 rounded-full border-2 border-red-500 bg-zinc-900 flex items-center justify-center overflow-hidden shrink-0 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
           title="عرض الملف الشخصي للمضيف"
         >
-          {resolveAvatar(streamHostParticipant, (streamData as any)?.hostPhoto) ? (
+          {streamHostParticipant ? (
   <img
-    src={resolveAvatar(streamHostParticipant, (streamData as any)?.hostPhoto)!}
-    alt={streamHostParticipant?.name || "Host"}
+    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${streamHostParticipant.name || 'host'}`}
+    alt={streamHostParticipant.name || "Host"}
     referrerPolicy="no-referrer"
     className="w-full h-full object-cover rounded-full"
   />
 ) : (
-  <span className="text-white font-black text-xs">
-    (streamHostParticipant?.name?.charAt(0) || "H").toUpperCase()
-  </span>
+  <span className="text-white font-black text-xs">H</span>
 )}
 
           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black" />
