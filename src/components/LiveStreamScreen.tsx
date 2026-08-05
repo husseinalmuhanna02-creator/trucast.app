@@ -2587,11 +2587,16 @@ const LiveStreamContent = ({
   <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden flex items-center justify-center bg-zinc-800">
     {mainParticipant ? (
       <img
-        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${mainParticipant.name || 'host'}`}
-        alt="Main participant"
-        className="w-full h-full object-cover"
-        referrerPolicy="no-referrer"
-      />
+  src={
+    mainParticipant?.photoURL ||
+    (mainParticipant as any)?.avatar ||
+    (streamData as any)?.hostPhoto ||
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=${mainParticipant?.name || 'host'}`
+  }
+  alt="Main participant"
+  className="w-full h-full object-cover"
+  referrerPolicy="no-referrer"
+/>
     ) : (
       <Radio className="w-10 h-10 text-red-500 animate-pulse" />
     )}
