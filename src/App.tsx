@@ -6843,8 +6843,6 @@ const LiveStreamScreen = ({
     console.error("PK start error:", err);
   }
 };
-    const activeId = streamId || hostStreamId || stream?.id;
-    if (!activeId) return;
     try {
       await updateDoc(doc(db, "lives", activeId), {
         pkBattle: {
