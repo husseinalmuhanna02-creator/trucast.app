@@ -6210,55 +6210,61 @@ const LiveStreamScreen = ({
   };
 
   const handleStartLive = async (title: string) => {
-    if (!currentUser || !userProfile) return;
-    setGlobalLoading(true);
-    try {
-      const liveRef = await addDoc(collection(db, "lives"), {
-        hostId: currentUser.uid,
-        hostName: userProfile.displayName || "مستخدم",
-        hostPhoto: (
-  (userProfile?.photoURL && !userProfile.photoURL.includes('ui-avatars.com'))
-    ? userProfile.photoURL
-    : ((currentUser?.photoURL && !currentUser.photoURL.includes('ui-avatars.com'))
-        ? currentUser.photoURL
-        : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || null))
-),
-        title: title || "بث مباشر جديد",
-        status: 'active',
-        startedAt: serverTimestamp(),
-        lastActiveAt: serverTimestamp(),
-        viewerCount: 1,
-        likesCount: 0,
-        commentsCount: 0,
-        trendingScore: 0,
-        cameraEnabled: true,
-        micEnabled: isMicEnabled
-      });
-      await logActivity(currentUser.uid, 'start_live', `بدأ بثاً مباشراً بعنوان: "${title || "بث مباشر جديد"}"`);
-      setIsLive(true);
-      setIsCameraEnabled(true);
-      setStream({
-        id: liveRef.id,
-        hostId: currentUser.uid,
-        hostName: userProfile.displayName || "مستخدم",
-        hostPhoto: (
-  (userProfile?.photoURL && !userProfile.photoURL.includes('ui-avatars.com'))
-    ? userProfile.photoURL
-    : ((currentUser?.photoURL && !currentUser.photoURL.includes('ui-avatars.com'))
-        ? currentUser.photoURL
-        : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || null))
-),
-        title: title || "بث مباشر جديد",
-        status: 'active',
-        startedAt: Timestamp.now(),
-        lastActiveAt: Timestamp.now(),
-        viewerCount: 1,
-        likesCount: 0,
-        commentsCount: 0,
-        trendingScore: 0,
-        cameraEnabled: true,
-        micEnabled: isMicEnabled
-      });
+  if (!currentUser) return;
+  setGlobalLoading(true);
+  try {
+    const profilePhoto = userProfile?.photoURL;
+    const authPhoto = currentUser?.photoURL;
+    const localPhoto = localStorage.getItem('user_photo') || JSON.parse(localStorage.getItem('user') || '{}')?.photoURL;
+    
+    const validPhotos = [profilePhoto, authPhoto, localPhoto].filter(
+      photo => photo && typeof photo === 'string' && !photo.includes('ui-avatars.com') && !photo.includes('avatar')
+    );
+    
+    const realHostPhoto = validPhotos[0] || authPhoto || profilePhoto || "";
+
+    const liveRef = await addDoc(collection(db, "lives"), {
+      hostId: currentUser.uid,
+      hostName: userProfile?.displayName || currentUser?.displayName || "مستخدم",
+      hostPhoto: realHostPhoto,
+      title: title || "بث مباشر جديد",
+      status: 'active',
+      startedAt: serverTimestamp(),
+      lastActiveAt: serverTimestamp(),
+      viewerCount: 1,
+      likesCount: 0,
+      commentsCount: 0,
+      trendingScore: 0,
+      cameraEnabled: true,
+      micEnabled: isMicEnabled
+    });
+
+    await logActivity(currentUser.uid, 'start_live', `بدأ بثاً مباشراً بعنوان: "${title || "بث مباشر جديد"}"`);
+    setIsLive(true);
+    setHostStreamId(liveRef.id);
+    setIsCameraEnabled(true);
+    setStream({
+      id: liveRef.id,
+      hostId: currentUser.uid,
+      hostName: userProfile?.displayName || currentUser?.displayName || "مستخدم",
+      hostPhoto: realHostPhoto,
+      title: title || "بث مباشر جديد",
+      status: 'active',
+      startedAt: Timestamp.now(),
+      lastActiveAt: Timestamp.now(),
+      viewerCount: 1,
+      likesCount: 0,
+      commentsCount: 0,
+      trendingScore: 0,
+      cameraEnabled: true,
+      micEnabled: isMicEnabled
+    });
+  } catch (e) {
+    console.error("Error starting live:", e);
+  } finally {
+    setGlobalLoading(false);
+  }
+};
 
       // Send notifications to all followers (chunked for batches of up to 500)
       try {
