@@ -6236,13 +6236,6 @@ const LiveStreamScreen = ({
       });
       await logActivity(currentUser.uid, 'start_live', `بدأ بثاً مباشراً بعنوان: "${title || "بث مباشر جديد"}"`);
       setIsLive(true);
-      hostPhoto: (
-  (userProfile?.photoURL && !userProfile.photoURL.includes('ui-avatars.com'))
-    ? userProfile.photoURL
-    : ((currentUser?.photoURL && !currentUser.photoURL.includes('ui-avatars.com'))
-        ? currentUser.photoURL
-        : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || null))
-),
       setIsCameraEnabled(true);
       setStream({
         id: liveRef.id,
