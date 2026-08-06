@@ -6259,6 +6259,30 @@ const LiveStreamScreen = ({
       cameraEnabled: true,
       micEnabled: isMicEnabled
     });
+
+    // Send notifications to all followers (chunked for batches of up to 500)
+    try {
+      const followersSnap = await getDocs(collection(db, "users", currentUser.uid, "followers"));
+      if (!followersSnap.empty) {
+        const docs = followersSnap.docs;
+        for (const followerDoc of docs) {
+          await addDoc(collection(db, "users", followerDoc.id, "notifications"), {
+            type: "live_start",
+            title: "بث مباشر جديد 🔴",
+            message: `${userProfile?.displayName || currentUser?.displayName || "مستخدم"} بدأ بثاً مباشراً الآن: ${title || "بث مباشر جديد"}`,
+            streamId: liveRef.id,
+            senderId: currentUser.uid,
+            senderName: userProfile?.displayName || currentUser?.displayName || "مستخدم",
+            senderPhoto: realHostPhoto,
+            createdAt: serverTimestamp(),
+            isRead: false
+          });
+        }
+      }
+    } catch (notifErr) {
+      console.error("Error sending live notifications:", notifErr);
+    }
+
   } catch (e) {
     console.error("Error starting live:", e);
   } finally {
