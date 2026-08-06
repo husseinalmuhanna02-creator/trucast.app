@@ -4530,20 +4530,27 @@ class WebGLBeautyProcessor {
 /** ---------------------------------------------------------------------------
  * STREAM AVATAR COMPONENT
  * -------------------------------------------------------------------------- */
-const StreamAvatar = ({ 
-  photoURL, 
-  name, 
-  className = "w-8 h-8", 
-  onClick 
-}: { 
-  photoURL?: string | null, 
-  name?: string, 
-  className?: string, 
-  onClick?: (e: React.MouseEvent) => void 
+const StreamAvatar = ({
+  photoURL,
+  name,
+  className = "w-8 h-8",
+  onClick
+}: {
+  photoURL?: string | null,
+  name?: string,
+  className?: string,
+  onClick?: (e: React.MouseEvent) => void
 }) => {
   const [hasError, setHasError] = useState(false);
   const cleanName = name?.trim() || "مستخدم";
   const firstLetter = cleanName.charAt(0).toUpperCase();
+
+  const isCartoon = photoURL ? (
+    photoURL.includes('dicebear') || 
+    photoURL.includes('ui-avatars') || 
+    photoURL.includes('avatar') ||
+    photoURL.includes('multiavatar')
+  ) : false;
 
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
@@ -4552,7 +4559,7 @@ const StreamAvatar = ({
     }
   };
 
-  if (photoURL && photoURL.trim() !== "" && !hasError) {
+  if (photoURL && photoURL.trim() !== "" && !hasError && !isCartoon) {
     return (
       <img
         src={photoURL}
@@ -4565,11 +4572,15 @@ const StreamAvatar = ({
     );
   }
 
-  // Fallback with first letter
-  const colors = [
-    'bg-red-500', 'bg-orange-500', 'bg-amber-500', 'bg-emerald-500', 
-    'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-violet-500', 
-    'bg-fuchsia-500', 'bg-pink-500', 'bg-rose-500'
+  return (
+    <div
+      onClick={handleClick}
+      className={`${className} rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold border border-white/20 shadow-sm shrink-0`}
+    >
+      {firstLetter}
+    </div>
+  );
+};
   ];
   let hash = 0;
   for (let i = 0; i < cleanName.length; i++) {
