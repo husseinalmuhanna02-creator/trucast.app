@@ -10603,11 +10603,17 @@ const LivesExplorerScreen = ({ onWatchLive, onNavigateToUser, onGoLive }: { onWa
               className="bg-zinc-900 border border-zinc-800 rounded-[32px] overflow-hidden group cursor-pointer shadow-xl shadow-black/50"
             >
               <div className="aspect-video relative overflow-hidden bg-zinc-800">
-                <img 
-                  src={live.hostPhoto || `https://ui-avatars.com/api/?name=${live.hostName}&background=random`} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60"
-                  alt=""
-                />
+                <img
+  src={
+    (live.coverImage && !live.coverImage.includes('ui-avatars.com')) 
+      ? live.coverImage 
+      : ((live.hostPhoto && !live.hostPhoto.includes('ui-avatars.com')) 
+          ? live.hostPhoto 
+          : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || `https://api.dicebear.com/7.x/avataaars/svg?seed=${live.hostId || 'host'}`))
+  }
+  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+  alt=""
+/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute top-4 left-4 flex items-center gap-2">
                   <div className="bg-red-600 text-white px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
@@ -10645,7 +10651,15 @@ const LivesExplorerScreen = ({ onWatchLive, onNavigateToUser, onGoLive }: { onWa
                   }}
                   className="hover:scale-105 transition-transform"
                 >
-                  <img src={live.hostPhoto} className="w-10 h-10 rounded-full border border-zinc-800" alt="" />
+                  <img 
+  src={
+    (live.hostPhoto && !live.hostPhoto.includes('ui-avatars.com'))
+      ? live.hostPhoto
+      : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || `https://api.dicebear.com/7.x/avataaars/svg?seed=${live.hostId || 'host'}`)
+  } 
+  className="w-10 h-10 rounded-full border border-zinc-800 object-cover" 
+  alt="" 
+/>
                 </button>
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-bold truncate text-sm">@{live.hostName}</p>
