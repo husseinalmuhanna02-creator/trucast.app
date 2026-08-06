@@ -6248,7 +6248,13 @@ const LiveStreamScreen = ({
         id: liveRef.id,
         hostId: currentUser.uid,
         hostName: userProfile.displayName || "مستخدم",
-        hostPhoto: userProfile.photoURL || "",
+        hostPhoto: (
+  (userProfile?.photoURL && !userProfile.photoURL.includes('ui-avatars.com'))
+    ? userProfile.photoURL
+    : ((currentUser?.photoURL && !currentUser.photoURL.includes('ui-avatars.com'))
+        ? currentUser.photoURL
+        : (JSON.parse(localStorage.getItem('user') || '{}')?.photoURL || localStorage.getItem('user_photo') || null))
+),
         title: title || "بث مباشر جديد",
         status: 'active',
         startedAt: Timestamp.now(),
