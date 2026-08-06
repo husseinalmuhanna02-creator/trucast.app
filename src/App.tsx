@@ -6208,8 +6208,8 @@ const LiveStreamScreen = ({
       handleFirestoreError(e, OperationType.UPDATE, `lives/${activeId}`);
     }
   };
-
-  const handleStartLive = async (title: string) => {
+  
+const handleStartLive = async (title: string) => {
   if (!currentUser) return;
   setGlobalLoading(true);
   try {
@@ -6265,68 +6265,39 @@ const LiveStreamScreen = ({
       const followersSnap = await getDocs(collection(db, "users", currentUser.uid, "followers"));
       if (!followersSnap.empty) {
         const docs = followersSnap.docs;
-        for (const followerDoc of docs) {
-          await addDoc(collection(db, "users", followerDoc.id, "notifications"), {
-            type: "live_start",
-            title: "بث مباشر جديد 🔴",
-            message: `${userProfile?.displayName || currentUser?.displayName || "مستخدم"} بدأ بثاً مباشراً الآن: ${title || "بث مباشر جديد"}`,
-            streamId: liveRef.id,
-            senderId: currentUser.uid,
-            senderName: userProfile?.displayName || currentUser?.displayName || "مستخدم",
-            senderPhoto: realHostPhoto,
-            createdAt: serverTimestamp(),
-            isRead: false
+        const chunkSize = 400;
+        for (let i = 0; i < docs.length; i += chunkSize) {
+          const chunk = docs.slice(i, i + chunkSize);
+          const batch = writeBatch(db);
+          chunk.forEach(followerDoc => {
+            const followerId = followerDoc.id;
+            const notifRef = doc(collection(db, "users", followerId, "notifications"));
+            batch.set(notifRef, {
+              title: "بث مباشر جديد 🔴",
+              body: `${userProfile?.displayName || "مستخدم"} بدأ بثاً مباشراً جديداً`,
+              type: "live_start",
+              streamId: liveRef.id,
+              hostId: currentUser.uid,
+              hostName: userProfile?.displayName || "مستخدم",
+              hostPhoto: realHostPhoto,
+              read: false,
+              createdAt: serverTimestamp()
+            });
           });
+          await batch.commit();
         }
       }
-    } catch (notifErr) {
-      console.error("Error sending live notifications:", notifErr);
+    } catch (err) {
+      console.error("Error sending start live notifications to followers:", err);
     }
 
   } catch (e) {
-    console.error("Error starting live:", e);
+    handleFirestoreError(e, OperationType.WRITE, "lives");
   } finally {
     setGlobalLoading(false);
   }
 };
-
-      // Send notifications to all followers (chunked for batches of up to 500)
-      try {
-        const followersSnap = await getDocs(collection(db, "users", currentUser.uid, "followers"));
-        if (!followersSnap.empty) {
-          const docs = followersSnap.docs;
-          const chunkSize = 400; // conservative batch limit
-          for (let i = 0; i < docs.length; i += chunkSize) {
-            const chunk = docs.slice(i, i + chunkSize);
-            const batch = writeBatch(db);
-            chunk.forEach(followerDoc => {
-              const followerId = followerDoc.id;
-              const notifRef = doc(collection(db, "users", followerId, "notifications"));
-              batch.set(notifRef, {
-                title: "بث مباشر جديد 🔴",
-                body: `بدأ المذيع ${userProfile.displayName || "مستخدم"} بثاً مباشراً جديداً: ${title || "بدون عنوان"}`,
-                type: "live_start",
-                streamId: liveRef.id,
-                hostId: currentUser.uid,
-                hostName: userProfile.displayName || "مستخدم",
-                hostPhoto: userProfile.photoURL || "",
-                read: false,
-                createdAt: serverTimestamp()
-              });
-            });
-            await batch.commit();
-          }
-        }
-      } catch (err) {
-        console.error("Error sending start live notifications to followers:", err);
-      }
-    } catch (e) {
-      handleFirestoreError(e, OperationType.WRITE, "lives");
-    } finally {
-      setGlobalLoading(false);
-    }
-  };
-
+  
   const handleEndLive = async () => {
     setGlobalLoading(true);
     const activeId = hostStreamId || stream?.id;
