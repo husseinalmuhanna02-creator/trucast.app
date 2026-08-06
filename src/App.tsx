@@ -6793,7 +6793,56 @@ const LiveStreamScreen = ({
   };
 
   // --- PK Battle System ---
-  const handleStartPKBattle = async (opponent: { name: string; photo: string }) => {
+  const handleStartPKBattle = async (opponent: { name: string; photo: string; id?: string }) => {
+  const activeId = streamId || hostStreamId || stream?.id;
+  if (!activeId) return;
+  try {
+    const oppId = stream?.coHostStreamIds?.[0] || stream?.coHostStreamId || opponent?.id || "";
+    
+    const battleDataForHost = {
+      opponentStreamId: oppId,
+      opponentName: opponent.name,
+      opponentPhoto: opponent.photo,
+      pointsHost: 100,
+      pointsOpponent: 100,
+      timeLeft: 180,
+      status: 'active',
+      startedAt: serverTimestamp()
+    };
+
+    // 1. تحديث وثيقتك
+    await updateDoc(doc(db, "lives", activeId), {
+      pkBattle: battleDataForHost
+    });
+
+    // 2. تحديث وثيقة المضيف الآخر ليظهر عنده التحدي فوراً
+    if (oppId) {
+      await updateDoc(doc(db, "lives", oppId), {
+        pkBattle: {
+          opponentStreamId: activeId,
+          opponentName: stream?.hostName || "المضيف",
+          opponentPhoto: stream?.hostPhoto || "",
+          pointsHost: 100,
+          pointsOpponent: 100,
+          timeLeft: 180,
+          status: 'active',
+          startedAt: serverTimestamp()
+        }
+      });
+    }
+
+    setShowPKModal(false);
+    await addDoc(collection(db, "lives", activeId, "comments"), {
+      userId: "system",
+      userName: "تحدي TruCast ⚔️",
+      userPhoto: "",
+      text: `🔥 بدأ تحدي البث المباشر (PK Battle) مع @${opponent.name}!`,
+      createdAt: serverTimestamp()
+    });
+  } catch (err) {
+    console.error("PK start error:", err);
+  }
+};
     const activeId = streamId || hostStreamId || stream?.id;
     if (!activeId) return;
     try {
