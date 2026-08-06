@@ -7861,12 +7861,19 @@ const handleStartLive = async (title: string) => {
                     className="absolute inset-0 w-full h-full object-cover z-0"
                   />
                 ) : (
-                  <div className="absolute inset-0 w-full h-full bg-black flex flex-col items-center justify-center text-zinc-400 z-0">
-                    <StreamAvatar 
-                      photoURL={stream?.hostPhoto || userProfile?.photoURL || currentUser?.photoURL} 
-                      name={stream?.hostName || currentUser?.displayName || "المضيف"} 
-                      className="w-24 h-24 border-4 border-zinc-800 shadow-2xl mb-4" 
-                    />
+                  {stream?.hostPhoto || userProfile?.photoURL ? (
+  <img
+    src={stream?.hostPhoto || userProfile?.photoURL}
+    alt="Host"
+    referrerPolicy="no-referrer"
+    className="w-24 h-24 rounded-full object-cover border-4 border-zinc-800 shadow-2xl mb-4"
+    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+  />
+) : (
+  <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-3xl font-bold border-4 border-zinc-800 shadow-2xl mb-4">
+    {(stream?.hostName || userProfile?.displayName || "M")?.charAt(0).toUpperCase()}
+  </div>
+)}
                     <p className="font-black text-sm text-zinc-300">الكاميرا مغلقة</p>
                     <p className="text-xs text-zinc-500 mt-1">قم بتشغيل الكاميرا من الزر في الأعلى للبدء</p>
                   </div>
