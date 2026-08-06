@@ -6843,31 +6843,6 @@ const LiveStreamScreen = ({
     console.error("PK start error:", err);
   }
 };
-    try {
-      await updateDoc(doc(db, "lives", activeId), {
-        pkBattle: {
-          opponentStreamId: stream?.coHostStreamIds?.[0] || stream?.coHostStreamId || "opponent_" + Date.now(),
-          opponentName: opponent.name,
-          opponentPhoto: opponent.photo,
-          pointsHost: 100,
-          pointsOpponent: 100,
-          timeLeft: 180,
-          status: 'active',
-          startedAt: serverTimestamp()
-        }
-      });
-      setShowPKModal(false);
-      await addDoc(collection(db, "lives", activeId, "comments"), {
-        userId: "system",
-        userName: "تحدي TruCast ⚔️",
-        userPhoto: "",
-        text: `🔥 بدأ تحدي البث المباشر (PK Battle) مع @${opponent.name}! ادعم المذيع الآن بالتعليقات وتفاعل الجمهور!`,
-        createdAt: serverTimestamp()
-      });
-    } catch (err) {
-      console.error("PK start error:", err);
-    }
-  };
 
   // --- Co-hosting System ---
   const handleStartCoHost = async (otherStream: { id: string; hostName: string; hostPhoto: string }) => {
