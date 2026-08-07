@@ -6241,8 +6241,7 @@ const handleStartLive = async (title: string) => {
       photo.startsWith('http')
     );
     
-    const realHostPhoto = validPhotos[0] || (authPhoto && !authPhoto.includes('avatar') && !authPhoto.includes('dicebear') ? authPhoto : "");
-
+    const realHostPhoto = getAvatarUrl(userProfile?.photoURL, userProfile?.displayName);
     const liveRef = await addDoc(collection(db, "lives"), {
       hostId: currentUser.uid,
       hostName: userProfile?.displayName || currentUser?.displayName || "مستخدم",
