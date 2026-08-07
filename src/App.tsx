@@ -12012,7 +12012,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
       await addDoc(collection(db, 'posts'), {
         userId: currentUser.uid,
         userName: currentUser.displayName || "مستخدم مجهول",
-        userPhoto: currentUser.photoURL || "https://ui-avatars.com/api/?name=User",
+        userPhoto: currentUser.photoURL || "",
         content: newPost,
         gifUrl: postGifUrl || null,
         likesCount: 0,
@@ -12173,7 +12173,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
                         body: "بدأ المذيع أحمد بثاً مباشراً جديداً: نقاش ساخن حول تقنيات الويب",
                         type: "live_start",
                         senderName: "أحمد",
-                        senderPhoto: "https://ui-avatars.com/api/?name=Ahmed&background=0D8ABC&color=fff",
+                        senderPhoto: ""
                         read: false,
                         createdAt: { toMillis: () => Date.now() - 3600000 }
                       },
