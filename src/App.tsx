@@ -12173,7 +12173,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
                         body: "بدأ المذيع أحمد بثاً مباشراً جديداً: نقاش ساخن حول تقنيات الويب",
                         type: "live_start",
                         senderName: "أحمد",
-                        senderPhoto: ""
+                        senderPhoto: "",
                         read: false,
                         createdAt: { toMillis: () => Date.now() - 3600000 }
                       },
