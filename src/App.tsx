@@ -9640,7 +9640,7 @@ const handleStartLive = async (title: string) => {
                       {stream.mutedUsers?.map((u: any) => (
                         <div key={u.uid} className="flex items-center justify-between py-2.5">
                           <div className="flex items-center gap-2.5">
-                            <img src={u.photo || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-8 h-8 rounded-full border border-white/5 object-cover" alt="" />
+                            <img src={getAvatarUrl(u.photo, u.name)}
                             <span className="text-xs font-bold text-zinc-200">@{u.name}</span>
                           </div>
                           <button 
@@ -9666,7 +9666,7 @@ const handleStartLive = async (title: string) => {
                       {stream.blockedUsers?.map((u: any) => (
                         <div key={u.uid} className="flex items-center justify-between py-2.5">
                           <div className="flex items-center gap-2.5">
-                            <img src={u.photo || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-8 h-8 rounded-full border border-white/5 object-cover" alt="" />
+                            <img src={getAvatarUrl(u.photo, u.name)}
                             <span className="text-xs font-bold text-zinc-200">@{u.name}</span>
                           </div>
                           <button 
