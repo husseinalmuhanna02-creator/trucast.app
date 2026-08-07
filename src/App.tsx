@@ -2668,7 +2668,7 @@ function CommentsComponent({
                 <div className="flex items-center gap-2">
                   <div className="relative">
                     <img 
-                      src={postContext.userPhoto || 'https://ui-avatars.com/api/?name=User'} 
+                      src={getAvatarUrl(postContext.userPhoto, "")}
                       className="w-6 h-6 rounded-full object-cover border border-zinc-800" 
                       alt="" 
                     />
