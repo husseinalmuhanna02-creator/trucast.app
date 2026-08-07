@@ -9549,7 +9549,7 @@ const handleStartLive = async (title: string) => {
                             <div key={u.uid} className="flex items-center justify-between py-3">
                               <div className="flex items-center gap-2.5">
                                 <div className="relative">
-                                  <img src={getAvatarUrl(u.photo, u.name)}
+                                  <img src={getAvatarUrl(u.photo, u.name)} className="w-10 h-10 rounded-full object-cover" alt="" />
                                   {isMod && (
                                     <span className="absolute -bottom-1 -right-1 bg-emerald-500 text-[8px] p-0.5 rounded-full border border-zinc-950 text-white">
                                       🛡️
