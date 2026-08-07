@@ -9695,7 +9695,7 @@ const handleStartLive = async (title: string) => {
                         {pendingRequests.map((req: any) => (
                           <div key={req.id} className="flex items-center justify-between py-2.5" dir="rtl">
                             <div className="flex items-center gap-2.5">
-                              <img src={req.photoURL || `https://ui-avatars.com/api/?name=${req.displayName}&background=random`} className="w-8 h-8 rounded-full border border-white/5 object-cover" alt="" />
+                              <img src={getAvatarUrl(req.photoURL, req.displayName)}
                               <span className="text-xs font-bold text-zinc-200">@{req.displayName}</span>
                             </div>
                             <div className="flex gap-2">
