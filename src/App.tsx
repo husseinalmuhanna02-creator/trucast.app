@@ -9640,7 +9640,7 @@ const handleStartLive = async (title: string) => {
                       {stream.mutedUsers?.map((u: any) => (
                         <div key={u.uid} className="flex items-center justify-between py-2.5">
                           <div className="flex items-center gap-2.5">
-                            <img src={getAvatarUrl(u.photo, u.name)}
+                            <img src={getAvatarUrl(u.photo, u.name)} className="w-10 h-10 rounded-full object-cover" alt="" />
                             <span className="text-xs font-bold text-zinc-200">@{u.name}</span>
                           </div>
                           <button 
