@@ -24903,8 +24903,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                 ? (currentUserProfile?.displayName ? `${t("أنت")} (${currentUserProfile.displayName})` : t("أنت"))
                 : (adminProfile?.displayName || t("مشرف"));
               const avatar = adminId === currentUser?.uid
-                ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                : (adminProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(adminProfile?.displayName || adminId)}&background=random`);
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(adminProfile?.photoURL, adminProfile?.displayName);
               const username = adminId === currentUser?.uid
                 ? (currentUserProfile?.username ? `@${currentUserProfile.username}` : '')
                 : (adminProfile?.username ? `@${adminProfile.username}` : '');
@@ -24966,7 +24966,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
             onClick={() => { if (selectedAdminId) onNavigateToUser(selectedAdminId); }}
             className="w-24 h-24 bg-zinc-800 rounded-full overflow-hidden border-4 border-zinc-900 shadow-2xl cursor-pointer hover:border-blue-500 transition-all"
           >
-            <img src={`https://ui-avatars.com/api/?name=${selectedAdminId}&background=random`} alt="" className="w-full h-full object-cover" />
+            <img src={getAvatarUrl("", selectedAdminId)}
           </div>
           <div className="text-center">
             <h3 className="text-xl font-black">{selectedAdminId === currentUser?.uid ? t('أنت') : t('مشرف')}</h3>
@@ -25130,7 +25130,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                       <div className="flex items-center gap-3">
                         <div className="relative">
                           <img 
-                            src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`} 
+                            src={getAvatarUrl(user.photoURL, user.displayName)}
                             className="w-12 h-12 rounded-full object-cover border border-zinc-800 shadow-lg" 
                             alt="" 
                           />
@@ -25259,8 +25259,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                 ? (currentUserProfile?.displayName ? `${t("أنت")} (${currentUserProfile.displayName})` : t("أنت"))
                 : (profile?.displayName || 'مستخدم TruCast');
               const photoURL = userId === currentUser?.uid
-                ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                : (profile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.displayName || userId)}&background=random`);
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(profile?.photoURL, profile?.displayName);
               const usernameLabel = userId === currentUser?.uid
                 ? (currentUserProfile?.username ? `@${currentUserProfile.username}` : '')
                 : (profile?.username ? `@${profile.username}` : '');
@@ -26736,7 +26736,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                   </div>
                 ) : (chat?.type === 'private' || chat?.type === 'direct') ? (
                   <img 
-                    src={chat?.otherUser?.photoURL || `https://ui-avatars.com/api/?name=${chatId}&background=random`} 
+                    src={getAvatarUrl(chat?.otherUser?.photoURL, chat?.otherUser?.displayName || chat?.name)}
                     className="w-32 h-32 rounded-full border-4 border-zinc-900 shadow-2xl object-cover" 
                     alt="" 
                   />
@@ -27087,8 +27087,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                                 <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 overflow-hidden flex-shrink-0">
                                   <img 
                                     src={userId === currentUser?.uid
-                                      ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                                      : (participantProfiles[userId]?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(participantProfiles[userId]?.displayName || userId)}&background=random`)} 
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(participantProfiles[userId]?.photoURL, participantProfiles[userId]?.displayName)}
                                     alt="" 
                                     className="w-full h-full object-cover" 
                                   />
@@ -27352,7 +27352,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                   </div>
                 ) : (chat?.type === 'private' || chat?.type === 'direct') ? (
                   <img 
-                    src={chat?.otherUser?.photoURL || `https://ui-avatars.com/api/?name=${chatId}&background=random`} 
+                    src={getAvatarUrl(chat?.otherUser?.photoURL, chat?.otherUser?.displayName)}
                     className="w-11 h-11 rounded-full border border-zinc-800 object-cover shadow-lg" 
                     alt="" 
                   />
@@ -27630,8 +27630,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
               : (senderProfile?.displayName || msg.senderName || 'مستخدم TruCast');
               
             const senderPhotoURL = isSenderMe
-              ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-              : (senderProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName || senderId)}&background=random`);
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(senderProfile?.photoURL, msg.senderName || senderId);
 
             return (
               <motion.div 
@@ -28152,7 +28152,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                               <p className="text-[10px] text-zinc-500 font-bold">@{u.username}</p>
                             </div>
                             <img 
-                              src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                              src={getAvatarUrl(u.photoURL, u.displayName)}
                               className="w-8 h-8 rounded-lg object-cover border border-zinc-800"
                               alt=""
                             />
@@ -28779,7 +28779,7 @@ function ForwardChatList({ onSelect, currentUser }: { onSelect: (chatId: string)
             <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center overflow-hidden text-white font-bold">
                {isPrivate ? (
                   <img 
-                    src={chat.otherUser?.photoURL || `https://ui-avatars.com/api/?name=${chat.id}&background=random`} 
+                    src={getAvatarUrl(chat.otherUser?.photoURL, chat.otherUser?.displayName)}
                     className="w-full h-full object-cover" 
                   />
                ) : (
