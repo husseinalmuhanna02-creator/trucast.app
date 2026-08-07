@@ -2195,7 +2195,7 @@ function CommentsComponent({
       await addDoc(collection(db, path), {
         userId: currentUser.uid,
         userName: currentUser.displayName || "مستخدم",
-        userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
+        userPhoto: currentUser.photoURL || "",
         content: commentText,
         gifUrl: prevGifUrl || null,
         imageUrl: finalImageUrl || null,
