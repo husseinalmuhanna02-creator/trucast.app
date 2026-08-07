@@ -14908,7 +14908,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main', onViewMe
       const authUpdate: any = { displayName: data.displayName };
       if (data.photoURL) {
         authUpdate.photoURL = data.photoURL.startsWith('data:') 
-          ? `https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}`
+          ? ""
           : data.photoURL;
       }
 
@@ -17294,7 +17294,7 @@ function CreateMediaPostScreen({
                       <p className="text-[10px] text-zinc-500 font-bold">@{u.username}</p>
                     </div>
                     <img 
-                      src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                      src={getAvatarUrl(u.photoURL, u.displayName)}
                       className="w-8 h-8 rounded-lg object-cover border border-zinc-800"
                       alt=""
                     />
@@ -18372,7 +18372,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
       await addDoc(collection(db, 'reels'), {
         userId: currentUser.uid,
         userName: currentUser.displayName || "مستخدم",
-        userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
+        userPhoto: currentUser.photoURL || "",
         caption: `دويتو مع @${publisherProfile?.username || currentReel.userName} 👥\n${currentReel.caption || ""}`,
         videoUrl: currentReel.videoUrl,
         likes: 0,
@@ -19300,7 +19300,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
       await addDoc(collection(db, 'stories'), {
         userId: currentUser?.uid || "anonymous",
         userName: currentUser?.displayName || "مستخدم مجهول",
-        userPhoto: currentUser?.photoURL || "https://ui-avatars.com/api/?name=User",
+        userPhoto: currentUser?.photoURL || "",
         type: finalType,
         content: text,
         mediaUrl: mediaUrl,
@@ -19429,7 +19429,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <img 
-                      src={sharedComment.userPhoto || "https://ui-avatars.com/api/?name=User"} 
+                      src={getAvatarUrl(sharedComment.userPhoto, sharedComment.userName)}
                       className="w-7 h-7 rounded-full border border-white/20" 
                       alt="" 
                     />
@@ -19479,7 +19479,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
                           <p className="text-[10px] text-zinc-500 font-bold">@{u.username}</p>
                         </div>
                         <img 
-                          src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                          src={getAvatarUrl(u.photoURL, u.displayName)}
                           className="w-8 h-8 rounded-lg object-cover border border-zinc-800"
                           alt=""
                         />
@@ -19604,7 +19604,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
                           <p className="text-[10px] text-zinc-500 font-bold">@{u.username}</p>
                         </div>
                         <img 
-                          src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                          src={getAvatarUrl(u.photoURL, u.displayName)}
                           className="w-8 h-8 rounded-lg object-cover border border-zinc-800"
                           alt=""
                         />
@@ -19837,7 +19837,7 @@ function CreateReel({ currentUser, onCancel, onComplete }: {
       await addDoc(collection(db, 'reels'), {
         userId: currentUser?.uid || "mock_uid",
         userName: currentUser?.displayName || "مستخدم",
-        userPhoto: currentUser?.photoURL || `https://ui-avatars.com/api/?name=${currentUser?.displayName}`,
+        userPhoto: currentUser?.photoURL || "",
         caption: caption,
         videoUrl: downloadURL,
         likes: 0,
@@ -19928,7 +19928,7 @@ function CreateReel({ currentUser, onCancel, onComplete }: {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <img 
-                      src={sharedComment.userPhoto || "https://ui-avatars.com/api/?name=User"} 
+                      src={getAvatarUrl(sharedComment.userPhoto, sharedComment.userName)}
                       className="w-7 h-7 rounded-full border border-white/20" 
                       alt="" 
                     />
