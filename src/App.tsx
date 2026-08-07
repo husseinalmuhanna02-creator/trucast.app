@@ -24966,7 +24966,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
             onClick={() => { if (selectedAdminId) onNavigateToUser(selectedAdminId); }}
             className="w-24 h-24 bg-zinc-800 rounded-full overflow-hidden border-4 border-zinc-900 shadow-2xl cursor-pointer hover:border-blue-500 transition-all"
           >
-            <img src={getAvatarUrl("", selectedAdminId)}
+            <img src={getAvatarUrl("", selectedAdminId)} className="w-full h-full object-cover" alt="" />
           </div>
           <div className="text-center">
             <h3 className="text-xl font-black">{selectedAdminId === currentUser?.uid ? t('أنت') : t('مشرف')}</h3>
