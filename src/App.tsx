@@ -9306,9 +9306,7 @@ const handleStartLive = async (title: string) => {
               return (
                 <div className="flex items-center gap-3.5 pb-4 mb-5 border-b border-zinc-900">
                   <img 
-                    src={isOptAnon 
-                      ? `https://ui-avatars.com/api/?name=%D9%85%D8%AC%D9%87%D9%88%D9%84&background=52525b&color=fff` 
-                      : (selectedCommentForOptions.userPhoto || `https://ui-avatars.com/api/?name=${selectedCommentForOptions.userName}&background=random`)} 
+                    src={isOptAnon ? "" : getAvatarUrl(selectedCommentForOptions.userPhoto, selectedCommentForOptions.userName)} 
                     className="w-11 h-11 rounded-full border border-white/10 object-cover"
                     alt=""
                   />
