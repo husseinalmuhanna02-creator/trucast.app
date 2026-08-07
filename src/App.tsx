@@ -7867,9 +7867,15 @@ const handleStartLive = async (title: string) => {
                   />
                    ) : (
   <div className="flex flex-col items-center justify-center h-full w-full">
-    {getAvatarUrl(stream?.hostPhoto || userProfile?.photoURL, stream?.hostName || userProfile?.displayName) ? (
+    {getAvatarUrl(
+      stream?.hostPhoto || userProfile?.photoURL,
+      stream?.hostName || userProfile?.displayName
+    ) ? (
       <img
-        src={getAvatarUrl(stream?.hostPhoto || userProfile?.photoURL, stream?.hostName || userProfile?.displayName)}
+        src={getAvatarUrl(
+          stream?.hostPhoto || userProfile?.photoURL,
+          stream?.hostName || userProfile?.displayName
+        )}
         alt="Host"
         referrerPolicy="no-referrer"
         className="w-24 h-24 rounded-full object-cover border-4 border-zinc-800 shadow-2xl mb-4"
