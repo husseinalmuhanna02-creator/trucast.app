@@ -12460,7 +12460,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
                   <p className="text-[10px] text-zinc-500 font-bold">@{u.username}</p>
                 </div>
                 <img 
-                  src={u.photoURL || `https://ui-avatars.com/api/?name=${u.displayName}`} 
+                  src={getAvatarUrl(u.photoURL, u.displayName)}
                   className="w-8 h-8 rounded-lg object-cover border border-zinc-800"
                   alt=""
                 />
@@ -13522,7 +13522,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
           // Firebase Auth only allows URLs up to 2048 characters.
           // Since base64 is way longer, we use a simple placeholder URL for Auth,
           // while storing the full high-res base64 string in Firestore.
-          const fallbackURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email || 'User')}`;
+          const fallbackURL = "";
           await updateProfile(currentUser, { photoURL: fallbackURL });
         } catch (authErr) {
           console.error("Failed to update auth photoURL:", authErr);
@@ -13961,7 +13961,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
                       <p className="text-white font-black text-xs">{follower.displayName || follower.name || follower.userName || follower.username || "مستخدم"}</p>
                     </div>
                     <img 
-                      src={follower.userPhoto || `https://ui-avatars.com/api/?name=${follower.userName}&background=random`} 
+                      src={getAvatarUrl(follower.userPhoto, follower.displayName)}
                       className="w-9 h-9 rounded-full object-cover border border-zinc-800" 
                       alt="" 
                     />
@@ -14026,7 +14026,7 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
                       <p className="text-white font-black text-xs">{following.userName || "مستخدم"}</p>
                     </div>
                     <img 
-                      src={following.userPhoto || `https://ui-avatars.com/api/?name=${following.userName}&background=random`} 
+                      src={getAvatarUrl(following.userPhoto, following.displayName)}
                       className="w-9 h-9 rounded-full object-cover border border-zinc-800" 
                       alt="" 
                     />
@@ -16646,7 +16646,7 @@ function SettingsScreen({ onBack, userProfile, initialSubView = 'main', onViewMe
                     <div key={u.uid} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
                       <div className="flex items-center gap-3">
                         <img 
-                          src={u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName || 'User')}`} 
+                          src={getAvatarUrl(u.photoURL, u.displayName)}
                           className="w-10 h-10 rounded-full object-cover bg-zinc-950 border border-zinc-800"
                           alt="" 
                         />
@@ -17195,7 +17195,7 @@ function CreateMediaPostScreen({
         await addDoc(collection(db, 'reels'), {
           userId: currentUser.uid,
           userName: currentUser.displayName || "مستخدم",
-          userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
+          userPhoto: currentUser.photoURL || "",
           caption: caption,
           videoUrl: downloadURL,
           likes: 0,
@@ -17207,7 +17207,7 @@ function CreateMediaPostScreen({
         await addDoc(collection(db, 'posts'), {
           userId: currentUser.uid,
           userName: currentUser.displayName || "مستخدم",
-          userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName}`,
+          userPhoto: currentUser.photoURL || "",
           caption: caption,
           content: caption,
           mediaUrl: downloadURL,
@@ -18281,7 +18281,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
       await addDoc(collection(db, 'stories'), {
         userId: currentUser.uid,
         userName: currentUser.displayName || "مستخدم مجهول",
-        userPhoto: currentUser.photoURL || "https://ui-avatars.com/api/?name=User",
+        userPhoto: currentUser.photoURL || "",
         type: "video",
         content: currentReel.caption || "مشاركة من الريلز 🎬",
         mediaUrl: currentReel.videoUrl,
