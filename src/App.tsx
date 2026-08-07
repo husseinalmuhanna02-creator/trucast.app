@@ -19401,7 +19401,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
 
           {/* Story UI (Top info) */}
           <div className="relative z-10 flex items-center gap-2">
-            <img src={getAvatarUrl(currentUser?.photoURL, currentUser?.displayName)}
+            <img src={getAvatarUrl(currentUser?.photoURL, currentUser?.displayName)} className="w-8 h-8 rounded-full object-cover" alt="" />
             <div>
               <p className="text-xs font-black text-white">{currentUser?.displayName || "مستخدم"}</p>
               <p className="text-[9px] text-white/65 font-medium">قصتك • الآن</p>
