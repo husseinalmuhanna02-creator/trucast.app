@@ -19401,7 +19401,7 @@ function CreateStory({ currentUser, onCancel, onComplete }: {
 
           {/* Story UI (Top info) */}
           <div className="relative z-10 flex items-center gap-2">
-            <img src={currentUser?.photoURL || "https://ui-avatars.com/api/?name=User"} className="w-8 h-8 rounded-full border border-white/20" alt="" />
+            <img src={getAvatarUrl(currentUser?.photoURL, currentUser?.displayName)}
             <div>
               <p className="text-xs font-black text-white">{currentUser?.displayName || "مستخدم"}</p>
               <p className="text-[9px] text-white/65 font-medium">قصتك • الآن</p>
@@ -20351,7 +20351,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
     setLongPressTriggered(false);
     timerRef.current = setTimeout(() => {
       setLongPressTriggered(true);
-      const photo = profile?.photoURL || `https://ui-avatars.com/api/?name=${userId}&background=random&size=128`;
+      const photo = getAvatarUrl(profile?.photoURL, profile?.displayName || userId);
       if (photo) {
         onViewMedia(photo, 'image');
       }
@@ -20366,7 +20366,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
       if (activeStories.length > 0) {
         setShowStoryViewer(true);
       } else {
-        const photo = profile?.photoURL || `https://ui-avatars.com/api/?name=${userId}&background=random&size=128`;
+        const photo = getAvatarUrl(profile?.photoURL, profile?.displayName || userId);
         if (photo) {
           onViewMedia(photo, 'image');
         }
@@ -20928,7 +20928,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
               >
                 <div className="relative bg-zinc-950 rounded-full p-0.5">
                   <img 
-                    src={profile?.photoURL || `https://ui-avatars.com/api/?name=${userId}&background=random&size=128`} 
+                    src={getAvatarUrl(profile?.photoURL, profile?.displayName)}
                     className="w-32 h-32 rounded-full border-4 border-zinc-950 object-cover shadow-2xl relative z-10" 
                     alt="" 
                   />
@@ -20941,7 +20941,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
                 groupedStories={[{
                   userId: userId,
                   userName: profile?.displayName || userId,
-                  userPhoto: profile?.photoURL || `https://ui-avatars.com/api/?name=${userId}&background=random&size=128`,
+                  userPhoto: profile?.photoURL || "",
                   stories: activeStories
                 }]}
                 initialGroupIndex={0}
@@ -21337,7 +21337,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
                             <p className="text-white font-black text-xs">{follower.displayName || follower.name || follower.userName || follower.username || "مستخدم"}</p>
                           </div>
                           <img 
-                            src={follower.userPhoto || `https://ui-avatars.com/api/?name=${follower.userName}&background=random`} 
+                            src={getAvatarUrl(follower.userPhoto, follower.displayName)}
                             className="w-9 h-9 rounded-full object-cover border border-zinc-800" 
                             alt="" 
                           />
@@ -21402,7 +21402,7 @@ export function UserProfileScreen({ userId, currentUser, onBack, onViewMedia, on
                             <p className="text-white font-black text-xs">{following.userName || "مستخدم"}</p>
                           </div>
                           <img 
-                            src={following.userPhoto || `https://ui-avatars.com/api/?name=${following.userName}&background=random`} 
+                            src={getAvatarUrl(following.userPhoto, following.displayName)}
                             className="w-9 h-9 rounded-full object-cover border border-zinc-800" 
                             alt="" 
                           />
@@ -22096,7 +22096,7 @@ function ChatListScreen({
                       ) : (chat.type === 'private' || chat.type === 'direct') ? (
                         <>
                           <img 
-                            src={chat.otherUser?.photoURL || `https://ui-avatars.com/api/?name=${chat.id}&background=random`} 
+                            src={getAvatarUrl(chat.otherUser?.photoURL, chat.otherUser?.displayName)}
                             className="w-14 h-14 rounded-full border border-zinc-800 shadow-lg object-cover hover:ring-2 hover:ring-blue-500 transition-all" 
                             alt="" 
                           />
@@ -22592,7 +22592,7 @@ export const WhiteboardStage = ({
                     <div key={p.id} className="flex items-center justify-between p-3.5 bg-zinc-900/40 border border-zinc-900 rounded-2xl">
                       <div className="flex items-center gap-3">
                         <img 
-                          src={p.photoURL || `https://ui-avatars.com/api/?name=${p.displayName}&background=random`} 
+                          src={getAvatarUrl(p.photoURL, p.displayName)}
                           className="w-10 h-10 rounded-xl object-cover border border-white/5"
                           alt=""
                           referrerPolicy="no-referrer"
@@ -23334,8 +23334,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                                     <div className="w-9 h-9 bg-zinc-800 rounded-full overflow-hidden flex-shrink-0 shadow-inner">
                                       <img 
                                         src={userId === currentUser?.uid
-                                          ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                                          : (participantProfiles[userId]?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(participantProfiles[userId]?.displayName || userId)}&background=random`)} 
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(participantProfiles[userId]?.photoURL, participantProfiles[userId]?.displayName)}
                                         alt="" 
                                         className="w-full h-full object-cover" 
                                       />
@@ -24747,8 +24747,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                       <div className="w-11 h-11 bg-zinc-800 rounded-full overflow-hidden flex-shrink-0 border border-zinc-700 shadow-inner">
                         <img 
                           src={userId === currentUser?.uid
-                            ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                            : (participantProfiles[userId]?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(participantProfiles[userId]?.displayName || userId)}&background=random`)} 
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(participantProfiles[userId]?.photoURL, participantProfiles[userId]?.displayName)}
                           alt="" 
                           className="w-full h-full object-cover" 
                         />
@@ -24843,8 +24843,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                       <div className="w-11 h-11 bg-zinc-800 rounded-full overflow-hidden flex-shrink-0 border border-zinc-700 shadow-inner">
                         <img 
                           src={userId === currentUser?.uid
-                            ? (currentUserProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUserProfile?.displayName || 'أنت')}&background=random`)
-                            : (participantProfiles[userId]?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(participantProfiles[userId]?.displayName || userId)}&background=random`)} 
+  ? getAvatarUrl(currentUserProfile?.photoURL, currentUserProfile?.displayName)
+  : getAvatarUrl(participantProfiles[userId]?.photoURL, participantProfiles[userId]?.displayName)}
                           alt="" 
                           className="w-full h-full object-cover" 
                         />
