@@ -30001,7 +30001,7 @@ export default function App() {
               await setDoc(userRef, {
                 uid: u.uid,
                 displayName: existingDisplayName || u.displayName || "مستخدم جديد",
-                photoURL: existingPhoto || u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName || 'User')}&background=random`,
+                photoURL: existingPhoto || u.photoURL || "",
                 email: u.email,
                 lastSeen: serverTimestamp()
               }, { merge: true });
