@@ -4576,16 +4576,6 @@ const StreamAvatar = ({
     );
   }
 
-  return (
-    <div
-      onClick={handleClick}
-      className={`${className} rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold border border-white/20 shadow-sm shrink-0`}
-    >
-      {firstLetter}
-    </div>
-  );
-};
-  ];
   let hash = 0;
   for (let i = 0; i < cleanName.length; i++) {
     hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
