@@ -6218,29 +6218,6 @@ const handleStartLive = async (title: string) => {
   if (!currentUser) return;
   setGlobalLoading(true);
   try {
-    // 1. حفظ رابط الصورة الحقيقي في الذاكرة المحلية إن وجد وغير كارتوني
-    if (userProfile?.photoURL && 
-        !userProfile.photoURL.includes('dicebear') && 
-        !userProfile.photoURL.includes('ui-avatars') && 
-        !userProfile.photoURL.includes('avatar')) {
-      localStorage.setItem('user_photo', userProfile.photoURL);
-    }
-
-    // 2. تصفية كافة المصادر واستبعاد الصورة الكارتونية
-    const profilePhoto = userProfile?.photoURL;
-    const authPhoto = currentUser?.photoURL;
-    const localPhoto = localStorage.getItem('user_photo') || JSON.parse(localStorage.getItem('user') || '{}')?.photoURL;
-    
-    const validPhotos = [profilePhoto, authPhoto, localPhoto].filter(
-      photo => photo && 
-      typeof photo === 'string' && 
-      !photo.includes('ui-avatars.com') && 
-      !photo.includes('dicebear') && 
-      !photo.includes('api.multiavatar') && 
-      !photo.includes('avatar') &&
-      photo.startsWith('http')
-    );
-    
     const realHostPhoto = getAvatarUrl(userProfile?.photoURL, userProfile?.displayName);
     const liveRef = await addDoc(collection(db, "lives"), {
       hostId: currentUser.uid,
