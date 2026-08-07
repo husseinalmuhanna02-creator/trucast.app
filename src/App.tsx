@@ -9549,7 +9549,7 @@ const handleStartLive = async (title: string) => {
                             <div key={u.uid} className="flex items-center justify-between py-3">
                               <div className="flex items-center gap-2.5">
                                 <div className="relative">
-                                  <img src={u.photo || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-8 h-8 rounded-full border border-white/5 object-cover" alt="" />
+                                  <img src={getAvatarUrl(u.photo, u.name)}
                                   {isMod && (
                                     <span className="absolute -bottom-1 -right-1 bg-emerald-500 text-[8px] p-0.5 rounded-full border border-zinc-950 text-white">
                                       🛡️
@@ -9603,7 +9603,7 @@ const handleStartLive = async (title: string) => {
                         <div key={mod.uid} className="flex items-center justify-between py-2.5">
                           <div className="flex items-center gap-2.5">
                             <div className="relative">
-                              <img src={mod.photo || `https://ui-avatars.com/api/?name=${mod.name}&background=random`} className="w-8 h-8 rounded-full border border-white/5 object-cover" alt="" />
+                              <img src={getAvatarUrl(mod.photo, mod.name)}
                               <span className="absolute -bottom-1 -right-1 bg-emerald-500 text-[8px] p-0.5 rounded-full border border-zinc-950 text-white">
                                 🛡️
                               </span>
