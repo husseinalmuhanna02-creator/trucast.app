@@ -1672,7 +1672,18 @@ const LiveStreamContent = ({
     };
   }, [call, isHost, selectedFilter]);
   const resolveAvatar = (participant?: any, hostPhotoFromStream?: string) => {
-  if (hostPhotoFromStream && !hostPhotoFromStream.includes('ui-avatars.com')) {
+  const isCartoon = (url?: string | null) => {
+    if (!url) return false;
+    return (
+      url.includes("dicebear") ||
+      url.includes("multiavatar") ||
+      url.includes("bottts") ||
+      url.includes("avataaars") ||
+      url.includes("/9j/4AAQSkZJRgABAQ")
+    );
+  };
+
+  if (hostPhotoFromStream && !hostPhotoFromStream.includes('ui-avatars.com') && !isCartoon(hostPhotoFromStream)) {
     return hostPhotoFromStream;
   }
 
@@ -1684,15 +1695,13 @@ const LiveStreamContent = ({
     participant?.profilePicture ||
     participant?.image;
 
-  if (participantPhoto && !participantPhoto.includes('ui-avatars.com')) {
+  if (participantPhoto && !participantPhoto.includes('ui-avatars.com') && !isCartoon(participantPhoto)) {
     return participantPhoto;
   }
 
   const firebaseAuthPhoto = (window as any).firebaseAuth?.currentUser?.photoURL;
   const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const storedPhoto =
-    localStorage.getItem('user_photo') ||
-    localStorage.getItem('userPhoto');
+  const storedPhoto = localStorage.getItem('user_photo') || localStorage.getItem('userPhoto');
 
   const fallback =
     firebaseAuthPhoto ||
@@ -1700,12 +1709,16 @@ const LiveStreamContent = ({
     localUser?.photoUrl ||
     localUser?.avatar ||
     localUser?.avatarUrl ||
-    localUser?.profilePicture ||
-    localUser?.image ||
     storedPhoto;
 
-  return (fallback && !fallback.includes('ui-avatars.com')) ? fallback : null;
+  if (fallback && !fallback.includes('ui-avatars.com') && !isCartoon(fallback)) {
+    return fallback;
+  }
+
+  const name = participant?.displayName || participant?.name || localUser?.displayName || "مستخدم";
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0D9488&color=fff&bold=true`;
 };
+
   const [selectedBackground, setSelectedBackground] = useState('none');
   const [customBackgroundImage, setCustomBackgroundImage] = useState<string | null>(null);
   const customBgInputRef = useRef<HTMLInputElement>(null);
