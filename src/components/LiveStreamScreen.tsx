@@ -1673,15 +1673,15 @@ const LiveStreamContent = ({
   }, [call, isHost, selectedFilter]);
   const resolveAvatar = (participant?: any, hostPhotoFromStream?: string) => {
   const isCartoon = (url?: string | null) => {
-    if (!url) return false;
-    return (
-      url.includes("dicebear") ||
-      url.includes("multiavatar") ||
-      url.includes("bottts") ||
-      url.includes("avataaars") ||
-      url.includes("/9j/4AAQSkZJRgABAQ")
-    );
-  };
+  if (!url) return false;
+  return (
+    url.includes("dicebear") ||
+    url.includes("multiavatar") ||
+    url.includes("bottts") ||
+    url.includes("avataaars")
+  );
+};
+
 
   if (hostPhotoFromStream && !hostPhotoFromStream.includes('ui-avatars.com') && !isCartoon(hostPhotoFromStream)) {
     return hostPhotoFromStream;
