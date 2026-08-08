@@ -7959,14 +7959,14 @@ const handleStartLive = async (title: string) => {
                   {stream?.hostPhoto && (
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-10 blur-2xl scale-110"
-                      style={{ backgroundImage: `url(${stream.hostPhoto})` }}
+                      style={{ backgroundImage: `url(${getAvatarUrl(stream?.hostPhoto, stream?.hostName)})` }}
                     />
                   )}
                   <div className="text-center space-y-4 relative z-10 px-4">
                     <div className="relative inline-block mb-4">
                       <div className="absolute -inset-4 rounded-full bg-blue-500/20 blur-xl animate-pulse" />
                       <StreamAvatar 
-                        photoURL={stream?.hostPhoto} 
+                        photoURL={getAvatarUrl(stream?.hostPhoto, stream?.hostName)}
                         name={stream?.hostName || "المضيف"} 
                         className="w-28 h-28 border-4 border-blue-500/40 shadow-2xl relative z-10 animate-pulse cursor-pointer animate-duration-1000" 
                         onClick={() => stream?.hostId && onNavigateToUser(stream.hostId)}
