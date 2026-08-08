@@ -13508,10 +13508,10 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     const file = e.target.files?.[0];
     if (!file || !currentUser) return;
 
-    if (file.size > 1024 * 512) {
-      alert("حجم الصورة كبير جداً. يرجى اختيار صورة أقل من 512 كيلوبايت.");
-      return;
-    }
+    if (file.size > 1024 * 1024 * 2) {
+  alert("حجم الصورة كبير جداً. يرجى اختيار صورة أقل من 2 ميجابايت.");
+  return;
+  }
 
     setUpdatingPhoto(true);
     try {
