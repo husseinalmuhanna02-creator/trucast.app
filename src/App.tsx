@@ -238,16 +238,17 @@ export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => 
 
   const url = photoURL.toLowerCase();
 
-  // حظر خدمات الصور الكارتونية الافتراضية فقط
-    const isCartoonApi =
+  // 1. حظر خدمات الصور الكارتونية الخارجية
+  const isCartoonApi =
     url.includes("dicebear") ||
     url.includes("multiavatar") ||
     url.includes("bottts") ||
-    url.includes("avataaars") ||
-    url.startsWith("data:image/svg") ||
-    url.includes("image/svg+xml");
+    url.includes("avataaars");
 
-  if (isCartoonApi) {
+  // 2. حظر أرقام الأكواد المشفرة (Base64) التي تولد الصورة الكارتونية الافتراضية
+  const isBase64Cartoon = url.startsWith("data:image/");
+
+  if (isCartoonApi || isBase64Cartoon) {
     return letterAvatar;
   }
 
