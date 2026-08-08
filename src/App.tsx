@@ -4551,11 +4551,9 @@ const StreamAvatar = ({
   const firstLetter = cleanName.charAt(0).toUpperCase();
 
   const isCartoon = photoURL ? (
-    photoURL.includes('dicebear') || 
-    photoURL.includes('ui-avatars') || 
-    photoURL.includes('avatar') ||
-    photoURL.includes('multiavatar')
-  ) : false;
+  photoURL.includes('dicebear') ||
+  photoURL.includes('multiavatar')
+) : false;
 
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
