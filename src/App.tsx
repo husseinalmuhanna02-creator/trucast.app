@@ -232,7 +232,6 @@ export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => 
   if (
     photoURL &&
     photoURL.trim() !== "" &&
-    !photoURL.startsWith("data:image") &&
     !photoURL.includes("ui-avatars.com") &&
     !photoURL.includes("dicebear")
   ) {
