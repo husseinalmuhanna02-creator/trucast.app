@@ -8161,7 +8161,7 @@ const handleStartLive = async (title: string) => {
           {/* Live Status Header with profile photo */}
           <div className="flex items-center gap-2.5 bg-black/45 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10 shadow-lg select-none">
             <StreamAvatar 
-              photoURL={getAvatarUrl(stream?.hostPhoto, stream?.hostName)}
+              photoURL={getAvatarUrl(stream?.hostPhoto || stream?.hostPhotoUrl || stream?.hostAvatar, stream?.hostName)}
               name={stream?.hostName || "المذيع"} 
               className="w-8 h-8"
               onClick={() => stream?.hostId && onNavigateToUser(stream.hostId)}
