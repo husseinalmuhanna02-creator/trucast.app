@@ -238,22 +238,20 @@ export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => 
 
   const url = photoURL.toLowerCase();
 
-  // 1. حظر خدمات الصور الكارتونية الخارجية
+  // حظر روابط المواقع الكارتونية الخارجية فقط
   const isCartoonApi =
     url.includes("dicebear") ||
     url.includes("multiavatar") ||
     url.includes("bottts") ||
     url.includes("avataaars");
 
-  // 2. حظر أرقام الأكواد المشفرة (Base64) التي تولد الصورة الكارتونية الافتراضية
-  const isBase64Cartoon = url.startsWith("data:image/");
-
-  if (isCartoonApi || isBase64Cartoon) {
+  if (isCartoonApi) {
     return letterAvatar;
   }
 
   return photoURL;
 };
+
 
 let globalErrorSetter: ((info: FirestoreErrorInfo | null) => void) | null = null;
 let globalLoadingSetter: ((active: boolean) => void) | null = null;
