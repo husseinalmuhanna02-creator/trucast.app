@@ -121,7 +121,7 @@ service cloud.firestore {
         && (!(data.type in ['private', 'direct', 'saved']) ? (data.name is string && data.name.size() <= 200) : true)
         && (data.get('description', null) == null || (data.description is string && data.description.size() <= 2000))
         && (data.get('avatarUrl', null) == null || (data.avatarUrl is string && data.avatarUrl.size() <= 2000000))
-        && (data.get('photoURL', null) == null || (data.photoURL is string && data.photoURL.size() <= 2000))
+        && (data.get('photoURL', null) == null || (data.photoURL is string && data.photoURL.size() <= 2000000))
         && (data.get('creatorId', null) == null || (data.creatorId is string && data.creatorId.size() <= 128))
         && (data.get('admins', null) == null || (data.admins is list && data.admins.size() >= 0))
         && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp)
