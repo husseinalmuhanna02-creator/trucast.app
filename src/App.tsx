@@ -13498,9 +13498,11 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
         setLoading(false);
       }
     }, (err) => {
-      handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
-      setLoading(false);
-    });
+  console.error("Firestore listen error:", err);
+  updateDoc(doc(db, 'users', currentUser.uid), { photoURL: "" }).catch(() => {});
+  handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
+  setLoading(false);
+});
     return () => unsub();
   }, [currentUser]);
 
