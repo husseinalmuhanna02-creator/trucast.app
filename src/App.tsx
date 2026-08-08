@@ -4542,7 +4542,7 @@ const StreamAvatar = ({
   onClick
 }: {
   photoURL?: string | null,
-  name?: string,
+  name: string,
   className?: string,
   onClick?: (e: React.MouseEvent) => void
 }) => {
@@ -4550,10 +4550,7 @@ const StreamAvatar = ({
   const cleanName = name?.trim() || "مستخدم";
   const firstLetter = cleanName.charAt(0).toUpperCase();
 
-  const isCartoon = photoURL ? (
-  photoURL.includes('dicebear') ||
-  photoURL.includes('multiavatar')
-) : false;
+  const avatarSrc = getAvatarUrl(photoURL, name);
 
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
@@ -4562,30 +4559,22 @@ const StreamAvatar = ({
     }
   };
 
-  if (photoURL && photoURL.trim() !== "" && !hasError && !isCartoon) {
+  if (avatarSrc && !hasError) {
     return (
       <img
-        src={photoURL}
-        onError={() => setHasError(true)}
-        className={`${className} rounded-full object-cover border border-white/20`}
-        onClick={handleClick}
+        src={avatarSrc}
         alt={cleanName}
-        referrerPolicy="no-referrer"
+        className={`${className} rounded-full object-cover`}
+        onClick={handleClick}
+        onError={() => setHasError(true)}
       />
     );
   }
 
-  let hash = 0;
-  for (let i = 0; i < cleanName.length; i++) {
-    hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const colorIndex = Math.abs(hash) % colors.length;
-  const bgColor = colors[colorIndex];
-
   return (
     <div
-      className={`${className} rounded-full ${bgColor} flex items-center justify-center text-white font-bold text-xs select-none border border-white/20`}
       onClick={handleClick}
+      className={`${className} rounded-full bg-teal-600 flex items-center justify-center text-white font-bold select-none cursor-pointer`}
     >
       {firstLetter}
     </div>
