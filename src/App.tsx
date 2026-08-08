@@ -239,11 +239,13 @@ export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => 
   const url = photoURL.toLowerCase();
 
   // حظر خدمات الصور الكارتونية الافتراضية فقط
-  const isCartoonApi =
+    const isCartoonApi =
     url.includes("dicebear") ||
     url.includes("multiavatar") ||
     url.includes("bottts") ||
-    url.includes("avataaars");
+    url.includes("avataaars") ||
+    url.startsWith("data:image/svg") ||
+    url.includes("image/svg+xml");
 
   if (isCartoonApi) {
     return letterAvatar;
