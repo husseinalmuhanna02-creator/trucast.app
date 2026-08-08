@@ -13504,37 +13504,53 @@ function Profile({ currentUser, onViewMedia, onNavigate, onNavigateToUser }: {
     return () => unsub();
   }, [currentUser]);
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !currentUser) return;
 
-    if (file.size > 1024 * 1024 * 2) {
-  alert("حجم الصورة كبير جداً. يرجى اختيار صورة أقل من 2 ميجابايت.");
-  return;
-  }
+    if (file.size > 1024 * 1024 * 3) {
+      alert("حجم الصورة كبير جداً. يرجى اختيار صورة أقل من 3 ميجابايت.");
+      return;
+    }
 
     setUpdatingPhoto(true);
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64 = reader.result as string;
-        try {
-          // Firebase Auth only allows URLs up to 2048 characters.
-          // Since base64 is way longer, we use a simple placeholder URL for Auth,
-          // while storing the full high-res base64 string in Firestore.
-          const fallbackURL = "";
-          await updateProfile(currentUser, { photoURL: fallbackURL });
-        } catch (authErr) {
-          console.error("Failed to update auth photoURL:", authErr);
+      const imageBitmap = await createImageBitmap(file);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const maxSize = 500;
+      let width = imageBitmap.width;
+      let height = imageBitmap.height;
+
+      if (width > height) {
+        if (width > maxSize) {
+          height = Math.round((height * maxSize) / width);
+          width = maxSize;
         }
-        await updateDoc(doc(db, 'users', currentUser.uid), { photoURL: base64 });
-        setUpdatingPhoto(false);
-      };
-      reader.readAsDataURL(file);
+      } else {
+        if (height > maxSize) {
+          width = Math.round((width * maxSize) / height);
+          height = maxSize;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      if (ctx) {
+        ctx.drawImage(imageBitmap, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+        const fallbackURL = "";
+        await updateProfile(currentUser, { photoURL: fallbackURL });
+        await updateDoc(doc(db, 'users', currentUser.uid), { photoURL: compressedBase64 });
+      }
+      setUpdatingPhoto(false);
     } catch (error) {
       console.error("Error updating photo:", error);
       setUpdatingPhoto(false);
-      alert("حدث خطأ أثناء تحديث الصورة.");
+      alert("حدث خطأ أثناء تحديث الصورة");
     }
   };
 
