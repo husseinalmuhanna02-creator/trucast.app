@@ -8065,7 +8065,7 @@ const handleStartLive = async (title: string) => {
                 ) : (
                   <div className="absolute inset-0 w-full h-full bg-zinc-900 flex flex-col items-center justify-center text-zinc-400 p-2 text-center">
                     <StreamAvatar 
-                      photoURL={stream.guest.photo} 
+                      photoURL={getAvatarUrl(stream?.guest?.photo, stream?.guest?.name)}
                       name={stream.guest.name} 
                       className="w-12 h-12 border-2 border-zinc-800 shadow-md mb-2" 
                     />
@@ -8078,12 +8078,12 @@ const handleStartLive = async (title: string) => {
                   {stream.guest.photo && (
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-20 blur-lg scale-110"
-                      style={{ backgroundImage: `url(${stream.guest.photo})` }}
+                      {getAvatarUrl(stream?.guest?.photo, stream?.guest?.name)}) }}
                     />
                   )}
                   <div className="relative z-10 text-center flex flex-col items-center justify-center p-2 w-full">
                     <StreamAvatar 
-                      photoURL={stream.guest.photo} 
+                      photoURL={getAvatarUrl(stream?.guest?.photo, stream?.guest?.name)}
                       name={stream.guest.name} 
                       className="w-12 h-12 border-2 border-emerald-500 shadow-lg cursor-pointer hover:scale-105 transition-transform"
                       onClick={(e) => {
@@ -8161,7 +8161,7 @@ const handleStartLive = async (title: string) => {
           {/* Live Status Header with profile photo */}
           <div className="flex items-center gap-2.5 bg-black/45 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10 shadow-lg select-none">
             <StreamAvatar 
-              photoURL={stream?.hostPhoto} 
+              photoURL={getAvatarUrl(stream?.hostPhoto, stream?.hostName)}
               name={stream?.hostName || "المذيع"} 
               className="w-8 h-8"
               onClick={() => stream?.hostId && onNavigateToUser(stream.hostId)}
