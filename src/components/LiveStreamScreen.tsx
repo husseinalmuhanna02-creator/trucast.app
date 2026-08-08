@@ -5783,11 +5783,22 @@ export const LiveStreamScreen = ({
               setError(null);
               try {
                 // 1. Create lives document in Firestore
-                const titleText = streamTitle.trim() || t("بث مباشر جديد");
-                const liveRef = await addDoc(collection(db, "lives"), {
-                  hostId: currentUser.uid,
-                  hostName: userProfile?.displayName || currentUser.displayName || t("مستضيف"),
-                  hostPhoto: currentUser?.photoURL || userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || "https://www.gravatar.com/avatar/?d=mp",
+        const titleText = streamTitle.trim() || t("بث مباشر جديد");
+
+        const rawPhoto = currentUser?.photoURL || userProfile?.photoURL || "";
+        const isCartoon =
+          rawPhoto.includes("dicebear") ||
+          rawPhoto.includes("multiavatar") ||
+          rawPhoto.includes("bottts") ||
+          rawPhoto.includes("avataaars") ||
+          rawPhoto.includes("/9j/4AAQSkZJRgABAQ");
+
+        const cleanHostPhoto = isCartoon ? "" : rawPhoto;
+
+        const liveRef = await addDoc(collection(db, "lives"), {
+          hostId: currentUser.uid,
+          hostName: userProfile?.displayName || currentUser.displayName || t("المضيف"),
+          hostPhoto: cleanHostPhoto,
                   title: titleText,
                   status: 'active',
                   startedAt: serverTimestamp(),
