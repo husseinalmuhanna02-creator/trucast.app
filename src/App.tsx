@@ -228,16 +228,18 @@ interface FirestoreErrorInfo {
 }
 
 // Global state for errors and loading that should be shown in the UI
-export const getAvatarUrl = (photoURL?: string | null, name?: string) => {
+export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => {
   if (
-    photoURL && 
-    photoURL.trim() !== "" && 
-    !photoURL.includes("ui-avatars.com") && 
+    photoURL &&
+    photoURL.trim() !== "" &&
+    !photoURL.startsWith("data:image") &&
+    !photoURL.includes("ui-avatars.com") &&
     !photoURL.includes("dicebear")
   ) {
     return photoURL;
   }
-  return "";
+  const displayName = name && name.trim() !== "" ? name : "مستخدم";
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D9488&color=fff&bold=true`;
 };
 
 let globalErrorSetter: ((info: FirestoreErrorInfo | null) => void) | null = null;
