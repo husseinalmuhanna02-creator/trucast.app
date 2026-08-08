@@ -7897,7 +7897,7 @@ const handleStartLive = async (title: string) => {
                     {stream?.hostPhoto && (
                       <div 
                         className="absolute inset-0 bg-cover bg-center opacity-10 blur-2xl scale-110"
-                        style={{ backgroundImage: `url(${stream.hostPhoto})` }}
+                        style={{ backgroundImage: `url(${getAvatarUrl(stream?.hostPhoto, stream?.hostName)})` }}
                       />
                     )}
                   </div>
@@ -7920,7 +7920,7 @@ const handleStartLive = async (title: string) => {
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-black flex flex-col items-center justify-center text-zinc-400 z-0">
                   <StreamAvatar 
-                    photoURL={stream?.hostPhoto || userProfile?.photoURL || currentUser?.photoURL} 
+                    photoURL={getAvatarUrl(stream?.hostPhoto || userProfile?.photoURL || currentUser?.photoURL, stream?.hostName || currentUser?.displayName)}
                     name={stream?.hostName || currentUser?.displayName || "المضيف"} 
                     className="w-24 h-24 border-4 border-zinc-800 shadow-2xl mb-4" 
                   />
