@@ -229,16 +229,30 @@ interface FirestoreErrorInfo {
 
 // Global state for errors and loading that should be shown in the UI
 export const getAvatarUrl = (photoURL?: string | null, name?: string | null) => {
-  if (
-    photoURL &&
-    photoURL.trim() !== "" &&
-    !photoURL.includes("ui-avatars.com") &&
-    !photoURL.includes("dicebear")
-  ) {
-    return photoURL;
-  }
   const displayName = name && name.trim() !== "" ? name : "مستخدم";
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D9488&color=fff&bold=true`;
+  const letterAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D9488&color=fff&bold=true`;
+
+  if (!photoURL || photoURL.trim() === "") {
+    return letterAvatar;
+  }
+
+  const url = photoURL.toLowerCase();
+
+  // حظر جميع روابط وأكواد الصور الكارتونية والافتراضية
+  const isCartoonOrDefault =
+    url.includes("dicebear") ||
+    url.includes("multiavatar") ||
+    url.includes("api.multiavatar") ||
+    url.includes("bottts") ||
+    url.includes("avataaars") ||
+    url.includes("svg") ||
+    url.includes("avatar");
+
+  if (isCartoonOrDefault) {
+    return letterAvatar;
+  }
+
+  return photoURL;
 };
 
 let globalErrorSetter: ((info: FirestoreErrorInfo | null) => void) | null = null;
