@@ -8078,7 +8078,7 @@ const handleStartLive = async (title: string) => {
                   {stream.guest.photo && (
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-20 blur-lg scale-110"
-                      {getAvatarUrl(stream?.guest?.photo, stream?.guest?.name)}) }}
+                      style={{ backgroundImage: `url(${getAvatarUrl(stream?.guest?.photo, stream?.guest?.name)})` }}
                     />
                   )}
                   <div className="relative z-10 text-center flex flex-col items-center justify-center p-2 w-full">
