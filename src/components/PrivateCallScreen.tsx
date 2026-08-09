@@ -538,7 +538,7 @@ export const PrivateCallScreen = ({
 
   if (!client || !streamCall) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-6 relative">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center w-full h-full bg-slate-950 overflow-hidden text-white">
         <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-zinc-900/85 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-full transition-all border border-zinc-800/50">
           <X className="w-5 h-5" />
         </button>
