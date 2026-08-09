@@ -446,21 +446,21 @@ export const PrivateCallScreen = ({
         await requestMediaPermissions();
 
     const apiKey = "93v2eu284nry";
-    const token = currentUser.uid;
+const token = currentUser.uid;
 
-    if (!active) return;
+if (!active) return;
 
-    const user = {
-      id: currentUser.uid,
-      name: currentUser.displayName || t('مستخدم'),
-      image: currentUser.photoURL || '',
-    };
+const user = {
+  id: currentUser.uid,
+  name: currentUser.displayName || t('مستخدم'),
+  image: currentUser.photoURL || '',
+};
 
-    streamClient = new StreamVideoClient({
-      apiKey,
-      user,
-      token,
-    });
+streamClient = new StreamVideoClient({
+  apiKey,
+  user,
+  token,
+});
 
         setClient(streamClient);
 
