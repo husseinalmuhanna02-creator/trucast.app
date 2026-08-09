@@ -457,11 +457,13 @@ export const PrivateCallScreen = ({
 
     const userToken = currentUser.uid;
 
-    streamClient = new StreamVideoClient({
+        streamClient = new StreamVideoClient({
       apiKey,
       user,
       token: userToken,
     });
+
+    await streamClient.connectUser(user, userToken);
 
         setClient(streamClient);
 
