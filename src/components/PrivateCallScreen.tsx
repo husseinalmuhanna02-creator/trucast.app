@@ -536,9 +536,9 @@ export const PrivateCallScreen = ({
     );
   }
 
-    if (!client || !streamCall) {
+      if (!client || !streamCall) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center w-screen h-screen bg-slate-950 overflow-hidden text-white">
+      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center w-full h-full bg-slate-950 overflow-hidden text-white">
         <button 
           onClick={onClose} 
           className="absolute top-6 right-6 p-3 bg-zinc-900/80 hover:bg-zinc-800 rounded-full text-white z-10 transition-all"
@@ -557,8 +557,8 @@ export const PrivateCallScreen = ({
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-slate-950 flex flex-col overflow-hidden text-white">
-      {/* زر إغلاق مباشر وثابت أعلى الشاشة لضمان الخروج فوراً */}
+    <div className="fixed inset-0 z-[9999] w-full h-full bg-slate-950 text-white overflow-hidden">
+      {/* زر إغلاق أحمر ثابت في الزاوية العلوية يضمن الخروج دائماً */}
       <button
         onClick={async () => {
           try {
@@ -568,7 +568,7 @@ export const PrivateCallScreen = ({
             if (onClose) onClose();
           }
         }}
-        className="absolute top-4 right-4 z-[10000] p-3 bg-red-600/90 hover:bg-red-600 text-white rounded-full shadow-lg backdrop-blur-md transition-all active:scale-95"
+        className="absolute top-4 right-4 z-[10001] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition-all active:scale-95"
         title={t("إنهاء المكالمة")}
       >
         <X className="w-6 h-6" />
@@ -576,7 +576,8 @@ export const PrivateCallScreen = ({
 
       <StreamVideo client={client}>
         <StreamCall call={streamCall}>
-          <div className="w-full h-full flex flex-col relative overflow-hidden">
+          {/* استخدام absolute inset-0 يجبر الواجهة على التمدد بملء الشاشة 100% دون انكماش */}
+          <div className="absolute inset-0 w-full h-full flex flex-col z-0">
             <PrivateCallContent 
               currentUser={currentUser} 
               chat={chat} 
