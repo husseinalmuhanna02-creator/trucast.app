@@ -449,21 +449,17 @@ export const PrivateCallScreen = ({
 
     if (!active) return;
 
-    const user = {
+        const user = {
       id: currentUser.uid,
       name: currentUser.displayName || t('مستخدم'),
       image: currentUser.photoURL || '',
+      type: 'guest' as const,
     };
 
-    const userToken = currentUser.uid;
-
-        streamClient = new StreamVideoClient({
+    streamClient = new StreamVideoClient({
       apiKey,
       user,
-      token: userToken,
     });
-
-    await streamClient.connectUser(user, userToken);
 
         setClient(streamClient);
 
