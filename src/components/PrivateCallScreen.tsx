@@ -553,11 +553,13 @@ export const PrivateCallScreen = ({
     );
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950 w-full h-full overflow-hidden">
+    return (
+    <div className="fixed inset-0 z-50 flex flex-col w-full h-full bg-slate-950 overflow-hidden text-white">
       <StreamVideo client={client}>
         <StreamCall call={streamCall}>
-          <PrivateCallContent currentUser={currentUser} chat={chat} callSession={callSession} onClose={onClose} />
+          <div className="flex-1 w-full h-full flex flex-col relative">
+            <PrivateCallContent currentUser={currentUser} chat={chat} callSession={callSession} onClose={onClose} />
+          </div>
         </StreamCall>
       </StreamVideo>
     </div>
