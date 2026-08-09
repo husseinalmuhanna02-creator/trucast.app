@@ -445,17 +445,41 @@ export const PrivateCallScreen = ({
         setCallError(null);
         await requestMediaPermissions();
 
-    const apiKey = "93v2eu284nry";
+        const apiKey = "93v2eu284nry";
+    const apiSecret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
 
     if (!active) return;
 
-            const user = {
+    // دالة توليد توكن JWT مشفر معتمد من Stream على الهاتف مباشرة
+    const generateStreamToken = async (userId: string, secret: string) => {
+      const base64Url = (str: string) =>
+        btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const header = base64Url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+      const payload = base64Url(JSON.stringify({ user_id: userId }));
+      const dataToSign = `${header}.${payload}`;
+
+      const encoder = new TextEncoder();
+      const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+      );
+      const signatureBuffer = await crypto.subtle.sign("HMAC", key, encoder.encode(dataToSign));
+      const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
+        .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+      return `${dataToSign}.${signature}`;
+    };
+
+    const user = {
       id: currentUser.uid,
       name: currentUser.displayName || t('مستخدم'),
       image: currentUser.photoURL || '',
     };
 
-    const token = StreamVideoClient.devToken(currentUser.uid);
+    const token = await generateStreamToken(currentUser.uid, apiSecret);
 
     streamClient = new StreamVideoClient({
       apiKey,
