@@ -11895,7 +11895,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
       setTrendingCreators(users);
       
       // Also query posts to ensure we get any updates
-      const qPosts = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+      const qPosts = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(15));
       const postsSnap = await getDocs(qPosts);
       setPosts(postsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post)));
     } catch (err) {
@@ -11946,7 +11946,7 @@ function Feed({ currentUser, currentUserProfile, onViewMedia, onNavigateToChat, 
     if (!currentUser) return; // Wait for user to be available
     console.log("Feed: User authenticated, starting posts subscription...");
     
-    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(15));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post)));
       setLoading(false);
