@@ -446,21 +446,29 @@ export const PrivateCallScreen = ({
         await requestMediaPermissions();
 
     const apiKey = "93v2eu284nry";
-const token = currentUser.uid;
 
-if (!active) return;
+    if (!active) return;
 
-const user = {
-  id: currentUser.uid,
-  name: currentUser.displayName || t('مستخدم'),
-  image: currentUser.photoURL || '',
-};
+    const user = {
+      id: currentUser.uid,
+      name: currentUser.displayName || t('مستخدم'),
+      image: currentUser.photoURL || '',
+    };
 
-streamClient = new StreamVideoClient({
-  apiKey,
-  user,
-  token,
-});
+    // استخدام tokenProvider لتغذية العميل بالتوكين دون انقطاع الاتصال
+    streamClient = new StreamVideoClient({
+      apiKey,
+      user,
+      tokenProvider: async () => {
+        return StreamVideoClient.devToken(currentUser.uid);
+      },
+    });
+
+    // ربط المستخدم صراحة داخل العميل لتجنب خطأ connectUser wasn't called
+    await streamClient.connectUser(
+      user,
+      async () => StreamVideoClient.devToken(currentUser.uid)
+    );
 
         setClient(streamClient);
 
