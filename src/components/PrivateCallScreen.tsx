@@ -536,14 +536,14 @@ export const PrivateCallScreen = ({
     );
   }
 
-        if (!client || !streamCall) {
+          if (!client || !streamCall) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center w-full h-full bg-slate-950 overflow-hidden text-white">
+      <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center w-full bg-slate-950 overflow-hidden text-white" style={{ height: '100dvh' }}>
         <button 
           onClick={onClose} 
-          className="absolute top-6 right-6 p-3 bg-zinc-900/80 hover:bg-zinc-800 rounded-full text-white z-10"
+          className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full text-white z-[999999]"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
         <div className="flex flex-col items-center max-w-sm text-center">
           <div className="relative mb-6">
@@ -556,17 +556,32 @@ export const PrivateCallScreen = ({
     );
   }
 
-  // الكود الأصلي الخاص بك بدون أي حاويات زائدة تدمر الواجهة
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col w-full h-full bg-slate-950 overflow-hidden">
+    <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
+      {/* زر طوارئ إجباري يطفو فوق الشاشة السوداء لضمان الخروج وإنهاء الجلسة */}
+      <button
+        onClick={async () => {
+          try {
+            if (streamCall) await streamCall.leave().catch(() => {});
+            if (client) await client.disconnectUser().catch(() => {});
+          } catch (e) {}
+          if (onClose) onClose();
+        }}
+        className="absolute top-6 right-6 z-[999999] p-3 bg-red-600 active:bg-red-700 text-white rounded-full shadow-2xl"
+      >
+        <X className="w-6 h-6" />
+      </button>
+
       <StreamVideo client={client}>
         <StreamCall call={streamCall}>
-          <PrivateCallContent 
-            currentUser={currentUser} 
-            chat={chat} 
-            callSession={callSession} 
-            onClose={onClose} 
-          />
+          <div className="flex-1 w-full h-full relative z-10 flex flex-col">
+            <PrivateCallContent 
+              currentUser={currentUser} 
+              chat={chat} 
+              callSession={callSession} 
+              onClose={onClose} 
+            />
+          </div>
         </StreamCall>
       </StreamVideo>
     </div>
