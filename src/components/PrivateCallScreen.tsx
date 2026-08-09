@@ -445,17 +445,25 @@ export const PrivateCallScreen = ({
         setCallError(null);
         await requestMediaPermissions();
 
-        const response = await fetch(getApiUrl('/api/stream/credentials'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUser.uid }),
-        });
-        
-        if (!response.ok) {
-           throw new Error(`فشل الاتصال بالخادم الداخلي للمكالمات (الرمز: ${response.status})`);
-        }
-        
-        const { apiKey, token } = await response.json();
+        // أضف هذا التنبيه لرؤية الرابط الفعلي المسبب للمشكلة على شاشة جوالك
+const targetUrl = getApiUrl('/api/stream/credentials');
+let response;
+try {
+  response = await fetch(targetUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: currentUser.uid }),
+  });
+} catch (err: any) {
+  throw new Error(`تعذر الوصول للرابط: ${targetUrl} - ${err?.message}`);
+}
+
+if (!response.ok) {
+  const textErr = await response.text();
+  throw new Error(`الرابط (${targetUrl}) أرجع خطأ ${response.status}: ${textErr.slice(0, 100)}`);
+}
+
+const { apiKey, token } = await response.json();
 
         if (!active) return;
 
