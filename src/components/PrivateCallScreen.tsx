@@ -445,39 +445,22 @@ export const PrivateCallScreen = ({
         setCallError(null);
         await requestMediaPermissions();
 
-        // أضف هذا التنبيه لرؤية الرابط الفعلي المسبب للمشكلة على شاشة جوالك
-const targetUrl = getApiUrl('/api/stream/credentials');
-let response;
-try {
-  response = await fetch(targetUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId: currentUser.uid }),
-  });
-} catch (err: any) {
-  throw new Error(`تعذر الوصول للرابط: ${targetUrl} - ${err?.message}`);
-}
+    const apiKey = "93v2eu284nry";
+    const token = currentUser.uid;
 
-if (!response.ok) {
-  const textErr = await response.text();
-  throw new Error(`الرابط (${targetUrl}) أرجع خطأ ${response.status}: ${textErr.slice(0, 100)}`);
-}
+    if (!active) return;
 
-const { apiKey, token } = await response.json();
+    const user = {
+      id: currentUser.uid,
+      name: currentUser.displayName || t('مستخدم'),
+      image: currentUser.photoURL || '',
+    };
 
-        if (!active) return;
-
-        const user = {
-          id: currentUser.uid,
-          name: currentUser.displayName || t('مستخدم'),
-          image: currentUser.photoURL || '',
-        };
-
-        streamClient = new StreamVideoClient({
-          apiKey,
-          user,
-          tokenProvider: async (): Promise<string> => token,
-        });
+    streamClient = new StreamVideoClient({
+      apiKey,
+      user,
+      token,
+    });
 
         setClient(streamClient);
 
