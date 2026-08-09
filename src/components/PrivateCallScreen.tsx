@@ -455,20 +455,13 @@ export const PrivateCallScreen = ({
       image: currentUser.photoURL || '',
     };
 
-    // استخدام tokenProvider لتغذية العميل بالتوكين دون انقطاع الاتصال
+    const userToken = currentUser.uid;
+
     streamClient = new StreamVideoClient({
       apiKey,
       user,
-      tokenProvider: async () => {
-        return StreamVideoClient.devToken(currentUser.uid);
-      },
+      token: userToken,
     });
-
-    // ربط المستخدم صراحة داخل العميل لتجنب خطأ connectUser wasn't called
-    await streamClient.connectUser(
-      user,
-      async () => StreamVideoClient.devToken(currentUser.uid)
-    );
 
         setClient(streamClient);
 
