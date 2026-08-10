@@ -589,18 +589,16 @@ export const PrivateCallScreen = ({
     );
   }
 
-        return (
+          return (
     <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
       {/* زر إغلاق طوارئ دائم في أعلى الشاشة */}
       <button
-        onClick={async () => {
-          try {
-            if (streamCall) await streamCall.leave().catch(() => {});
-            if (client) await client.disconnectUser().catch(() => {});
-          } catch (e) {}
+        onClick={() => {
+          if (streamCall) streamCall.leave().catch(() => {});
+          if (client) client.disconnectUser().catch(() => {});
           if (onClose) onClose();
         }}
-        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl"
+        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl active:scale-95 transition-all"
         title="إنهاء المكالمة"
       >
         <X className="w-6 h-6" />
@@ -613,7 +611,11 @@ export const PrivateCallScreen = ({
               currentUser={currentUser}
               chat={chat}
               callSession={call}
-              onClose={onClose}
+              onClose={() => {
+                if (streamCall) streamCall.leave().catch(() => {});
+                if (client) client.disconnectUser().catch(() => {});
+                if (onClose) onClose();
+              }}
             />
           </div>
         </StreamCall>
