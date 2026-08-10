@@ -4,7 +4,7 @@ import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
 import { UserProfileScreen } from '../App';
 import { db } from '../firebase';
-import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp, onSnapshot, collection, arrayUnion, arrayRemove, addDoc } from 'firebase/firestore';
 const Capacitor = typeof window !== 'undefined' && (window as any).Capacitor ? (window as any).Capacitor : { isNativePlatform: () => false };
 const registerPlugin = typeof window !== 'undefined' && (window as any).Capacitor?.registerPlugin ? (window as any).Capacitor.registerPlugin : (() => ({}));
 import {
