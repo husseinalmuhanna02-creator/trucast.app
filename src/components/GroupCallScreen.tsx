@@ -767,6 +767,7 @@ const GroupCallContent = ({
   };
 
   const executeEndCall = async () => {
+    sendCallLogToChat();
     try {
       if (chat?.id && callSession?.id) {
         // Mark the call session as inactive
