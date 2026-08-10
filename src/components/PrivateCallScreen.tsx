@@ -153,7 +153,61 @@ const PrivateCallContent = ({
   const [muteNew, setMuteNew] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
+  // تتبع انضمام الطرف الآخر ووقت البداية
+  const [hasOtherJoined, setHasOtherJoined] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    if (participants && participants.length > 1 && !hasOtherJoined) {
+      setHasOtherJoined(true);
+      startTimeRef.current = Date.now();
+    }
+  }, [participants, hasOtherJoined]);
+
+  // دالة تنسيق مدة المكالمة
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) return `${secs} ثانية`;
+    return `${mins} د/ ${secs} ث`;
+  };
+
+  // دالة إرسال تقرير المكالمة للمحادثة
+  const sendCallLogToChat = async () => {
+    if (!chat?.id) return;
+    try {
+      let messageText = '';
+      let callStatus = '';
+
+      if (!hasOtherJoined) {
+        messageText = '🚫 مكالمة فائتة';
+        callStatus = 'missed';
+      } else {
+        const durationSec = startTimeRef.current
+          ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+          : 0;
+        messageText = `📞 مكالمة انتهت (${formatDuration(durationSec)})`;
+        callStatus = 'ended';
+      }
+
+      await addDoc(collection(db, 'chats', chat.id, 'messages'), {
+        senderId: currentUser?.uid || '',
+        text: messageText,
+        type: 'call',
+        callStatus: callStatus,
+        createdAt: serverTimestamp(),
+      });
+
+      await updateDoc(doc(db, 'chats', chat.id), {
+        lastMessage: messageText,
+        lastMessageTimestamp: serverTimestamp(),
+        activeCallId: null,
+      });
+    } catch (e) {
+      console.error('Error logging call:', e);
+    }
+  };
+  
   const triggerToast = (msg: string) => {
     setShowToast(msg);
     setTimeout(() => setShowToast(null), 3000);
