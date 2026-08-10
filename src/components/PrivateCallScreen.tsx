@@ -173,7 +173,7 @@ const PrivateCallContent = ({
   };
 
   // دالة إرسال تقرير المكالمة للمحادثة
-  const sendCallLogToChat = async () => {
+    const sendCallLogToChat = async () => {
     if (!chat?.id) return;
     try {
       let messageText = '';
@@ -193,7 +193,9 @@ const PrivateCallContent = ({
       await addDoc(collection(db, 'chats', chat.id, 'messages'), {
         senderId: currentUser?.uid || '',
         text: messageText,
-        type: 'call',
+        content: messageText,
+        message: messageText,
+        type: 'text',
         callStatus: callStatus,
         createdAt: serverTimestamp(),
       });
