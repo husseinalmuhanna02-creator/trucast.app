@@ -583,13 +583,14 @@ export const PrivateCallScreen = ({
   }
 
             // دالة إنهاء شاملة ومضمونة تقتل الواجهة فوراً
+    // دالة إنهاء آمنة ومضمونة
   const handleForceKill = () => {
-    setIsClosed(true); // 💥 إخفاء الشاشة لحظياً دون انتظار أي سيرفر
-
-        // 1. الخروج من الواجهة والعودة للدردشة فوراً
+    // 1. الخروج من الواجهة والعودة للدردشة فوراً
     try {
       if (onClose) onClose();
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error calling onClose:", e);
+    }
 
     // 2. التنظيف في الخلفية
     try {
