@@ -754,21 +754,24 @@ const GroupCallContent = ({
     }
   };
 
-    const executeLeave = async () => {
-    await sendCallLogToChat();
+      const executeLeave = async () => {
+    // إرسال التقرير في الخلفية لتجنب تجميد الشاشة
+    sendCallLogToChat().catch((err) => console.error('Call log error:', err));
+
     try {
       if (call) {
-        await call.leave().catch(err => console.warn("leave failed or already left in GroupCallContent:", err));
+        await call.leave().catch((err) => console.warn('leave failed in GroupCallContent:', err));
       }
     } catch (err) {
-      console.warn("Error leaving call in GroupCallContent:", err);
+      console.warn('Error leaving call in GroupCallContent:', err);
     }
     resetCallUIStates();
     navigation.goBack();
   };
 
   const executeEndCall = async () => {
-    await sendCallLogToChat();
+    // إرسال التقرير في الخلفية لتجنب تجميد الشاشة
+    sendCallLogToChat().catch((err) => console.error('Call log error:', err));
     try {
       if (chat?.id && callSession?.id) {
         // Mark the call session as inactive
