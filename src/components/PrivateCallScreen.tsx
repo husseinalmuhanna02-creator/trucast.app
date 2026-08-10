@@ -372,7 +372,11 @@ const PrivateCallContent = ({
         </button>
 
         <button
-          onClick={handleLeaveClick}
+          onClick={() => {
+  if (onClose) onClose();
+  executeEndCall();
+}}
+          
           className="p-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl transition-all shadow-lg shadow-red-600/30 active:scale-95"
         >
           <PhoneOff className="w-6 h-6" />
