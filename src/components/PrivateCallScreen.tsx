@@ -201,7 +201,12 @@ const PrivateCallContent = ({
     onClose();
   };
 
-  const executeEndCall = async () => {
+    const executeEndCall = () => {
+    try {
+      if (callSession) callSession.leave().catch(() => {});
+    } catch (e) {}
+    if (onClose) onClose();
+  };
     try {
       if (chat?.id && callSession?.id) {
         await updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), { 
