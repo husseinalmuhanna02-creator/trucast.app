@@ -201,43 +201,31 @@ const PrivateCallContent = ({
     onClose();
   };
 
-    const executeEndCall = () => {
+      const executeEndCall = () => {
+    // 1. تحديث قاعدة البيانات في الخلفية دون انتظار أو تعطيل للواجهة
+    if (chat?.id && callSession?.id) {
+      updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), {
+        active: false,
+        status: 'ended',
+        endedAt: serverTimestamp()
+      }).catch(() => {});
+
+      updateDoc(doc(db, 'chats', chat.id), {
+        activeCallId: null,
+        activeCallHostId: null,
+        activeCallHostName: null,
+        activeCallHostPhoto: null,
+        activeCallType: null,
+        activeCallStartedAt: null
+      }).catch(() => {});
+    }
+
+    // 2. إنهاء الجلسة وإغلاق الشاشة فوراً
     try {
       if (callSession) callSession.leave().catch(() => {});
     } catch (e) {}
+
     if (onClose) onClose();
-  };
-    try {
-      if (chat?.id && callSession?.id) {
-        await updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), { 
-          active: false,
-          status: 'ended',
-          endedAt: serverTimestamp()
-        }).catch(err => console.warn("Firestore update failed:", err));
-        
-        await updateDoc(doc(db, 'chats', chat.id), {
-          activeCallId: null,
-          activeCallHostId: null,
-          activeCallHostName: null,
-          activeCallHostPhoto: null,
-          activeCallType: null,
-          activeCallStartedAt: null
-        }).catch(err => console.warn("Firestore activeCallId clear failed:", err));
-      }
-    } catch (dbErr) {
-      console.error("Failed to update database for ending call:", dbErr);
-    }
-
-    try {
-      if (call) await call.endCall();
-    } catch (err) {
-      console.warn("Error ending call:", err);
-    }
-
-    if (typeof (window as any).navigate === 'function') {
-      (window as any).navigate('/home');
-    }
-    onClose();
   };
 
   return (
