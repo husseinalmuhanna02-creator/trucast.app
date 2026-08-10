@@ -394,7 +394,58 @@ const GroupCallContent = ({
   });
 
   const isLocalHardMuted = !!(currentUser?.uid && hardMutedUserIds.includes(currentUser.uid));
+  // 1. تتبع انضمام أطراف أخرى والمدة
+  const [hasOtherJoined, setHasOtherJoined] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    if (participants && participants.length > 1 && !hasOtherJoined) {
+      setHasOtherJoined(true);
+      startTimeRef.current = Date.now();
+    }
+  }, [participants, hasOtherJoined]);
+
+  // 2. دالة تنسيق المدة
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) return `${secs} ثانية`;
+    return `${mins} د/ ${secs} ث`;
+  };
+
+  // 3. دالة إرسال التقرير (دائماً "منتهية")
+  const sendCallLogToChat = async () => {
+    const targetId = (group as any)?.id || (chat as any)?.id;
+    if (!targetId) return;
+
+    try {
+      const durationSec = startTimeRef.current
+        ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+        : 0;
+
+      const messageText = `📞 مكالمة جماعية منتهية (${formatDuration(durationSec)})`;
+      const collectionName = (group as any)?.id ? 'groups' : 'chats';
+
+      await addDoc(collection(db, collectionName, targetId, 'messages'), {
+        senderId: currentUser?.uid || '',
+        text: messageText,
+        content: messageText,
+        message: messageText,
+        type: 'text',
+        callStatus: 'ended',
+        createdAt: serverTimestamp(),
+      });
+
+      await updateDoc(doc(db, collectionName, targetId), {
+        lastMessage: messageText,
+        lastMessageTimestamp: serverTimestamp(),
+        activeCallId: null,
+      });
+    } catch (e) {
+      console.error('Error logging group call:', e);
+    }
+  };
+  
   // State toggles
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [noiseReduction, setNoiseReduction] = useState(false);
