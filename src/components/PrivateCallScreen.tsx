@@ -255,11 +255,14 @@ const PrivateCallContent = ({
     onClose();
   };
 
-        const executeEndCall = () => {
-    // 1. إغلاق الشاشة والعودة للدردشة فوراً
+          const executeEndCall = () => {
+    // 1. إرسال تقرير المكالمة (مدة المكالمة أو مكالمة فائتة)
+    sendCallLogToChat();
+
+    // 2. إغلاق الشاشة والعودة للدردشة فوراً
     if (onClose) onClose();
 
-    // 2. تحديث قاعدة البيانات والتنظيف في الخلفية
+    // 3. تحديث قاعدة البيانات والتنظيف في الخلفية
     try {
       if (chat?.id && callSession?.id && typeof db !== 'undefined') {
         updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), {
