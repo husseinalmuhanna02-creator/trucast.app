@@ -434,9 +434,6 @@ export const PrivateCallScreen = ({
 
   // 🟢 إضافة حالة الصلاحيات الجديدة هنا:
   const [isPermissionsGranted, setIsPermissionsGranted] = useState<boolean | null>(null);
-  const [isClosed, setIsClosed] = useState(false);
-
-  if (isClosed) return null;
   
   useEffect(() => {
     if (!currentUser) return;
@@ -589,16 +586,22 @@ export const PrivateCallScreen = ({
   const handleForceKill = () => {
     setIsClosed(true); // 💥 إخفاء الشاشة لحظياً دون انتظار أي سيرفر
 
+        // 1. الخروج من الواجهة والعودة للدردشة فوراً
+    try {
+      if (onClose) onClose();
+    } catch (e) {}
+
+    // 2. التنظيف في الخلفية
     try {
       if (streamCall) streamCall.leave().catch(() => {});
       if (client) client.disconnectUser().catch(() => {});
     } catch (e) {}
 
-    if (chat?.id) {
-      updateDoc(doc(db, 'chats', chat.id), { activeCallId: null }).catch(() => {});
-    }
-
-    if (onClose) onClose();
+    try {
+      if (chat?.id) {
+        updateDoc(doc(db, 'chats', chat.id), { activeCallId: null }).catch(() => {});
+      }
+    } catch (e) {}
   };
 
   return (
