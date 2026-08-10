@@ -556,9 +556,9 @@ export const PrivateCallScreen = ({
     );
   }
 
-  return (
+    return (
     <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
-      {/* زر طوارئ إجباري يطفو فوق الشاشة السوداء لضمان الخروج وإنهاء الجلسة */}
+      {/* زر إغلاق طوارئ دائم في أعلى الشاشة للخروج بضغطة واحدة */}
       <button
         onClick={async () => {
           try {
@@ -567,14 +567,15 @@ export const PrivateCallScreen = ({
           } catch (e) {}
           if (onClose) onClose();
         }}
-        className="absolute top-6 right-6 z-[999999] p-3 bg-red-600 active:bg-red-700 text-white rounded-full shadow-2xl"
+        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl transition-all"
+        title="إنهاء المكالمة"
       >
         <X className="w-6 h-6" />
       </button>
 
       <StreamVideo client={client}>
         <StreamCall call={streamCall}>
-          <div className="flex-1 w-full h-full relative z-10 flex flex-col">
+          <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
             <PrivateCallContent 
               currentUser={currentUser} 
               chat={chat} 
