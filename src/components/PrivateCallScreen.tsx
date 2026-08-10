@@ -201,31 +201,33 @@ const PrivateCallContent = ({
     onClose();
   };
 
-      const executeEndCall = () => {
-    // 1. تحديث قاعدة البيانات في الخلفية دون انتظار أو تعطيل للواجهة
-    if (chat?.id && callSession?.id) {
-      updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), {
-        active: false,
-        status: 'ended',
-        endedAt: serverTimestamp()
-      }).catch(() => {});
+        const executeEndCall = () => {
+    // 1. إغلاق الشاشة والعودة للدردشة فوراً
+    if (onClose) onClose();
 
-      updateDoc(doc(db, 'chats', chat.id), {
-        activeCallId: null,
-        activeCallHostId: null,
-        activeCallHostName: null,
-        activeCallHostPhoto: null,
-        activeCallType: null,
-        activeCallStartedAt: null
-      }).catch(() => {});
-    }
+    // 2. تحديث قاعدة البيانات والتنظيف في الخلفية
+    try {
+      if (chat?.id && callSession?.id && typeof db !== 'undefined') {
+        updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), {
+          active: false,
+          status: 'ended',
+          endedAt: serverTimestamp()
+        }).catch(() => {});
 
-    // 2. إنهاء الجلسة وإغلاق الشاشة فوراً
+        updateDoc(doc(db, 'chats', chat.id), {
+          activeCallId: null,
+          activeCallHostId: null,
+          activeCallHostName: null,
+          activeCallHostPhoto: null,
+          activeCallType: null,
+          activeCallStartedAt: null
+        }).catch(() => {});
+      }
+    } catch (e) {}
+
     try {
       if (callSession) callSession.leave().catch(() => {});
     } catch (e) {}
-
-    if (onClose) onClose();
   };
 
   return (
