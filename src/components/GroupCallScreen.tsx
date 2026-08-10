@@ -754,10 +754,11 @@ const GroupCallContent = ({
     }
   };
 
-  const executeLeave = async () => {
+    const executeLeave = async () => {
+    await sendCallLogToChat();
     try {
       if (call) {
-        await call.leave().catch(err => console.warn("leave failed or already left in executeLeave:", err));
+        await call.leave().catch(err => console.warn("leave failed or already left in GroupCallContent:", err));
       }
     } catch (err) {
       console.warn("Error leaving call in GroupCallContent:", err);
@@ -767,7 +768,7 @@ const GroupCallContent = ({
   };
 
   const executeEndCall = async () => {
-    sendCallLogToChat();
+    await sendCallLogToChat();
     try {
       if (chat?.id && callSession?.id) {
         // Mark the call session as inactive
