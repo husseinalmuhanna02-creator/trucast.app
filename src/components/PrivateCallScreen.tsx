@@ -589,38 +589,36 @@ export const PrivateCallScreen = ({
     );
   }
 
-      return (
-    <CallErrorBoundary>
-      <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
-        {/* زر إغلاق طوارئ دائم في أعلى الشاشة الخروج بضغطة واحدة */}
-        <button
-          onClick={async () => {
-            try {
-              if (streamCall) await streamCall.leave().catch(() => {});
-              if (client) await client.disconnectUser().catch(() => {});
-            } catch (e) {}
-            if (onClose) onClose();
-          }}
-          className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl"
-          title="إنهاء المكالمة"
-        >
-          <X className="w-6 h-6" />
-        </button>
+        return (
+    <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
+      {/* زر إغلاق طوارئ دائم في أعلى الشاشة */}
+      <button
+        onClick={async () => {
+          try {
+            if (streamCall) await streamCall.leave().catch(() => {});
+            if (client) await client.disconnectUser().catch(() => {});
+          } catch (e) {}
+          if (onClose) onClose();
+        }}
+        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl"
+        title="إنهاء المكالمة"
+      >
+        <X className="w-6 h-6" />
+      </button>
 
-        <StreamVideo client={client}>
-          <StreamCall call={streamCall}>
-            <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
-              <PrivateCallContent
-                currentUser={currentUser}
-                chat={chat}
-                callSession={callSession}
-                onClose={onClose}
-              />
-            </div>
-          </StreamCall>
-        </StreamVideo>
-      </div>
-    </CallErrorBoundary>
+      <StreamVideo client={client}>
+        <StreamCall call={streamCall}>
+          <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
+            <PrivateCallContent
+              currentUser={currentUser}
+              chat={chat}
+              callSession={call}
+              onClose={onClose}
+            />
+          </div>
+        </StreamCall>
+      </StreamVideo>
+    </div>
   );
 };
             
