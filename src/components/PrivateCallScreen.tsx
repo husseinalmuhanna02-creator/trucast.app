@@ -3,7 +3,7 @@ import { useLanguage } from '../localization';
 import { User as FirebaseUser } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
 import { db } from '../firebase';
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp, addDoc, collection } from 'firebase/firestore';
 import {
   StreamVideo,
   StreamCall,
