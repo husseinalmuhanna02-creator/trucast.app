@@ -434,7 +434,10 @@ export const PrivateCallScreen = ({
 
   // 🟢 إضافة حالة الصلاحيات الجديدة هنا:
   const [isPermissionsGranted, setIsPermissionsGranted] = useState<boolean | null>(null);
+  const [isClosed, setIsClosed] = useState(false);
 
+  if (isClosed) return null;
+  
   useEffect(() => {
     if (!currentUser) return;
 
@@ -582,15 +585,27 @@ export const PrivateCallScreen = ({
     );
   }
 
-          return (
+            // دالة إنهاء شاملة ومضمونة تقتل الواجهة فوراً
+  const handleForceKill = () => {
+    setIsClosed(true); // 💥 إخفاء الشاشة لحظياً دون انتظار أي سيرفر
+
+    try {
+      if (streamCall) streamCall.leave().catch(() => {});
+      if (client) client.disconnectUser().catch(() => {});
+    } catch (e) {}
+
+    if (chat?.id) {
+      updateDoc(doc(db, 'chats', chat.id), { activeCallId: null }).catch(() => {});
+    }
+
+    if (onClose) onClose();
+  };
+
+  return (
     <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
-      {/* زر إغلاق طوارئ دائم في أعلى الشاشة */}
+      {/* زر إغلاق الطوارئ العلوي */}
       <button
-        onClick={() => {
-          if (streamCall) streamCall.leave().catch(() => {});
-          if (client) client.disconnectUser().catch(() => {});
-          if (onClose) onClose();
-        }}
+        onClick={handleForceKill}
         className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl active:scale-95 transition-all"
         title="إنهاء المكالمة"
       >
@@ -604,11 +619,7 @@ export const PrivateCallScreen = ({
               currentUser={currentUser}
               chat={chat}
               callSession={call}
-              onClose={() => {
-                if (streamCall) streamCall.leave().catch(() => {});
-                if (client) client.disconnectUser().catch(() => {});
-                if (onClose) onClose();
-              }}
+              onClose={handleForceKill}
             />
           </div>
         </StreamCall>
