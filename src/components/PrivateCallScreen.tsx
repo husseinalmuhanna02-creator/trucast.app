@@ -411,8 +411,10 @@ export const PrivateCallScreen = ({
   const { t } = useLanguage();
   const [client, setClient] = useState<StreamVideoClient | null>(null);
   const [streamCall, setStreamCall] = useState<any>(null);
-  
   const [callError, setCallError] = useState<string | null>(null);
+
+  // 🟢 إضافة حالة الصلاحيات الجديدة هنا:
+  const [isPermissionsGranted, setIsPermissionsGranted] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -426,6 +428,7 @@ export const PrivateCallScreen = ({
         if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           stream.getTracks().forEach(track => track.stop());
+          if (active) setIsPermissionsGranted(true);
         }
       } catch (err) {
         console.warn("Camera/Mic permission failed. Trying audio only.", err);
@@ -433,9 +436,11 @@ export const PrivateCallScreen = ({
           if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             stream.getTracks().forEach(track => track.stop());
+            if (active) setIsPermissionsGranted(true);
           }
         } catch (audioErr: any) {
-          throw new Error("لم يتم منح صلاحيات الميكروفون أو الكاميرا. يرجى تفعيلها من إعدادات الهاتف.");
+          if (active) setIsPermissionsGranted(false);
+          throw new Error("لم يتم منح صلاحيات الميكروفون أو الكاميرا. يرجى تفعيلها من إعدادات الهاتف");
         }
       }
     };
@@ -516,32 +521,34 @@ export const PrivateCallScreen = ({
     };
   }, [currentUser, call.id, chat.id]);
 
-  if (callError) {
+  // 1. في حال رفض الصلاحيات أو حدوث خطأ
+  if (callError || isPermissionsGranted === false) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center w-full h-full bg-slate-950 overflow-hidden text-white">
-        <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-zinc-900/85 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-full transition-all border border-zinc-800/50">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center w-full h-full bg-slate-950 text-white p-6">
+        <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full">
           <X className="w-5 h-5" />
         </button>
-        <div className="w-20 h-20 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center mb-6">
+        <div className="w-20 h-20 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center mb-4">
           <AlertTriangle className="w-10 h-10" />
         </div>
-        <h3 className="text-xl font-black mb-3 text-red-400">فشل بدء المكالمة</h3>
+        <h3 className="text-xl font-black mb-3 text-red-400">{t("تنبيه الصلاحيات")}</h3>
         <p className="text-zinc-300 font-bold text-sm text-center max-w-sm mb-8 leading-relaxed">
-          {callError}
+          {callError || t("يرجى منح صلاحية الكاميرا والمايكروفون للتمكن من إجراء المكالمة.")}
         </p>
-        <button onClick={onClose} className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-black transition-colors">
-          عودة للدردشة
+        <button onClick={onClose} className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold">
+          {t("عودة للدردشة")}
         </button>
       </div>
     );
   }
 
-          if (!client || !streamCall) {
+  // 2. أثناء التحقق من الصلاحيات أو تهيأة الاتصال
+  if (isPermissionsGranted === null || !client || !streamCall) {
     return (
-      <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center w-full bg-slate-950 overflow-hidden text-white" style={{ height: '100dvh' }}>
-        <button 
-          onClick={onClose} 
-          className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full text-white z-[999999]"
+      <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center w-full h-full bg-slate-950 text-white">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full text-white/80 hover:text-white hover:bg-zinc-800 transition-colors z-50"
         >
           <X className="w-6 h-6" />
         </button>
