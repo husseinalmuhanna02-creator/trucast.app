@@ -395,6 +395,32 @@ const PrivateCallContent = ({
     </div>
   );
 };
+class CallErrorBoundary extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null, info: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, info: any) {
+    this.setState({ info });
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 999999, backgroundColor: '#000', color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+          <h2 style={{ color: '#ef4444', fontWeight: 'bold', fontSize: '20px' }}>تفاصيل الخطأ:</h2>
+          <pre style={{ marginTop: '16px', fontSize: '12px', color: '#fca5a5', width: '90%', overflow: 'auto', whiteSpace: 'pre-wrap' }}>
+            {this.state.error?.toString()}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export const PrivateCallScreen = ({
   currentUser,
   chat,
@@ -563,36 +589,38 @@ export const PrivateCallScreen = ({
     );
   }
 
-    return (
-    <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
-      {/* زر إغلاق طوارئ دائم في أعلى الشاشة للخروج بضغطة واحدة */}
-      <button
-        onClick={async () => {
-          try {
-            if (streamCall) await streamCall.leave().catch(() => {});
-            if (client) await client.disconnectUser().catch(() => {});
-          } catch (e) {}
-          if (onClose) onClose();
-        }}
-        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl transition-all"
-        title="إنهاء المكالمة"
-      >
-        <X className="w-6 h-6" />
-      </button>
+      return (
+    <CallErrorBoundary>
+      <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
+        {/* زر إغلاق طوارئ دائم في أعلى الشاشة الخروج بضغطة واحدة */}
+        <button
+          onClick={async () => {
+            try {
+              if (streamCall) await streamCall.leave().catch(() => {});
+              if (client) await client.disconnectUser().catch(() => {});
+            } catch (e) {}
+            if (onClose) onClose();
+          }}
+          className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl"
+          title="إنهاء المكالمة"
+        >
+          <X className="w-6 h-6" />
+        </button>
 
-      <StreamVideo client={client}>
-        <StreamCall call={streamCall}>
-          <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
-            <PrivateCallContent 
-              currentUser={currentUser} 
-              chat={chat} 
-              callSession={callSession} 
-              onClose={onClose} 
-            />
-          </div>
-        </StreamCall>
-      </StreamVideo>
-    </div>
+        <StreamVideo client={client}>
+          <StreamCall call={streamCall}>
+            <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
+              <PrivateCallContent
+                currentUser={currentUser}
+                chat={chat}
+                callSession={callSession}
+                onClose={onClose}
+              />
+            </div>
+          </StreamCall>
+        </StreamVideo>
+      </div>
+    </CallErrorBoundary>
   );
 };
             
