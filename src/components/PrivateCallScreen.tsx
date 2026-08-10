@@ -290,12 +290,12 @@ const PrivateCallContent = ({
                     participant={remoteParticipant}
                     trackType="videoTrack"
                     className="w-full h-full object-cover"
-                    ParticipantViewUI={null}
+                    ParticipantViewUI={() => null}
                   />
                 ) : (
                   <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-zinc-950/95" style={{ direction: 'rtl' }}>
                     <div className="absolute top-0 left-0 w-1 h-1 opacity-0 overflow-hidden pointer-events-none z-[-50]">
-                      <ParticipantView participant={remoteParticipant} trackType="none" ParticipantViewUI={null} />
+                      <ParticipantView participant={remoteParticipant} trackType="none" ParticipantViewUI={() => null} />
                     </div>
                     <div className="relative mb-6">
                       <div className="absolute -inset-4 bg-indigo-500/10 rounded-full blur-2xl animate-pulse" />
@@ -347,7 +347,7 @@ const PrivateCallContent = ({
                 participant={localParticipant}
                 trackType="videoTrack"
                 className="w-full h-full object-cover scale-x-[-1]"
-                ParticipantViewUI={null}
+                ParticipantViewUI={() => null}
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
