@@ -414,17 +414,22 @@ const GroupCallContent = ({
   };
 
   // 3. دالة إرسال التقرير (دائماً "منتهية")
-  const sendCallLogToChat = async () => {
-    const targetId = (group as any)?.id || (chat as any)?.id;
-    if (!targetId) return;
-
+    const sendCallLogToChat = async () => {
     try {
+      const targetId = (group as any)?.id || (chat as any)?.id || call?.id;
+      
+      if (!targetId) {
+        console.warn("sendCallLogToChat: لم يتم العثور على targetId");
+        return;
+      }
+
+      const collectionName = (group as any)?.id || call?.id ? 'groups' : 'chats';
+
       const durationSec = startTimeRef.current
         ? Math.floor((Date.now() - startTimeRef.current) / 1000)
         : 0;
 
       const messageText = `📞 مكالمة جماعية منتهية (${formatDuration(durationSec)})`;
-      const collectionName = (group as any)?.id ? 'groups' : 'chats';
 
       await addDoc(collection(db, collectionName, targetId, 'messages'), {
         senderId: currentUser?.uid || '',
@@ -440,9 +445,9 @@ const GroupCallContent = ({
         lastMessage: messageText,
         lastMessageTimestamp: serverTimestamp(),
         activeCallId: null,
-      });
-    } catch (e) {
-      console.error('Error logging group call:', e);
+      }).catch(() => {});
+    } catch (err) {
+      console.error("خطأ أثناء تسجيل إحصائية المكالمة:", err);
     }
   };
   
