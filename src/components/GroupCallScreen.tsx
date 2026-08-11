@@ -890,9 +890,20 @@ const GroupCallContent = ({
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   {/* Right side: Avatar */}
                   <div className="relative shrink-0">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-850 border border-white/10 flex items-center justify-center">
-                      <SafeAvatar p={p} />
-                    </div>
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-850 border border-white/10 flex items-center">
+  {(p as any)?.isCameraOn ? (
+    <video
+      autoPlay
+      playsInline
+      muted
+      ref={(el) => { if (el && (p as any)?.stream) el.srcObject = (p as any).stream; }}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <SafeAvatar p={p} />
+  )}
+</div>
+
                     <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border border-zinc-900 ${(p as any).isMuted ? 'bg-red-500' : 'bg-emerald-500'}`} />
                   </div>
 
