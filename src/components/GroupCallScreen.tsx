@@ -416,14 +416,12 @@ const GroupCallContent = ({
   // 3. دالة إرسال التقرير (دائماً "منتهية")
     const sendCallLogToChat = async () => {
     try {
-      const targetId = (group as any)?.id || (chat as any)?.id || call?.id;
-      
+      const targetId = chat?.id;
+
       if (!targetId) {
-        console.warn("sendCallLogToChat: لم يتم العثور على targetId");
+        console.warn("sendCallLogToChat: لم يتم العثور على targetId داخل chat");
         return;
       }
-
-      const collectionName = (group as any)?.id || call?.id ? 'groups' : 'chats';
 
       const durationSec = startTimeRef.current
         ? Math.floor((Date.now() - startTimeRef.current) / 1000)
@@ -431,7 +429,7 @@ const GroupCallContent = ({
 
       const messageText = `📞 مكالمة جماعية منتهية (${formatDuration(durationSec)})`;
 
-      await addDoc(collection(db, collectionName, targetId, 'messages'), {
+      await addDoc(collection(db, 'chats', targetId, 'messages'), {
         senderId: currentUser?.uid || '',
         text: messageText,
         content: messageText,
@@ -441,11 +439,13 @@ const GroupCallContent = ({
         createdAt: serverTimestamp(),
       });
 
-      await updateDoc(doc(db, collectionName, targetId), {
+      await updateDoc(doc(db, 'chats', targetId), {
         lastMessage: messageText,
         lastMessageTimestamp: serverTimestamp(),
         activeCallId: null,
       }).catch(() => {});
+
+      console.log("تم إرسال إحصائية المكالمة بنجاح إلى المحادثة:", targetId);
     } catch (err) {
       console.error("خطأ أثناء تسجيل إحصائية المكالمة:", err);
     }
