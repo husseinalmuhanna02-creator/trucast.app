@@ -27572,7 +27572,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="sticky top-0 z-20 m-2 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2rem] flex items-center justify-between shadow-2xl shadow-blue-900/40 border border-white/10 backdrop-blur-xl"
+            className="fixed top-[80px] left-4 right-4 z-40 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2rem] ...
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center animate-pulse">
