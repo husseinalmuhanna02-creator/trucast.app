@@ -27618,12 +27618,12 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 text-blue-600 animate-spin" /></div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-zinc-600 opacity-20">
+          <div className="flex-1 flex flex-col items-center justify-center min-h-[75vh] text-zinc-600 opacity-20">
              <MessageSquare className="w-20 h-20 mb-4" />
              <p className="font-black">لا توجد رسائل بعد</p>
           </div>
         ) : searchQuery && filteredMessages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-zinc-500 animate-in fade-in zoom-in duration-300">
+          <div className="flex-1 flex flex-col items-center justify-center min-h-[75vh] text-zinc-500 animate-in fade-in">
              <Search className="w-14 h-14 mb-4 text-zinc-600" />
              <p className="font-black text-base text-zinc-400">لا توجد رسائل تطابق "{searchQuery}"</p>
              <button 
