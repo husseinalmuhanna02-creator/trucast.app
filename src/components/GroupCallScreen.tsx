@@ -841,7 +841,7 @@ const GroupCallContent = ({
     <div className="flex-1 flex flex-col md:flex-row relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
       {/* 1. Sidebar Panel (Vertical Ladder Layout - شكل السلم) */}
-      <div className="w-full md:w-80 lg:w-96 flex flex-col shrink-0 bg-zinc-950/90 border-b md:border-b-0 md:border-l border-white/5 z-40">
+      <div className={`w-full flex flex-col shrink-0 bg-zinc-950/90 border-b md:border-b-0 md:border-l border-white/5 ${hasActiveVideo ? 'md:w-80 lg:w-96' : 'flex-1'}`}>
         <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/5">
           {/* Right side: Room Branding */}
           <div className="flex items-center gap-2">
@@ -938,7 +938,7 @@ const GroupCallContent = ({
       </div>
 
       {/* Main Content Pane */}
-      <div className="flex-1 flex flex-col relative h-full min-w-0">
+      <div className={`flex-col relative h-full min-w-0 ${hasActiveVideo || isWhiteboardActive ? 'flex-1' : 'hidden'}`}>
         {/* Top bar over the video area containing options and whiteboard button for admin */}
         <div className="absolute top-4 right-4 left-4 flex items-center justify-between z-40 font-sans" dir="rtl">
           {/* Options & Minimize group */}
