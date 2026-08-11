@@ -27352,7 +27352,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
       />
       
       <div 
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50 }}
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}
         className={`p-4 border-b ${isLight ? 'border-zinc-200 bg-white/95 text-zinc-900' : 'border-zinc-900/50 bg-zinc-950/90 text-white'} flex items-center justify-between backdrop-blur-3xl h-[76px] transition-colors`}
       >
         <div className="flex items-center gap-3">
@@ -28025,7 +28025,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
 
       {isFeatureVisible('sendText') ? (
         <div 
-          style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50 }}
+          style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50 }}
           className={`p-4 ${isLight ? 'bg-white/95 border-zinc-200 text-zinc-900' : 'bg-zinc-950/80 border-zinc-800 text-white'} backdrop-blur-xl border-t transition-all`}
         >
           {chat?.type === 'channel' && !isAdminOrOwner ? (
