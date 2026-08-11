@@ -27551,7 +27551,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
 
       <div 
         ref={scrollRef}
-        className="flex-1 min-h-[calc(100vh-180px)] overflow-y-auto p-4 space-y-4 flex flex-col z-10 custom-scrollbar scroll-smooth relative"
+        className="flex-1 h-0 overflow-y-auto p-4 space-y-4 flex flex-col z-10 custom-scrollbar scroll-smooth relative"
         style={{
           paddingTop: isSearchOpen ? '144px' : '92px',
           paddingBottom: (replyingTo || editingMessage) ? '180px' : '92px',
