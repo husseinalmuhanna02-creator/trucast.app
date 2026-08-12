@@ -31084,9 +31084,10 @@ const handleTwitterLogin = async () => {
                   onNavigateToChat={(id, data) => handleNavigateToChat(id, data)} 
                   onNavigateToCreate={(type) => setActiveSubTab(type === 'group' ? 'create-group' : 'create-channel')}
                   onNavigateToUser={(uid) => {
-                    setSelectedUserId(uid);
-                    requestTabChange('user-profile');
-                  }}
+          setSelectedUserId(uid);
+          setSelectedChatId(null);
+          requestTabChange('user-profile');
+        }}
                   isDiscoverOpen={isDiscoverOpen}
                   setIsDiscoverOpen={setIsDiscoverOpen}
                   onBackHome={goBackTab}
