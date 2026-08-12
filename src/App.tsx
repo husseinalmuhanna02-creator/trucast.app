@@ -28557,7 +28557,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-[100] bg-zinc-950 overflow-y-auto"
+            className="fixed inset-0 z-[9999] bg-zinc-950 overflow-y-auto"
           >
             <UserProfileScreen
               userId={viewProfileUserId}
