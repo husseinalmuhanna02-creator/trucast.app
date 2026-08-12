@@ -25751,7 +25751,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
         setUploading(false);
       } catch (error) {
         console.error("Error updating avatar:", error);
-        alert(t("فشل تحديث الصورة"));
+        alert("سبب الخطأ: " + (error?.message || JSON.stringify(error)));
+
         setUploading(false);
       }
     };
