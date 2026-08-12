@@ -881,7 +881,7 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
     </button>
   )}
 
-    {/* خيارات متقدمة */}
+      {/* خيارات متقدمة */}
   <div className="relative">
     <button
       onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -911,6 +911,7 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
       </div>
     )}
   </div>
+</div>
   
         {/* Participant Settings */}
         {isOwnerOrAdmin && (
