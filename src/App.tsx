@@ -1772,9 +1772,8 @@ async function uploadToCloudinarySigned(file: File, onProgress?: (p: number) => 
 
     const config = await signatureRes.json();
     const { signature, timestamp, cloud_name, api_key } = config;
-if (!api_key || !cloud_name) {
-  throw new Error(`مفاتيح Cloudinary مفقودة من السيرفر! api_key: ${api_key}, cloud_name: ${cloud_name}`);
-}
+alert(`Cloud Name: ${cloud_name} | API Key: ${api_key}`);
+
 
 
     // IF Video OR Large file, use chunked upload
