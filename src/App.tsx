@@ -31072,9 +31072,10 @@ const handleTwitterLogin = async () => {
                   onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
                   onWatchLive={(streamId) => setActiveLiveStreamId(streamId)}
                   onNavigateToUser={(uid) => {
-                    setSelectedUserId(uid);
-                    requestTabChange('user-profile');
-                  }}
+          setSelectedUserId(uid);
+          setSelectedChatId(null);
+          requestTabChange('user-profile');
+        }}
                   onNavigateToChat={(id, data) => handleNavigateToChat(id, data)}
                 />
               ) : (
