@@ -836,7 +836,7 @@ const GroupCallContent = ({
       console.error("خطأ في مشاركة الشاشة:", error);
     }
   };
-const hasActiveVideo = participants.some((p: any) => p.isCameraOn || p.isScreenSharing || (p as any).stream);
+const hasActiveVideo = participants.some((p: any) => p.isCameraEnabled || p.isCameraOn || p.isScreenSharing || p.videoTrack);
   return (
     <div className="flex-1 flex flex-row-reverse relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
@@ -891,7 +891,7 @@ const hasActiveVideo = participants.some((p: any) => p.isCameraOn || p.isScreenS
                   {/* Right side: Avatar */}
                   <div className="relative shrink-0">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-850 border border-white/10 flex items-center">
-  {(p as any)?.isCameraOn ? (
+  {(p as any)?.isCameraEnabled || (p as any)?.isCameraOn ? (
     <video
       autoPlay
       playsInline
