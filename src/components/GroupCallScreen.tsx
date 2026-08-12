@@ -881,7 +881,7 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
     </button>
   )}
 
-  {/* خيارات متقدمة */}
+    {/* خيارات متقدمة */}
   <div className="relative">
     <button
       onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -896,22 +896,21 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
       <div className="absolute top-full right-0 mt-2 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 z-50 shadow-2xl">
         <button
           onClick={() => {
-            setNoiseReduction(!isNoiseReduction);
-            triggerToast(!isNoiseReduction ? t("تم تفعيل عزل الضوضاء") : t("تم إلغاء عزل الضوضاء"));
+            setNoiseReduction(!noiseReduction);
+            triggerToast(!noiseReduction ? t("تم تفعيل عزل الضوضاء") : t("تم إلغاء عزل الضوضاء"));
             setIsMenuOpen(false);
           }}
           className="w-full flex items-center justify-between p-2.5 rounded-xl bg-zinc-900/50 text-right transition-all hover:bg-zinc-800"
         >
           <div className="flex items-center gap-2">
-            <Sliders className={`w-4 h-4 ${isNoiseReduction ? 'text-emerald-500' : 'text-zinc-400'}`} />
+            <Sliders className={`w-4 h-4 ${noiseReduction ? 'text-emerald-500' : 'text-zinc-400'}`} />
             <span className="text-xs font-bold text-white">{t("تقليل الضوضاء")}</span>
           </div>
-          {isNoiseReduction && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+          {noiseReduction && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
         </button>
       </div>
     )}
   </div>
-</div>
   
         {/* Participant Settings */}
         {isOwnerOrAdmin && (
