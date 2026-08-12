@@ -823,12 +823,15 @@ const GroupCallContent = ({
   };
 
   const handleToggleCamera = async () => {
-    try {
-      if (call) await call.camera.toggle();
-    } catch (error) {
-      console.error("خطأ في الكاميرا:", error);
+  try {
+    if (call) {
+      await call.camera.toggle();
+      setIsLocalCameraOn((prev) => !prev);
     }
-  };
+  } catch (error) {
+    console.error("خطأ في الكاميرا:", error);
+  }
+};
 
   const handleToggleScreenShare = async () => {
     try {
@@ -837,7 +840,7 @@ const GroupCallContent = ({
       console.error("خطأ في مشاركة الشاشة:", error);
     }
   };
-const hasActiveVideo = participants.some((p: any) => p.isCameraEnabled || p.isCameraOn || p.isScreenSharing || p.videoTrack);
+const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCameraEnabled || p.isCameraOn || p.isScreenSharing || p.videoTrack);
   return (
     <div className="flex-1 flex flex-row-reverse relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
