@@ -22827,8 +22827,9 @@ function AudioPlayer({ url, isMe }: { url: string, isMe: boolean }) {
 
 function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'dark', onBack, onNavigateToUser: originalOnNavigateToUser, onViewMedia, onWatchLive, onNavigateToChat }: { chatId: string, currentUser: FirebaseUser | null, currentUserProfile: UserProfile | null, theme?: 'light' | 'dark', onBack: () => void, onNavigateToUser: (uid: string) => void, onViewMedia: (url: string, type: 'image' | 'video') => void, onWatchLive?: (streamId: string) => void, onNavigateToChat?: (chatId: string, data?: Chat) => void }) {
   const [viewProfileUserId, setViewProfileUserId] = useState<string | null>(null);
-  const onNavigateToUser = (uid: string) => {
+    const onNavigateToUser = (uid: string) => {
     setViewProfileUserId(uid);
+    setShowGroupInfo(false);
   };
   const { t } = useLanguage();
   const isLight = theme === 'light' || currentUserProfile?.theme === 'light';
