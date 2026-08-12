@@ -457,7 +457,8 @@ const GroupCallContent = ({
   const [muteNew, setMuteNew] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
-
+  const [isLocalCameraOn, setIsLocalCameraOn] = useState(false);
+  
   // Premium states
   const [localMutedUsers, setLocalMutedUsers] = useState<string[]>([]);
   const [participantVolumes, setParticipantVolumes] = useState<Record<string, number>>({});
