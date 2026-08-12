@@ -836,7 +836,7 @@ const GroupCallContent = ({
       console.error("خطأ في مشاركة الشاشة:", error);
     }
   };
-const hasActiveVideo = participants.some((p: any) => p.isCameraOn || p.isScreenSharing);
+const hasActiveVideo = participants.some((p: any) => p.isCameraOn || p.isScreenSharing || (p as any).stream);
   return (
     <div className="flex-1 flex flex-row-reverse relative h-full bg-slate-950 overflow-hidden select-none font-sans" dir="rtl">
       
