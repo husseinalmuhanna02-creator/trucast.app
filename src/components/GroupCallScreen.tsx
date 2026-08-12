@@ -857,7 +857,62 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
             ● {t("مباشر")} ({participants.length})
           </span>
         </div>
+{/* Quick Actions Toolbar */}
+<div className="px-4 py-2.5 border-b border-white/5 flex items-center justify-between gap-2 bg-zinc-900/50 overflow-x-auto">
+  {/* السبورة الذكية */}
+  {isOwnerOrAdmin && (
+    <button
+      onClick={() => setIsWhiteboardActive(!isWhiteboardActive)}
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${isWhiteboardActive ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'}`}
+    >
+      <Palette className="w-3.5 h-3.5" />
+      <span>{t("السبورة الذكية")}</span>
+    </button>
+  )}
 
+  {/* تصغير الشاشة */}
+  {onMinimize && (
+    <button
+      onClick={onMinimize}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all"
+    >
+      <Minimize2 className="w-3.5 h-3.5" />
+      <span>{t("تصغير الشاشة")}</span>
+    </button>
+  )}
+
+  {/* خيارات متقدمة */}
+  <div className="relative">
+    <button
+      onClick={() => setIsMenuOpen(!isMenuOpen)}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all"
+    >
+      <Menu className="w-3.5 h-3.5 text-blue-400" />
+      <span>{t("خيارات متقدمة")}</span>
+      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
+    </button>
+
+    {isMenuOpen && (
+      <div className="absolute top-full right-0 mt-2 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 z-50 shadow-2xl">
+        <button
+          onClick={() => {
+            setNoiseReduction(!isNoiseReduction);
+            triggerToast(!isNoiseReduction ? t("تم تفعيل عزل الضوضاء") : t("تم إلغاء عزل الضوضاء"));
+            setIsMenuOpen(false);
+          }}
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-zinc-900/50 text-right transition-all hover:bg-zinc-800"
+        >
+          <div className="flex items-center gap-2">
+            <Sliders className={`w-4 h-4 ${isNoiseReduction ? 'text-emerald-500' : 'text-zinc-400'}`} />
+            <span className="text-xs font-bold text-white">{t("تقليل الضوضاء")}</span>
+          </div>
+          {isNoiseReduction && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+  
         {/* Participant Settings */}
         {isOwnerOrAdmin && (
           <div className="px-4 py-2.5 bg-zinc-900/40 border-b border-white/5 flex items-center justify-between">
