@@ -858,7 +858,7 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
           </span>
         </div>
 {/* Quick Actions Toolbar */}
-<div className="px-4 py-2.5 border-b border-white/5 flex items-center justify-between gap-2 bg-zinc-900/50 overflow-x-auto">
+<div className="px-4 py-2.5 border-b border-white/5 flex items-center justify-between gap-2 bg-zinc-900/50 relative z-30">
   {/* السبورة الذكية */}
   {isOwnerOrAdmin && (
     <button
@@ -881,7 +881,7 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
     </button>
   )}
 
-      {/* خيارات متقدمة */}
+  {/* خيارات متقدمة */}
   <div className="relative">
     <button
       onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -893,14 +893,14 @@ const hasActiveVideo = isLocalCameraOn || participants.some((p: any) => p.isCame
     </button>
 
     {isMenuOpen && (
-      <div className="absolute top-full right-0 mt-2 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 z-50 shadow-2xl">
+      <div className="absolute top-full right-0 mt-2 w-48 bg-zinc-900 border border-white/10 rounded-2xl p-2 z-50 shadow-2xl">
         <button
           onClick={() => {
             setNoiseReduction(!noiseReduction);
             triggerToast(!noiseReduction ? t("تم تفعيل عزل الضوضاء") : t("تم إلغاء عزل الضوضاء"));
             setIsMenuOpen(false);
           }}
-          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-zinc-900/50 text-right transition-all hover:bg-zinc-800"
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-zinc-800/80 text-right transition-all hover:bg-zinc-700"
         >
           <div className="flex items-center gap-2">
             <Sliders className={`w-4 h-4 ${noiseReduction ? 'text-emerald-500' : 'text-zinc-400'}`} />
