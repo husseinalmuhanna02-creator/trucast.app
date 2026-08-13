@@ -26098,7 +26098,6 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
               {t("يمكن للمستخدمين الآخرين العثور على")} {chat?.type === 'group' ? t("المجموعة") : t("القناة")} {t("والانضمام إليها مباشرة عبر هذا الرابط.")}
             </p>
           </div>
-        </div>
 
           <div className="space-y-6">
             <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest px-2">{t("الإعدادات المتقدمة")}</h3>
