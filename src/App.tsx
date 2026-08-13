@@ -26064,7 +26064,6 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                     trucast.app/c/
                   </span>
                   <input
-  autoFocus
   type="text"
   value={editCustomLink}
   onChange={(e) => {
