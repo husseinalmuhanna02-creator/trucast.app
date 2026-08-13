@@ -1784,13 +1784,16 @@ const upload_preset = "trucast";
       const xhr = new XMLHttpRequest();
       xhr.open('POST', uploadUrl);
 
-      xhr.upload.onprogress = (e) => {
-        xhr.upload.onprogress = (e) => {
-  if (e.lengthComputable && onProgress) {
-    onProgress(Math.round((e.loaded / e.total) * 100));
-  }
-};
-          if (xhr.status >= 200 && xhr.status < 300) {
+          xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      try {
+        if (xhr.status >= 200 && xhr.status < 300) {
+
             const response = JSON.parse(xhr.responseText);
             resolve(response.secure_url || response.url);
           } else {
