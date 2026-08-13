@@ -26063,16 +26063,18 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                   <span className="absolute left-6 text-zinc-500 font-bold text-sm select-none dir-ltr">
                     trucast.app/c/
                   </span>
-                  <input 
-                    type="text"
-                    value={editCustomLink}
-                    onChange={(e) => {
-                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
-                      setEditCustomLink(val);
-                    }}
-                    placeholder={t("رابط_مخصص")}
-                    className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl py-4 pr-6 pl-32 text-white font-bold outline-none focus:border-blue-500/50 transition-all shadow-inner text-left dir-ltr"
-                  />
+                  <input
+  autoFocus
+  type="text"
+  value={editCustomLink}
+  onChange={(e) => {
+    const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    setEditCustomLink(val);
+  }}
+  placeholder={t("رابط_مخصص")}
+  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
+/>
+
                 </div>
                 {editCustomLink && (
                   <div className="px-4 flex items-center gap-2 text-[10px] font-bold">
