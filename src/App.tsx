@@ -1770,10 +1770,11 @@ async function uploadToCloudinarySigned(file: File, onProgress?: (p: number) => 
       throw new Error(err.error || 'فشل جلب تصريح الرفع من الخادم');
     }
 
-    const config = await signatureRes.json();
-    const { signature, timestamp } = config;
-const cloud_name = config.cloud_name || "dkbflhdkz";
-const api_key = config.api_key || "285997298969293";
+      const config = await signatureRes.json();
+      const cloud_name = (config.cloud_name && config.cloud_name !== "undefined") ? config.cloud_name : "dkbflhdkz";
+      const api_key = (config.api_key && config.api_key !== "undefined") ? config.api_key : "285997298969293";
+      const { signature, timestamp } = config;
+
 
 
 
