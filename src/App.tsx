@@ -23896,7 +23896,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
       setLoading(false);
 
       // Mark messages as read in private/direct chats (Respect Stealth Mode and Disable Read Receipts privacy settings, except for disappearing messages)
-      if (chat && (chat.type === 'private' || chat.type === 'direct') && currentUser) {
+      if (!snapshot.metadata.hasPendingWrites && chat && (chat.type === 'private' || chat.type === 'direct') && currentUser) {
         const unreadMessages = msgs.filter(m => m.senderId !== currentUser.uid && !m.readAt);
         const shouldRespectPrivacy = currentUserProfile?.stealthMode || currentUserProfile?.privacySettings?.disableReadReceipts;
         
