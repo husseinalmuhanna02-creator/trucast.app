@@ -26034,7 +26034,8 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
               </div>
             )}
             
-            <div className="space-y-1.5">
+            <div className="w-full space-y-4">
+          <div className="space-y-1.5">
             <label className="text-[10px] font-black text-blue-500 uppercase tracking-wider">{t("اسم المجموعة")}</label>
             <input
               type="text"
@@ -26074,6 +26075,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
               />
             </div>
           </div>
+        </div>
 
                 </div>
                 {editCustomLink && (
