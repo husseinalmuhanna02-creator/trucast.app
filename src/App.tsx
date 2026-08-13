@@ -26074,34 +26074,31 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
                 className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
               />
             </div>
+
+            {editCustomLink && (
+              <div className="px-4 flex items-center gap-2 text-[10px] font-bold">
+                {linkStatus === 'checking' && (
+                  <span className="text-zinc-500 flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin" /> {t("التحقق من التوفر...")}
+                  </span>
+                )}
+                {linkStatus === 'available' && (
+                  <span className="text-emerald-500">✨ {t("هذا الرابط متاح للاستخدام!")}</span>
+                )}
+                {linkStatus === 'taken' && (
+                  <span className="text-red-500">❌ {t("هذا الرابط محجوز بالفعل لمجموعة/قناة أخرى")}</span>
+                )}
+                {linkStatus === 'invalid' && (
+                  <span className="text-red-500">❌ {t("يجب أن يكون الرابط من 3 أحرف على الأقل")}</span>
+                )}
+              </div>
+            )}
+
+            <p className="text-[10px] text-zinc-600 font-bold px-4 leading-relaxed">
+              {t("يمكن للمستخدمين الآخرين العثور على")} {chat?.type === 'group' ? t("المجموعة") : t("القناة")} {t("والانضمام إليها مباشرة عبر هذا الرابط.")}
+            </p>
           </div>
         </div>
-
-                </div>
-                {editCustomLink && (
-                  <div className="px-4 flex items-center gap-2 text-[10px] font-bold">
-                    {linkStatus === 'checking' && (
-                      <span className="text-zinc-500 flex items-center gap-1">
-                        <Loader2 className="w-3 h-3 animate-spin" /> {t("جاري التحقق من التوفر...")}
-                      </span>
-                    )}
-                    {linkStatus === 'available' && (
-                      <span className="text-emerald-500">✨ {t("هذا الرابط متاح للاستخدام!")}</span>
-                    )}
-                    {linkStatus === 'taken' && (
-                      <span className="text-red-500">❌ {t("هذا الرابط محجوز بالفعل لمجموعة/قناة أخرى.")}</span>
-                    )}
-                    {linkStatus === 'invalid' && (
-                      <span className="text-red-500">❌ {t("يجب أن يتكون الرابط من 3 أحرف على الأقل.")}</span>
-                    )}
-                  </div>
-                )}
-                <p className="text-[10px] text-zinc-600 font-bold px-4 leading-relaxed">
-                  {t("يمكن للمستخدمين الآخرين العثور على")} {chat?.type === 'group' ? t('المجموعة') : t('القناة')} {t("والانضمام إليها مباشرةً عبر هذا الرابط.")}
-                </p>
-              </div>
-            </div>
-          </div>
 
           <div className="space-y-6">
             <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest px-2">{t("الإعدادات المتقدمة")}</h3>
