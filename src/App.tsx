@@ -1771,8 +1771,10 @@ async function uploadToCloudinarySigned(file: File, onProgress?: (p: number) => 
     }
 
     const config = await signatureRes.json();
-    const { signature, timestamp, cloud_name, api_key } = config;
-alert(`Cloud Name: ${cloud_name} | API Key: ${api_key}`);
+    const { signature, timestamp } = config;
+const cloud_name = config.cloud_name || "dkbflhdkz";
+const api_key = config.api_key || "285997298969293";
+
 
 
 
