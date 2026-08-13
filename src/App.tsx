@@ -30118,11 +30118,6 @@ export default function App() {
               } catch (secErr) {
                 console.warn("Security device check failed:", secErr);
               }
-            } catch (syncErr: any) {
-              console.warn("User metadata sync failed (likely rules):", syncErr.code);
-              // We don't show a banner for this to keep the UI clean
-            }
-          }
         } else {
           setUnverifiedUser(null);
           setUser(null);
