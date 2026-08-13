@@ -26034,45 +26034,46 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
               </div>
             )}
             
-            <div className="w-full space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-blue-500 uppercase tracking-widest px-4">{chat?.type === 'group' ? t('اسم المجموعة') : t('اسم القناة')}</label>
-                <input 
-                  type="text"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  placeholder={t("أدخل الاسم هنا...")}
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl py-4 px-6 text-white font-bold outline-none focus:border-blue-500/50 transition-all shadow-inner"
-                />
-              </div>
+            <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-blue-500 uppercase tracking-wider">{t("اسم المجموعة")}</label>
+            <input
+              type="text"
+              defaultValue={editName}
+              onBlur={(e) => setEditName(e.target.value)}
+              placeholder={t("أدخل الاسم هنا...")}
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
+            />
+          </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-blue-500 uppercase tracking-widest px-4">{t("الوصف")}</label>
-                <textarea 
-                  value={editBio}
-                  onChange={(e) => setEditBio(e.target.value)}
-                  placeholder={t("اكتب وصفاً مختصراً...")}
-                  rows={3}
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl py-4 px-6 text-white font-medium outline-none focus:border-blue-500/50 transition-all shadow-inner resize-none text-sm leading-relaxed"
-                />
-              </div>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-blue-500 uppercase tracking-wider">{t("الوصف")}</label>
+            <textarea
+              defaultValue={editBio}
+              onBlur={(e) => setEditBio(e.target.value)}
+              placeholder={t("اكتب وصفاً مختصراً...")}
+              rows={3}
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
+            />
+          </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-blue-500 uppercase tracking-widest px-4">{t("الرابط المخصص")}</label>
-                <div className="relative flex items-center">
-                  <span className="absolute left-6 text-zinc-500 font-bold text-sm select-none dir-ltr">
-                    trucast.app/c/
-                  </span>
-                  <input
-  type="text"
-  value={editCustomLink}
-  onChange={(e) => {
-    const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
-    setEditCustomLink(val);
-  }}
-  placeholder={t("رابط_مخصص")}
-  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
-/>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-blue-500 uppercase tracking-wider">{t("الرابط المخصص")}</label>
+            <div className="relative flex items-center">
+              <span className="absolute left-6 text-zinc-500 font-bold text-sm select-none">
+                trucast.app/c/
+              </span>
+              <input
+                type="text"
+                defaultValue={editCustomLink}
+                onBlur={(e) => {
+                  const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+                  setEditCustomLink(val);
+                }}
+                placeholder={t("رابط_مخصص")}
+                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
 
                 </div>
                 {editCustomLink && (
