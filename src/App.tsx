@@ -30006,21 +30006,17 @@ export default function App() {
 
             setUnverifiedUser(null);
             setUser(u);
-            // Update user presence and meta - wrap in try catch to avoid blocking the whole app
-            try {
-              const userRef = doc(db, 'users', u.uid);
-              const userDocSnap = await getDoc(userRef);
-              const existingPhoto = userDocSnap.exists() ? userDocSnap.data()?.photoURL : null;
-              const existingDisplayName = userDocSnap.exists() ? userDocSnap.data()?.displayName : null;
-
-              await setDoc(userRef, {
-                uid: u.uid,
-                displayName: existingDisplayName || u.displayName || "مستخدم جديد",
-                photoURL: existingPhoto || u.photoURL || "",
-                email: u.email,
-                lastSeen: serverTimestamp()
-              }, { merge: true });
-              console.log("✅ User metadata synced to Firestore.");
+            // Update user presence and meta in background without blocking initial load
+    try {
+      const userRef = doc(db, 'users', u.uid);
+      setDoc(userRef, {
+        uid: u.uid,
+        email: u.email,
+        ...(u.displayName ? { displayName: u.displayName } : {}),
+        ...(u.photoURL ? { photoURL: u.photoURL } : {}),
+        lastSeen: serverTimestamp()
+      }, { merge: true }).catch((err) => console.warn("Meta background sync:", err));
+    } catch (e) {}
 
               // --- Device / Browser Check for Security Notifications ---
               try {
