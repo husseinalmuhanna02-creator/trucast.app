@@ -26200,10 +26200,12 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
         {renderPermissionsModalAndDialog()}
       </div>
       </div>
+      </div>
     );
   };
 
   const DisappearingMessagesScreen = () => {
+
     const options = [
       { label: t('إيقاف'), value: 0 },
       { label: t('5 ثواني'), value: 5 },
