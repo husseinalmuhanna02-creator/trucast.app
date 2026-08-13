@@ -30115,13 +30115,15 @@ export default function App() {
                     lastActiveAt: serverTimestamp()
                   });
                 }
-              } catch (secErr) {
-                console.warn("Security device check failed:", secErr);
-              }
-        } else {
-          setUnverifiedUser(null);
-          setUser(null);
-        }
+                  } catch (secErr) {
+      console.warn("Security device check failed:", secErr);
+    }
+  }
+} else {
+  setUnverifiedUser(null);
+  setUser(null);
+}
+
       } catch (e: any) {
         console.error("Auth lifecycle error:", e);
       } finally {
