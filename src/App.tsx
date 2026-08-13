@@ -26199,6 +26199,7 @@ function ChatDetailScreen({ chatId, currentUser, currentUserProfile, theme = 'da
         {/* Render Permissions Modal & Dialog */}
         {renderPermissionsModalAndDialog()}
       </div>
+      </div>
     );
   };
 
