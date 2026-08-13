@@ -1759,21 +1759,8 @@ async function uploadToCloudinarySigned(file: File, onProgress?: (p: number) => 
   console.log(`☁️ Fetching signature for media upload: ${sanitizedFile.name} (${(sanitizedFile.size / (1024 * 1024)).toFixed(2)}MB)`);
   
   try {
-    const signatureRes = await fetch(getApiUrl('/api/cloudinary-signature'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ folder: 'trucast' })
-    });
-
-    if (!signatureRes.ok) {
-      const err = await signatureRes.json().catch(() => ({}));
-      throw new Error(err.error || 'فشل جلب تصريح الرفع من الخادم');
-    }
-
-      const config = await signatureRes.json();
-      const cloud_name = (config.cloud_name && config.cloud_name !== "undefined") ? config.cloud_name : "dkbflhdkz";
-      const api_key = (config.api_key && config.api_key !== "undefined") ? config.api_key : "285997298969293";
-      const { signature, timestamp } = config;
+    const cloud_name = "dkbflhdkz";
+const upload_preset = "trucast";
 
 
 
@@ -1801,9 +1788,7 @@ async function uploadToCloudinarySigned(file: File, onProgress?: (p: number) => 
 
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable && onProgress) {
-          onProgress(Math.round((e.loaded / e.total) * 100));
-        }
-      };
+          formData.append('upload_preset', upload_preset);
 
       xhr.onload = () => {
         try {
