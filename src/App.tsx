@@ -1775,9 +1775,7 @@ const upload_preset = "trucast";
     const resourceType = 'auto'; 
     const formData = new FormData();
     formData.append('file', sanitizedFile);
-    formData.append('api_key', api_key);
-    formData.append('timestamp', timestamp);
-    formData.append('signature', signature);
+    formData.append('upload_preset', upload_preset);
     formData.append('folder', 'trucast');
 
     const uploadUrl = `https://api.cloudinary.com/v1_1/${cloud_name}/auto/upload`;
@@ -1787,11 +1785,11 @@ const upload_preset = "trucast";
       xhr.open('POST', uploadUrl);
 
       xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable && onProgress) {
-          formData.append('upload_preset', upload_preset);
-
-      xhr.onload = () => {
-        try {
+        xhr.upload.onprogress = (e) => {
+  if (e.lengthComputable && onProgress) {
+    onProgress(Math.round((e.loaded / e.total) * 100));
+  }
+};
           if (xhr.status >= 200 && xhr.status < 300) {
             const response = JSON.parse(xhr.responseText);
             resolve(response.secure_url || response.url);
