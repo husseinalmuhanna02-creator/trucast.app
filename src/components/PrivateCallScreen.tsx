@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../localization';
 import { User as FirebaseUser } from 'firebase/auth';
 import { Chat, CallSession } from '../types';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { doc, updateDoc, serverTimestamp, addDoc, collection } from 'firebase/firestore';
 import {
   StreamVideo,
@@ -411,16 +411,16 @@ const PrivateCallContent = ({
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 border border-white/10 flex items-center justify-center mb-2 shadow-inner">
-                      {(currentUser?.photoURL || currentUser?.avatarUrl || currentUser?.image) ? (
+                  {(currentUser?.photoURL || currentUser?.avatarUrl || currentUser?.image || auth.currentUser?.photoURL) ? (
                     <img 
-                      src={currentUser.photoURL || currentUser.avatarUrl || currentUser.image} 
+                      src={currentUser?.photoURL || currentUser?.avatarUrl || currentUser?.image || auth.currentUser?.photoURL || ''} 
                       alt="Profile" 
                       className="w-full h-full object-cover" 
                       referrerPolicy="no-referrer"
                     />
                   ) : (
                     <span className="text-sm font-black text-zinc-400">
-                      {(currentUser?.name || localParticipant.name || "U").charAt(0).toUpperCase()}
+                      {(currentUser?.name || auth.currentUser?.displayName || localParticipant.name || "U").charAt(0).toUpperCase()}
                     </span>
                   )}
 
