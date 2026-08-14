@@ -30894,40 +30894,43 @@ const handleTwitterLogin = async () => {
                 onGoLive={() => navigate('/livestream')}
               />
             </div>
-            <div style={{ display: activeTab === 'search' ? 'block' : 'none' }} className="h-full">
-                onNavigateToUser={(uid) => {
-                  setSelectedUserId(uid);
-                  requestTabChange('user-profile');
-                }} 
-                onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
-                currentUser={user}
-              />
-            </div>
-          <div style={{ display: activeTab === 'reels' ? 'block' : 'none' }} className="h-full">
-  <ReelsScreen
-    setSelectedUserId={setSelectedUserId}
-    requestTabChange={(tab) => requestTabChange(tab)}
-    onBack={goBackTab}
-  />
-</div>
-          <div style={{ display: activeTab === 'profile' ? 'block' : 'none' }}>
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            >
-              <Profile 
-                currentUser={user} 
-                onViewMedia={(url, type) => setFullscreenMedia({ url, type })} 
-                onNavigate={(tab, sub) => {
-                  requestTabChange(tab);
-                  if (sub) setSettingsSubView(sub);
-                  else setSettingsSubView('main');
-                }} 
-                onNavigateToUser={(uid) => {
-                  setSelectedUserId(uid);
-                  requestTabChange('user-profile');
-                }}
-              />
-            </motion.div>
-          )}
+            {/* قسم البحث */}
+  <div style={{ display: activeTab === 'search' ? 'block' : 'none' }} className="h-full">
+    <SearchScreen
+      onNavigateToUser={(uid) => {
+        setSelectedUserId(uid);
+        requestTabChange('user-profile');
+      }}
+      onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
+      currentUser={user}
+    />
+  </div>
+
+  {/* قسم الريلز */}
+  <div style={{ display: activeTab === 'reels' ? 'block' : 'none' }} className="h-full">
+    <ReelsScreen
+      setSelectedUserId={setSelectedUserId}
+      requestTabChange={(tab) => requestTabChange(tab)}
+      onBack={goBackTab}
+    />
+  </div>
+
+  {/* قسم الملف الشخصي */}
+  <div style={{ display: activeTab === 'profile' ? 'block' : 'none' }}>
+    <Profile
+      currentUser={user}
+      onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
+      onNavigate={(tab, sub) => {
+        requestTabChange(tab);
+        if (sub) setSettingsSubView(sub);
+        else setSettingsSubView('main');
+      }}
+      onNavigateToUser={(uid) => {
+        setSelectedUserId(uid);
+        requestTabChange('user-profile');
+      }}
+    />
+  </div>
           {activeTab === 'user-profile' && selectedUserId && (
             <motion.div 
               key="user-profile"
