@@ -30867,41 +30867,25 @@ const handleTwitterLogin = async () => {
       {/* Main Content Areas */}
       <main className={`flex-1 bg-white dark:bg-zinc-950 ${activeTab === 'chat' ? 'h-screen overflow-hidden flex flex-col' : activeTab === 'reels' ? 'h-screen overflow-hidden relative bg-black' : 'overflow-y-auto pb-32 md:pb-10'}`}>
         <AnimatePresence>
-          {(activeTab === 'home' || (activeTab === 'user-profile' && !selectedUserId) || (activeTab === 'create-post' && !selectedFile)) && (
-            <motion.div 
-              key="home"
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            >
-              <Feed 
-                currentUser={user} 
-                currentUserProfile={userProfile}
-                onViewMedia={(url, type) => setFullscreenMedia({ url, type })} 
-                onNavigateToChat={() => requestTabChange('chat')} 
-                unreadMessagesCount={totalUnreadCount}
-                onNavigateToSearch={() => requestTabChange('search')} 
-                onNavigateToUser={(uid) => {
-                  setSelectedUserId(uid);
-                  requestTabChange('user-profile');
-                }}
-                onTriggerMediaUpload={triggerFilePicker}
-                onNavigateToAI={() => requestTabChange('ai')}
-                onWatchLive={(id) => setActiveLiveStreamId(id)}
-                onNavigateToCreateStory={() => requestTabChange('create-story')}
-              />
-            </motion.div>
-          )}
-          {activeTab === 'lives' && (
-            <motion.div 
-              key="lives"
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="h-full"
-            >
+          <div style={{ display: (activeTab === 'home' || (activeTab === 'user-profile' && !selectedUserId)) ? 'block' : 'none' }}>
+  <Feed
+    currentUser={user}
+    currentUserProfile={userProfile}
+    onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
+    onNavigateToChat={() => requestTabChange('chat')}
+    unreadMessagesCount={totalUnreadCount}
+    onNavigateToSearch={() => requestTabChange('search')}
+    onNavigateToUser={(uid) => {
+      setSelectedUserId(uid);
+      requestTabChange('user-profile');
+    }}
+    onTriggerMediaUpload={triggerFilePicker}
+    onNavigateToAI={() => requestTabChange('ai')}
+    onWatchLive={(id) => setActiveLiveStreamId(id)}
+    onNavigateToCreateStory={() => requestTabChange('create-story')}
+  />
+</div>
+          <div style={{ display: activeTab === 'lives' ? 'block' : 'none' }} className="h-full">
               <LivesExplorerScreen 
                 onWatchLive={(id) => setActiveLiveStreamId(id)}
                 onNavigateToUser={(uid) => {
