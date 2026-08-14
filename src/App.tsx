@@ -31135,10 +31135,8 @@ const handleTwitterLogin = async () => {
                   requestTabChange('reels');
                 }}
               />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
+            </div>
+</main>
 
       {/* Live Stream Screen */}
       <AnimatePresence>
