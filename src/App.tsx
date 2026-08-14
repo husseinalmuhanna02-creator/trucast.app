@@ -30903,30 +30903,14 @@ const handleTwitterLogin = async () => {
                 currentUser={user}
               />
             </div>
-          )}
-          {activeTab === 'reels' && (
-            <motion.div 
-              key="reels"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              </div>
-              <ReelsScreen 
-                <div style={{ display: activeTab === 'reels' ? 'block' : 'none' }} className="h-full">
-                  setSelectedUserId(uid);
-                  requestTabChange('user-profile');
-                }} 
-                onBack={goBackTab}
-              />
-            </motion.div>
-          )}
-          {activeTab === 'profile' && (
-            <motion.div 
-              key="profile"
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
+          <div style={{ display: activeTab === 'reels' ? 'block' : 'none' }} className="h-full">
+  <ReelsScreen
+    setSelectedUserId={setSelectedUserId}
+    requestTabChange={(tab) => requestTabChange(tab)}
+    onBack={goBackTab}
+  />
+</div>
+          <div style={{ display: activeTab === 'profile' ? 'block' : 'none' }}>
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
               <Profile 
