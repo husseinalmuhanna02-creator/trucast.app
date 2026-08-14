@@ -21751,19 +21751,21 @@ function ChatListScreen({
     }
   };
 
-  useEffect(() => {
+    useEffect(() => {
     if (!currentUser) return;
 
     const chatsRef = collection(db, 'chats');
     const q = query(
-      chatsRef, 
+      chatsRef,
       where('participants', 'array-contains', currentUser.uid)
     );
 
+    // كاش محلي لمنع إعادة جلب بيانات البروفايل عند كل تحديث بسيط
+    const usersCache = new Map();
+
     const unsub = onSnapshot(q, async (snapshot) => {
-      setGlobalLoading(true);
       const fetchedChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
-      
+
       // Sort in-memory by updatedAt descending
       const getMs = (val: any) => {
         if (!val) return 0;
@@ -21771,16 +21773,24 @@ function ChatListScreen({
         if (val.seconds !== undefined) return val.seconds * 1000 + Math.floor((val.nanoseconds || 0) / 1000000);
         return new Date(val).getTime() || 0;
       };
+
       fetchedChats.sort((a, b) => getMs(b.updatedAt) - getMs(a.updatedAt));
 
       // Fetch other user profile for each chat
       const chatsWithProfiles = await Promise.all(fetchedChats.map(async (chat) => {
         if (!chat.participants || !Array.isArray(chat.participants)) return chat;
         const otherUserId = chat.participants.find(p => p !== currentUser.uid);
+
         if (otherUserId) {
+          if (usersCache.has(otherUserId)) {
+            return { ...chat, otherUser: usersCache.get(otherUserId) };
+          }
+
           const userDoc = await getDoc(doc(db, 'users', otherUserId));
           if (userDoc.exists()) {
-            return { ...chat, otherUser: userDoc.data() as UserProfile };
+            const userData = userDoc.data() as UserProfile;
+            usersCache.set(otherUserId, userData);
+            return { ...chat, otherUser: userData };
           }
         }
         return chat;
