@@ -362,7 +362,7 @@ const PrivateCallContent = ({
                   />
                 ) : (
                   <span className="text-2xl font-black text-indigo-400">
-                    {(remoteParticipant.name || remoteParticipant.userId)}
+                    {(remoteParticipant.name || remoteParticipant.userId).charAt(0).toUpperCase()}
                   </span>
                 )}
                         
