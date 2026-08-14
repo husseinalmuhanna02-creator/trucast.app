@@ -30866,7 +30866,6 @@ const handleTwitterLogin = async () => {
 
       {/* Main Content Areas */}
       <main className={`flex-1 bg-white dark:bg-zinc-950 ${activeTab === 'chat' ? 'h-screen overflow-hidden flex flex-col' : activeTab === 'reels' ? 'h-screen overflow-hidden relative bg-black' : 'overflow-y-auto pb-32 md:pb-10'}`}>
-        <AnimatePresence>
           <div style={{ display: (activeTab === 'home' || (activeTab === 'user-profile' && !selectedUserId)) ? 'block' : 'none' }}>
   <Feed
     currentUser={user}
@@ -30894,18 +30893,8 @@ const handleTwitterLogin = async () => {
                 }}
                 onGoLive={() => navigate('/livestream')}
               />
-            </motion.div>
-          )}
-          {activeTab === 'search' && (
-            <motion.div 
-              key="search"
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="h-full"
-            >
-              <SearchScreen 
+            </div>
+            <div style={{ display: activeTab === 'search' ? 'block' : 'none' }} className="h-full">
                 onNavigateToUser={(uid) => {
                   setSelectedUserId(uid);
                   requestTabChange('user-profile');
@@ -30913,7 +30902,7 @@ const handleTwitterLogin = async () => {
                 onViewMedia={(url, type) => setFullscreenMedia({ url, type })}
                 currentUser={user}
               />
-            </motion.div>
+            </div>
           )}
           {activeTab === 'reels' && (
             <motion.div 
@@ -30922,11 +30911,9 @@ const handleTwitterLogin = async () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="h-full"
-            >
+              </div>
               <ReelsScreen 
-                currentUser={user} 
-                onNavigateToUser={(uid) => {
+                <div style={{ display: activeTab === 'reels' ? 'block' : 'none' }} className="h-full">
                   setSelectedUserId(uid);
                   requestTabChange('user-profile');
                 }} 
