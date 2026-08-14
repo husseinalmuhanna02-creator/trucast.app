@@ -29976,36 +29976,38 @@ export default function App() {
     const unsubAuth = onAuthStateChanged(auth, async (u) => {
       console.log("Auth state changed. User:", u?.uid || 'GUEST');
       try {
-        if (u) {
-          const isEmailUser = u.providerData.some(p => p.providerId === 'password');
-          if (isEmailUser && !u.emailVerified) {
-            setUnverifiedUser(u);
-            setUser(null);
-            if (!justRegisteredRef.current) {
-              setAuthError('يرجى التحقق من بريدك الإلكتروني لتفعيل حسابك قبل تسجيل الدخول.');
-            }
-          } else {
-            // Check if user has Two-Factor Authentication (2FA) enabled in their profile
-            try {
-              const userRef = doc(db, 'users', u.uid);
-              const userDocSnap = await getDoc(userRef);
-              if (userDocSnap.exists() && userDocSnap.data()?.twoFactorEnabled) {
-                const is2faVerified = sessionStorage.getItem(`trucast_2fa_verified_${u.uid}`) === "true";
-                if (!is2faVerified) {
-                  // Prompt for 2FA code!
-                  setTwoFactorPendingUser(u);
-                  setUnverifiedUser(null);
-                  setUser(null);
-                  setLoading(false);
-                  return;
-                }
-              }
-            } catch (err) {
-              console.warn("Could not check 2FA status on login:", err);
-            }
+            if (u) {
+      // ⚡ تثبيت المستخدم فوراً لمنع ظهور صفحة تسجيل الدخول أثناء ضعف النت
+      setUser(u);
+      setUnverifiedUser(null);
 
-            setUnverifiedUser(null);
-            setUser(u);
+      const isEmailUser = u.providerData.some(p => p.providerId === 'password');
+      if (isEmailUser && !u.emailVerified) {
+        setUnverifiedUser(u);
+        setUser(null);
+        if (!justRegisteredRef.current) {
+          setAuthError('يرجى التحقق من بريدك الإلكتروني لتفعيل حسابك قبل تسجيل الدخول.');
+        }
+      } else {
+        // Check if user has Two-Factor Authentication (2FA) enabled in their profile
+        try {
+          const userRef = doc(db, 'users', u.uid);
+          const userDocSnap = await getDoc(userRef);
+          if (userDocSnap.exists() && userDocSnap.data()?.twoFactorEnabled) {
+            const is2faVerified = sessionStorage.getItem(`trucast_2fa_verified_${u.uid}`);
+            if (!is2faVerified) {
+              // Prompt for 2FA code!
+              setTwoFactorPendingUser(u);
+              setUnverifiedUser(null);
+              setUser(null);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Could not check 2FA status on login:", err);
+        }
+
             // Update user presence and meta in background without blocking initial load
     try {
       const userRef = doc(db, 'users', u.uid);
