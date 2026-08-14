@@ -354,13 +354,18 @@ const PrivateCallContent = ({
                     <div className="relative mb-6">
                       <div className="absolute -inset-4 bg-indigo-500/10 rounded-full blur-2xl animate-pulse" />
                       <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center relative z-10 shadow-2xl">
-                        {remoteParticipant.image ? (
-                          <img src={remoteParticipant.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                        ) : (
-                          <span className="text-2xl font-black text-indigo-400">
-                            {(remoteParticipant.name || remoteParticipant.userId).charAt(0).toUpperCase()}
-                          </span>
-                        )}
+                      {(remoteParticipant.image || remoteParticipant.avatar || remoteParticipant.photoURL || remoteParticipant.avatarUrl) ? (
+                  <img 
+                    src={remoteParticipant.image || remoteParticipant.avatar || remoteParticipant.photoURL || remoteParticipant.avatarUrl} 
+                    alt="" 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : (
+                  <span className="text-2xl font-black text-indigo-400">
+                    {(remoteParticipant.name || remoteParticipant.userId)}
+                  </span>
+                )}
+                        
                       </div>
                     </div>
                     <h3 className="text-white font-black text-lg mb-1">{remoteParticipant.name || remoteParticipant.userId}</h3>
