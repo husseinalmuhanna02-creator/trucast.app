@@ -21442,9 +21442,12 @@ function DiscoverScreen({ currentUser, onClose, onNavigateToChat }: {
   const [loading, setLoading] = useState(false);
   const [joiningId, setJoiningId] = useState<string | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchPublicChats = async () => {
-      setLoading(true);
+      // يظهر التحميل فقط إذا كانت القائمة فارغة
+      if (results.length === 0) {
+        setLoading(true);
+      }
       try {
         const chatsRef = collection(db, 'chats');
         const q = query(
@@ -21453,7 +21456,7 @@ function DiscoverScreen({ currentUser, onClose, onNavigateToChat }: {
           limit(50)
         );
         const snapshot = await getDocs(q);
-        const allChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
+        const allChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Chat);
         setResults(allChats);
       } catch (error) {
         handleFirestoreError(error, OperationType.LIST, 'chats');
@@ -21463,6 +21466,7 @@ function DiscoverScreen({ currentUser, onClose, onNavigateToChat }: {
     };
     fetchPublicChats();
   }, []);
+
 
   const handleJoin = async (chat: Chat) => {
     if (!currentUser) return;
