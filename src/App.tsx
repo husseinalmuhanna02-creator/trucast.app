@@ -21760,45 +21760,50 @@ function ChatListScreen({
       where('participants', 'array-contains', currentUser.uid)
     );
 
-    // كاش محلي لمنع إعادة جلب بيانات البروفايل عند كل تحديث بسيط
     const usersCache = new Map();
 
     const unsub = onSnapshot(q, async (snapshot) => {
-      const fetchedChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
+      try {
+        const fetchedChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
 
-      // Sort in-memory by updatedAt descending
-      const getMs = (val: any) => {
-        if (!val) return 0;
-        if (typeof val.toMillis === 'function') return val.toMillis();
-        if (val.seconds !== undefined) return val.seconds * 1000 + Math.floor((val.nanoseconds || 0) / 1000000);
-        return new Date(val).getTime() || 0;
-      };
+        // Sort in-memory by updatedAt descending
+        const getMs = (val: any) => {
+          if (!val) return 0;
+          if (typeof val.toMillis === 'function') return val.toMillis();
+          if (val.seconds !== undefined) return val.seconds * 1000 + Math.floor((val.nanoseconds || 0) / 1000000);
+          return new Date(val).getTime() || 0;
+        };
 
-      fetchedChats.sort((a, b) => getMs(b.updatedAt) - getMs(a.updatedAt));
+        fetchedChats.sort((a, b) => getMs(b.updatedAt) - getMs(a.updatedAt));
 
-      // Fetch other user profile for each chat
-      const chatsWithProfiles = await Promise.all(fetchedChats.map(async (chat) => {
-        if (!chat.participants || !Array.isArray(chat.participants)) return chat;
-        const otherUserId = chat.participants.find(p => p !== currentUser.uid);
+        // Fetch other user profile for each chat
+        const chatsWithProfiles = await Promise.all(fetchedChats.map(async (chat) => {
+          if (!chat.participants || !Array.isArray(chat.participants)) return chat;
+          const otherUserId = chat.participants.find(p => p !== currentUser.uid);
 
-        if (otherUserId) {
-          if (usersCache.has(otherUserId)) {
-            return { ...chat, otherUser: usersCache.get(otherUserId) };
+          if (otherUserId) {
+            if (usersCache.has(otherUserId)) {
+              return { ...chat, otherUser: usersCache.get(otherUserId) };
+            }
+
+            const userDoc = await getDoc(doc(db, 'users', otherUserId));
+            if (userDoc.exists()) {
+              const userData = userDoc.data() as UserProfile;
+              usersCache.set(otherUserId, userData);
+              return { ...chat, otherUser: userData };
+            }
           }
+          return chat;
+        }));
 
-          const userDoc = await getDoc(doc(db, 'users', otherUserId));
-          if (userDoc.exists()) {
-            const userData = userDoc.data() as UserProfile;
-            usersCache.set(otherUserId, userData);
-            return { ...chat, otherUser: userData };
-          }
-        }
-        return chat;
-      }));
-
-      setChats(chatsWithProfiles);
-      setLoading(false);
-      setGlobalLoading(false);
+        setChats(chatsWithProfiles);
+      } catch (err) {
+        console.error("Error loading chats profiles:", err);
+      } finally {
+        // يضمن إيقاف شاشة التحميل دائماً مهما حدث
+        setLoading(false);
+        setGlobalLoading(false);
+      }
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'chats');
       setLoading(false);
