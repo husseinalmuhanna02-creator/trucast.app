@@ -406,13 +406,19 @@ const PrivateCallContent = ({
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 border border-white/10 flex items-center justify-center mb-2 shadow-inner">
-                  {localParticipant.image ? (
-                    <img src={localParticipant.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  ) : (
-                    <span className="text-sm font-black text-zinc-400">
-                      {(localParticipant.name || localParticipant.userId).charAt(0).toUpperCase()}
-                    </span>
-                  )}
+                                  {(localParticipant.image || localParticipant.avatar || localParticipant.photoURL || localParticipant.avatarUrl) ? (
+                  <img 
+                    src={localParticipant.image || localParticipant.avatar || localParticipant.photoURL || localParticipant.avatarUrl} 
+                    alt="" 
+                    className="w-full h-full object-cover" 
+                    referrerPolicy="no-referrer" 
+                  />
+                ) : (
+                  <span className="text-sm font-black text-zinc-400">
+                    {(localParticipant.name || localParticipant.userId).charAt(0).toUpperCase()}
+                  </span>
+                )}
+
                 </div>
               </div>
             )}
