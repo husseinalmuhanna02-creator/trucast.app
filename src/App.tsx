@@ -31116,14 +31116,7 @@ const handleTwitterLogin = async () => {
               />
             </motion.div>
           )}
-          {activeTab === 'create-reel' && (
-            <motion.div 
-              key="create-reel"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="h-full"
-            >
+          <div style={{ display: activeTab === 'create-reel' ? 'block' : 'none' }} className="h-full">
               <CreateReel 
                 currentUser={user} 
                 onCancel={() => {
