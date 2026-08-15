@@ -1520,11 +1520,11 @@ const LiveStreamContent = ({
 
       triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
       setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
+    } catch (err) {
     console.error("Error granting permissions to requesting guest:", err);
     triggerToast("فشل منح صلاحيات الضيف");
   }
 };
-
   const handleRejectRequest = (requestingUserId: string) => {
     setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
     triggerToast("تم رفض طلب الانضمام");
