@@ -5788,7 +5788,10 @@ const user = {
                 // 1. Create lives document in Firestore
         const titleText = streamTitle.trim() || t("بث مباشر جديد");
 
-        const rawPhoto = userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "";
+const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+const userData = userSnap.exists() ? userSnap.data() : {};
+const rawPhoto = userData.photoURL || userData.avatarUrl || userData.image || userProfile?.photoURL || currentUser?.photoURL || "";
+
 const isCartoon =
   rawPhoto.includes("dicebear") ||
   rawPhoto.includes("multiavatar") ||
