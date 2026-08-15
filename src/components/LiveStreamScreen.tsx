@@ -3173,11 +3173,12 @@ const LiveStreamContent = ({
                         />
                       </div>
                     )}
-                    {g.image ? (
-                      <img src={g.image} alt={g.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
-                    ) : (
-                      <span className="text-white font-black text-sm">{g.name?.charAt(0) || g.userId?.charAt(0)}</span>
-                    )}
+                      <UserAvatar 
+                          userId={g.userId} 
+                          name={g.name} 
+                          className="w-full h-full" 
+                        />
+                    
                   </div>
                 )}
                 
