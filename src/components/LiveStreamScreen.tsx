@@ -2593,7 +2593,10 @@ const LiveStreamContent = ({
             );
           }
 
-          const mainParticipant = onStageParticipants.find(p => p.userId === expandedParticipantId) || streamHostParticipant;
+          const mainParticipant = expandedParticipantId 
+  ? onStageParticipants.find(p => p.userId === expandedParticipantId) 
+  : (streamHostParticipant || localParticipant);
+
           const isMainLocal = mainParticipant?.isLocalParticipant;
           const isMainCamEnabled = isMainLocal
             ? isCamOn
