@@ -5789,7 +5789,7 @@ const user = {
         const titleText = streamTitle.trim() || t("بث مباشر جديد");
 
         const rawPhoto = userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "";
-        const isCartoon =
+const isCartoon =
   rawPhoto.includes("dicebear") ||
   rawPhoto.includes("multiavatar") ||
   rawPhoto.includes("bottts") ||
@@ -5797,9 +5797,8 @@ const user = {
 
 const cleanHostPhoto = isCartoon ? "" : rawPhoto;
 
-        const cleanHostPhoto = isCartoon ? "" : rawPhoto;
+const liveRef = await addDoc(collection(db, "lives"), {
 
-        const liveRef = await addDoc(collection(db, "lives"), {
           hostId: currentUser.uid,
           hostName: userProfile?.displayName || currentUser.displayName || t("المضيف"),
           hostPhoto: cleanHostPhoto,
