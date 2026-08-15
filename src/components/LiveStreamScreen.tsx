@@ -1514,13 +1514,12 @@ const LiveStreamContent = ({
     }).catch(() => {});
 
     // 3. منح الصلاحيات بحذر دون قطع البث
-    await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']).catch(err => {
-      console.warn("خطأ غير مؤثر في منح الصلاحيات:", err);
-    });
+      await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']).catch(err => {
+        console.warn("خطأ غير مؤثر في منح الصلاحيات:", err);
+      });
 
-    triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
-    setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
-  } catch (err) {
+      triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
+      setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
     console.error("Error granting permissions to requesting guest:", err);
     triggerToast("فشل منح صلاحيات الضيف");
   }
