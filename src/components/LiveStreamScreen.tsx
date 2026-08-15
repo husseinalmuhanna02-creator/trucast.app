@@ -2601,40 +2601,41 @@ const LiveStreamContent = ({
                 />
                 
                 {/* Only show the fallback screen / cover image / overlay if the main participant's camera is actually disabled/off */}
-                {!isMainCamEnabled && (
-                  <div className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center p-6 transition-all duration-500 ${getBackgroundStyles()}`}>
-                    {activeCoverImage ? (
-                      <img 
-                        src={activeCoverImage} 
-                        alt="Custom Live Cover" 
-                        className="absolute inset-0 w-full h-full object-cover z-0 transition-all duration-500"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-<div className="relative mb-6">
-  <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
-  <UserAvatar 
-    userId={mainParticipant?.userId || streamHostParticipant?.userId} 
-    name={mainParticipant?.name || streamHostParticipant?.name} 
-    className="w-28 h-28 border-4 border-red-500" 
-  />
-</div>
-                )}
+    {!isMainCamEnabled && (
+      <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-zinc-950">
+        {activeCoverImage ? (
+          <img
+            src={activeCoverImage}
+            alt="Custom Live Cover"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div className="relative mb-6">
+            <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
+            <UserAvatar 
+              userId={mainParticipant?.userId || streamHostParticipant?.userId} 
+              name={mainParticipant?.name || streamHostParticipant?.name} 
+              className="w-28 h-28 border-4 border-red-500" 
+            />
+          </div>
+        )}
 
-                {/* Audio player fallback for viewers just in case if main is remote */}
-                {!isMainLocal && (
-                  <div className="absolute top-0 left-0 w-1 h-1 opacity-0 overflow-hidden pointer-events-none z-[-1]">
-                    <ParticipantView 
-                      participant={mainParticipant}
-                      trackType="none"
-                      ParticipantViewUI={null}
-                    />
-                  </div>
-                )}
+        {/* Audio player fallback for viewers */}
+        {!isMainLocal && (
+          <div className="absolute top-0 left-0 w-1 h-1 opacity-0 overflow-hidden">
+            <ParticipantView
+              participant={mainParticipant}
+              trackType="none"
+              ParticipantViewUI={null}
+            />
+          </div>
+        )}
       </div>
-  )}
-</div>
-);
+    )}
+    </div>
+    );
+
 } else {
   
   return (
