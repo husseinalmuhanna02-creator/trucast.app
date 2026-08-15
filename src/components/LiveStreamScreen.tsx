@@ -5650,11 +5650,14 @@ export const LiveStreamScreen = ({
 
         if (!active || !token) return;
 
-        const user = {
-          id: currentUser.uid,
-          name: userProfile?.displayName || currentUser.displayName || t('مضيف'),
-          image: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || '',
-        };
+        const rawPhoto = userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || '';
+const safePhoto = (rawPhoto && rawPhoto.startsWith('http')) ? rawPhoto : '';
+
+const user = {
+  id: currentUser.uid,
+  name: userProfile?.displayName || currentUser.displayName || t('مضيف'),
+  image: safePhoto,
+};
 
         streamClient = new StreamVideoClient({
           apiKey,
