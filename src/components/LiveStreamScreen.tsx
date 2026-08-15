@@ -2631,10 +2631,12 @@ const LiveStreamContent = ({
                     />
                   </div>
                 )}
-  </div>
+      </div>
   )}
+</div>
 );
 } else {
+  
   return (
               <div className="w-full h-full flex items-center justify-center bg-zinc-950">
                 <div className="text-center">
