@@ -2611,9 +2611,7 @@ const LiveStreamContent = ({
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <div className="relative mb-6">
-  <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
-  <div className="relative mb-6">
+<div className="relative mb-6">
   <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
   <UserAvatar 
     userId={mainParticipant?.userId || streamHostParticipant?.userId} 
@@ -2621,7 +2619,6 @@ const LiveStreamContent = ({
     className="w-28 h-28 border-4 border-red-500" 
   />
 </div>
-                  </div>
                 )}
 
                 {/* Audio player fallback for viewers just in case if main is remote */}
