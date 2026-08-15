@@ -4245,11 +4245,16 @@ const LiveStreamContent = ({
                           </div>
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleAcceptRequest(req.senderId, req.senderName)}
-                              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black rounded-xl transition-all active:scale-95 shadow-md shadow-emerald-950/40"
-                            >
-                              {t("قبول 👍")}
-                            </button>
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    handleAcceptRequest(req.senderId, req.senderName);
+  }}
+  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all active:scale-95"
+>
+  {t("قبول 👍")}
+</button>
                             <button
                               onClick={() => handleRejectRequest(req.senderId)}
                               className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-750 text-zinc-400 text-[10px] font-black rounded-xl transition-all active:scale-95"
