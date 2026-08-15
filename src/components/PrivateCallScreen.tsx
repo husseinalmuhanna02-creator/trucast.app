@@ -153,6 +153,25 @@ const PrivateCallContent = ({
   const [muteNew, setMuteNew] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
+    const [myAvatar, setMyAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMyAvatar = async () => {
+      if (auth.currentUser?.uid) {
+        try {
+          const userSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            setMyAvatar(data.avatar || data.photoURL || data.avatarUrl || data.image || auth.currentUser?.photoURL || null);
+          }
+        } catch (e) {
+          console.error("Error fetching avatar:", e);
+        }
+      }
+    };
+    fetchMyAvatar();
+  }, []);
+  
   // تتبع انضمام الطرف الآخر ووقت البداية
   const [hasOtherJoined, setHasOtherJoined] = useState(false);
   const startTimeRef = useRef<number | null>(null);
@@ -411,16 +430,16 @@ const PrivateCallContent = ({
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 border border-white/10 flex items-center justify-center mb-2 shadow-inner">
-                  {(currentUser?.photoURL || currentUser?.avatarUrl || currentUser?.image || auth.currentUser?.photoURL) ? (
+                  {myAvatar ? (
                     <img 
-                      src={currentUser?.photoURL || currentUser?.avatarUrl || currentUser?.image || auth.currentUser?.photoURL || ''} 
+                      src={myAvatar} 
                       alt="Profile" 
                       className="w-full h-full object-cover" 
                       referrerPolicy="no-referrer"
                     />
                   ) : (
                     <span className="text-sm font-black text-zinc-400">
-                      {(currentUser?.name || auth.currentUser?.displayName || localParticipant.name || "U").charAt(0).toUpperCase()}
+                      {(auth.currentUser?.displayName || localParticipant.name || "U").charAt(0).toUpperCase()}
                     </span>
                   )}
 
