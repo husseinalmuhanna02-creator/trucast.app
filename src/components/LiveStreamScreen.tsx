@@ -5833,10 +5833,10 @@ export const LiveStreamScreen = ({
                           streamId: generatedStreamId,
                           hostId: currentUser.uid,
                           hostName: userProfile?.displayName || currentUser.displayName || t("مستضيف"),
-                          hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || ""
+                          hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "",
                           read: false,
                           createdAt: serverTimestamp()
-                        });
+                      });
                       });
                       await batch.commit();
                     }
