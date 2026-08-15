@@ -2632,9 +2632,10 @@ const LiveStreamContent = ({
                   </div>
                 )}
   </div>
-)}
+  )}
+);
 } else {
-            return (
+  return (
               <div className="w-full h-full flex items-center justify-center bg-zinc-950">
                 <div className="text-center">
                   <Radio className="w-10 h-10 text-zinc-700 animate-pulse mx-auto mb-2" />
