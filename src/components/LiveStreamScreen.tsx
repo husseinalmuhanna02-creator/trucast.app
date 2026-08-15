@@ -2538,12 +2538,12 @@ const LiveStreamContent = ({
                   />
                   {!isHostCamEnabled && (
                     <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-4">
-                      <div className="w-16 h-16 rounded-full border border-red-500/20 bg-zinc-900 flex items-center justify-center mb-2">
-                        {hostPart?.image || JSON.parse(localStorage.getItem('user') || '{}')?.photoURL ? (
-                          <img src={hostPart?.image || JSON.parse(localStorage.getItem('user') || '{}')?.photoURL} alt={hostPart?.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                        ) : (
-                          <Radio className="w-6 h-6 text-red-500 animate-pulse" />
-                        )}
+                      <UserAvatar 
+                      userId={hostPart?.userId || streamHostParticipant?.userId} 
+                      name={hostPart?.name} 
+                      className="w-16 h-16 border border-red-500/20" 
+                  />
+
                       </div>
                       <span className="text-xs text-zinc-400 font-bold">@{hostPart?.name || 'المضيف'}</span>
                     </div>
@@ -2565,12 +2565,12 @@ const LiveStreamContent = ({
                   />
                   {!isCoHostCamEnabled && (
                     <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-4">
-                      <div className="w-16 h-16 rounded-full border border-emerald-500/20 bg-zinc-900 flex items-center justify-center mb-2">
-                        {coHostPart?.image ? (
-                          <img src={coHostPart.image} alt={coHostPart.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
-                        ) : (
-                          <Radio className="w-6 h-6 text-emerald-500 animate-pulse" />
-                        )}
+                    <UserAvatar 
+                    userId={coHostPart?.userId} 
+                    name={coHostPart?.name} 
+                    className="w-16 h-16 border border-emerald-500/20" 
+                  />
+
                       </div>
                       <span className="text-xs text-zinc-400 font-bold">@{coHostPart?.name || 'مضيف مشترك'}</span>
                     </div>
