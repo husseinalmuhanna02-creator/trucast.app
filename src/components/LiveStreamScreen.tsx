@@ -2613,20 +2613,14 @@ const LiveStreamContent = ({
                     ) : (
                       <div className="relative mb-6">
   <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
-  <div className="relative w-28 h-28 rounded-full border-4 border-red-500 overflow-hidden flex items-center justify-center bg-zinc-800">
-    {mainParticipant ? (
-<img
-  src={resolveAvatar(mainParticipant) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
-  alt="Main participant"
-  className="w-full h-full object-cover"
-  referrerPolicy="no-referrer"
-/>
-    ) : (
-      <Radio className="w-10 h-10 text-red-500 animate-pulse" />
-    )}
-  </div>
+  <div className="relative mb-6">
+  <div className="absolute inset-0 rounded-full bg-red-600/20 animate-ping" />
+  <UserAvatar 
+    userId={mainParticipant?.userId || streamHostParticipant?.userId} 
+    name={mainParticipant?.name || streamHostParticipant?.name} 
+    className="w-28 h-28 border-4 border-red-500" 
+  />
 </div>
-                    )}
                   </div>
                 )}
 
@@ -2667,17 +2661,11 @@ const LiveStreamContent = ({
           }}
           className="relative w-9 h-9 rounded-full border-2 border-red-500 bg-zinc-900 flex items-center justify-center overflow-hidden shrink-0 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
           title="عرض الملف الشخصي للمضيف"
-        >
-          {streamHostParticipant ? (
-  <img
-  src={resolveAvatar(streamHostParticipant) || "https://api.dicebear.com/7.x/avataaars/svg?seed=host"}
-  alt={streamHostParticipant?.name || "Host"}
-  className="w-full h-full object-cover rounded-full"
-  referrerPolicy="no-referrer"
+        <UserAvatar 
+  userId={streamHostParticipant?.userId} 
+  name={streamHostParticipant?.name} 
+  className="w-9 h-9 border-2 border-red-500" 
 />
-) : (
-  <span className="text-white font-black text-xs">H</span>
-)}
 
           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black" />
         </div>
