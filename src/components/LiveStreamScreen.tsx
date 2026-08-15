@@ -161,14 +161,6 @@ const LiveStreamContent = ({
     }
   }, [isHost, isApprovedGuest, isGuestApproved, call]);
 
-  // Requirement 1: Force disable camera & microphone for the host on initial load of the livestream content
-  useEffect(() => {
-    if (isHost && call) {
-      call.camera.disable().catch((e) => console.warn("Error disabling host camera on mount:", e));
-      call.microphone.disable().catch((e) => console.warn("Error disabling host microphone on mount:", e));
-    }
-  }, [isHost, call]);
-
   const isCamOn = camStatus === 'enabled';
   const isMicOn = micStatus === 'enabled';
 
