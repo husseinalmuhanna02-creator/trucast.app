@@ -2657,7 +2657,7 @@ const LiveStreamContent = ({
             }
           }}
           className="relative w-9 h-9 rounded-full border-2 border-red-500 bg-zinc-900 flex items-center justify-center overflow-hidden shrink-0 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
-          title="عرض الملف الشخصي للمضيف"
+          title="عرض الملف الشخصي للمضيف">
         <UserAvatar 
   userId={streamHostParticipant?.userId} 
   name={streamHostParticipant?.name} 
