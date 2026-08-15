@@ -2544,7 +2544,6 @@ const LiveStreamContent = ({
                       className="w-16 h-16 border border-red-500/20" 
                   />
 
-                      </div>
                       <span className="text-xs text-zinc-400 font-bold">@{hostPart?.name || 'المضيف'}</span>
                     </div>
                   )}
@@ -2571,7 +2570,6 @@ const LiveStreamContent = ({
                     className="w-16 h-16 border border-emerald-500/20" 
                   />
 
-                      </div>
                       <span className="text-xs text-zinc-400 font-bold">@{coHostPart?.name || 'مضيف مشترك'}</span>
                     </div>
                   )}
