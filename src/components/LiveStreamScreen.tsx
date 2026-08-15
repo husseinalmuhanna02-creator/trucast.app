@@ -1494,23 +1494,37 @@ const LiveStreamContent = ({
   };
 
   const handleAcceptRequest = async (requestingUserId: string, requestingUserName: string) => {
-    if (!call) return;
-    try {
-      await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']);
-      
-      const activeId = streamId || "live_stream";
-      await updateDoc(doc(db, "lives", activeId), {
-        approvedGuests: arrayUnion(requestingUserId)
-      }).catch(e => console.warn("Failed to update approvedGuests in Firestore:", e));
-
-      await call.sendCustomEvent({ type: 'guest_request_approved', custom: { targetUserId: requestingUserId } });
-      triggerToast(`تم قبول طلب الصعود للضيف ${requestingUserName} 🎉`);
-      setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
-    } catch (err) {
-      console.error("Error granting permissions to requesting guest:", err);
-      triggerToast("فشل منح صلاحيات الضيف");
+  if (!call) return;
+  try {
+    const activeId = activeStreamId || streamId;
+    if (!activeId) {
+      console.error("لم يتم العثور على معرّف البث النشط");
+      return;
     }
-  };
+
+    // 1. تحديث Firestore أولاً
+    await updateDoc(doc(db, "lives", activeId), {
+      approvedGuests: arrayUnion(requestingUserId)
+    }).catch(e => console.warn("Failed to update approvedGuests in Firestore:", e));
+
+    // 2. إرسال الإشعار للضيف
+    await call.sendCustomEvent({
+      type: 'guest_request_approved',
+      custom: { targetUserId: requestingUserId }
+    }).catch(() => {});
+
+    // 3. منح الصلاحيات بحذر دون قطع البث
+    await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']).catch(err => {
+      console.warn("خطأ غير مؤثر في منح الصلاحيات:", err);
+    });
+
+    triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
+    setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
+  } catch (err) {
+    console.error("Error granting permissions to requesting guest:", err);
+    triggerToast("فشل منح صلاحيات الضيف");
+  }
+};
 
   const handleRejectRequest = (requestingUserId: string) => {
     setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
