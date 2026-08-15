@@ -5788,13 +5788,14 @@ const user = {
                 // 1. Create lives document in Firestore
         const titleText = streamTitle.trim() || t("بث مباشر جديد");
 
-        const rawPhoto = currentUser?.photoURL || userProfile?.photoURL || "";
+        const rawPhoto = userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || "";
         const isCartoon =
-          rawPhoto.includes("dicebear") ||
-          rawPhoto.includes("multiavatar") ||
-          rawPhoto.includes("bottts") ||
-          rawPhoto.includes("avataaars") ||
-          rawPhoto.includes("/9j/4AAQSkZJRgABAQ");
+  rawPhoto.includes("dicebear") ||
+  rawPhoto.includes("multiavatar") ||
+  rawPhoto.includes("bottts") ||
+  rawPhoto.includes("avataaars");
+
+const cleanHostPhoto = isCartoon ? "" : rawPhoto;
 
         const cleanHostPhoto = isCartoon ? "" : rawPhoto;
 
