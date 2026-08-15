@@ -1704,12 +1704,13 @@ const LiveStreamContent = ({
   const storedPhoto = localStorage.getItem('user_photo') || localStorage.getItem('userPhoto');
 
   const fallback =
-    firebaseAuthPhoto ||
-    localUser?.photoURL ||
-    localUser?.photoUrl ||
-    localUser?.avatar ||
-    localUser?.avatarUrl ||
-    storedPhoto;
+  userProfile?.photoURL ||
+  userProfile?.avatarUrl ||
+  userProfile?.image ||
+  firebaseAuthPhoto ||
+  localUser?.photoURL ||
+  localUser?.avatarUrl ||
+  storedPhoto;
 
   if (fallback && !fallback.includes('ui-avatars.com') && !isCartoon(fallback)) {
     return fallback;
@@ -5652,7 +5653,7 @@ export const LiveStreamScreen = ({
         const user = {
           id: currentUser.uid,
           name: userProfile?.displayName || currentUser.displayName || t('مضيف'),
-          image: userProfile?.avatarUrl || currentUser.photoURL || '',
+          image: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || '',
         };
 
         streamClient = new StreamVideoClient({
@@ -5832,7 +5833,7 @@ export const LiveStreamScreen = ({
                           streamId: generatedStreamId,
                           hostId: currentUser.uid,
                           hostName: userProfile?.displayName || currentUser.displayName || t("مستضيف"),
-                          hostPhoto: currentUser?.photoURL || userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || "https://www.gravatar.com/avatar/?d=mp",
+                          hostPhoto: userProfile?.photoURL || userProfile?.avatarUrl || userProfile?.image || currentUser?.photoURL || ""
                           read: false,
                           createdAt: serverTimestamp()
                         });
