@@ -1494,18 +1494,21 @@ const LiveStreamContent = ({
   };
 
   const handleAcceptRequest = async (requestingUserId: string, requestingUserName: string) => {
-  if (!call) return;
+  if (!call) {
+    triggerToast("خطأ: غرف البث غير متصلة");
+    return;
+  }
   try {
-    const activeId = activeStreamId || streamId;
+    const activeId = activeStreamId || streamId || call.id;
     if (!activeId) {
-      console.error("لم يتم العثور على معرّف البث النشط");
+      triggerToast("خطأ: لم يتم العثور على معرّف البث");
       return;
     }
 
-    // 1. تحديث Firestore أولاً
+    // 1. تحديث Firestore
     await updateDoc(doc(db, "lives", activeId), {
       approvedGuests: arrayUnion(requestingUserId)
-    }).catch(e => console.warn("Failed to update approvedGuests in Firestore:", e));
+    }).catch(e => console.warn("Failed to update approvedGuests:", e));
 
     // 2. إرسال الإشعار للضيف
     await call.sendCustomEvent({
@@ -1513,18 +1516,19 @@ const LiveStreamContent = ({
       custom: { targetUserId: requestingUserId }
     }).catch(() => {});
 
-    // 3. منح الصلاحيات بحذر دون قطع البث
-      await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']).catch(err => {
-        console.warn("خطأ غير مؤثر في منح الصلاحيات:", err);
-      });
+    // 3. منح الصلاحيات
+    await call.grantPermissions(requestingUserId, ['send-audio', 'send-video']).catch(err => {
+      console.warn("خطأ غير مؤثر في الصلاحيات:", err);
+    });
 
-      triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
-      setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
-    } catch (err) {
-    console.error("Error granting permissions to requesting guest:", err);
+    triggerToast(`تم قبول طلب انضمام ${requestingUserName} 🎉`);
+    setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
+  } catch (err) {
+    console.error("Error granting permissions:", err);
     triggerToast("فشل منح صلاحيات الضيف");
   }
 };
+
   const handleRejectRequest = (requestingUserId: string) => {
     setPendingRequests(prev => prev.filter(req => req.senderId !== requestingUserId));
     triggerToast("تم رفض طلب الانضمام");
