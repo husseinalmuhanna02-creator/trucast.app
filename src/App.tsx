@@ -2763,7 +2763,7 @@ function CommentsComponent({
             {sortedComments.length > 0 ? (
               sortedComments.map(comment => renderComment(comment))
             ) : (
-              <div className="flex flex-col items-center justify-center py-24 opacity-30">
+              <div className="flex-1 flex flex-col items-center justify-center min-h-[350px] py-12 opacity-30">
                 <MessageSquare className="w-16 h-16 text-zinc-500 mb-4" />
                 <p className="font-bold text-zinc-400">لا توجد نقاشات بعد.</p>
               </div>
