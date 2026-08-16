@@ -2630,35 +2630,33 @@ function CommentsComponent({
     }
   }
 
-  return (
-    <>
-      <div className="fixed inset-0 z-[200] flex flex-col justify-end">
-        {/* Blurred Backdrop */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        />
+    const modalContent = (
+    <div className="fixed inset-0 z-[9999] flex flex-col justify-end">
+      {/* Blurred Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      />
 
-                {/* Bottom Sheet Container */}
-        <motion.div
-          drag="y"
-          dragConstraints={{ top: 0 }}
-          dragElastic={0.2}
-          onDragEnd={(e, { offset, velocity }) => {
-            if (offset.y > 150 || velocity.y > 600) {
-              onClose();
-            }
-          }}
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "spring", damping: 25, stiffness: 250 }}
-          style={{ height: '75dvh', minHeight: '75dvh', maxHeight: '75dvh', display: 'flex', flexDirection: 'column' }}
-          className="relative w-full max-w-2xl mx-auto shrink-0 bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden shadow-2xl"
-        >
+      {/* Bottom Sheet Container */}
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(e, { offset, velocity }) => {
+          if (offset.y > 150 || velocity.y > 600) {
+            onClose();
+          }
+        }}
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ type: "spring", damping: 25, stiffness: 250 }}
+        className="relative w-full max-w-2xl mx-auto h-[67vh] max-h-[67vh] bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
+      >
 
 
           {/* Swipe Handle */}
