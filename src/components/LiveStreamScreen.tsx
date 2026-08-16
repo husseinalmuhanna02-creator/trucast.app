@@ -2598,8 +2598,9 @@ const LiveStreamContent = ({
   : null) || streamHostParticipant || localParticipant || participants?.[0];
 
 const isMainLocal = mainParticipant?.isLocalParticipant;
-const isMainCamEnabled = isMainLocal ? isCamOn : true;
-
+const isMainCamEnabled = isMainLocal 
+  ? isCamOn 
+  : (mainParticipant ? !!(mainParticipant.videoStream || (mainParticipant as any)?.isVideoEnabled) : false);
 
           if (mainParticipant) {
             return (
