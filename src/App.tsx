@@ -2655,8 +2655,8 @@ function CommentsComponent({
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", damping: 25, stiffness: 250 }}
-          style={{ height: '75%', minHeight: '75%' }}
-          className="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-2xl h-3/4 bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
+          style={{ position: 'absolute', top: '25%', bottom: 0, left: 0, right: 0 }}
+          className="w-full max-w-2xl mx-auto bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
         >
 
           {/* Swipe Handle */}
