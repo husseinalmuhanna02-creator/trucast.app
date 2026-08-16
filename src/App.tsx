@@ -2745,7 +2745,7 @@ function CommentsComponent({
             </div>
 
             <div className="flex flex-col text-right" dir="rtl">
-              <h3 className="text-white font-black text-lg">{t("التعليقات")}</h3>
+              <h3 className="text-white font-black text-lg">تجربة حسين</h3>
               <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">TruCast • {comments.length} {t("تعليق")}</span>
             </div>
 
