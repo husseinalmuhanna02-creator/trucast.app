@@ -2641,23 +2641,24 @@ function CommentsComponent({
           className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         />
 
-        {/* Bottom Sheet Container */}
+                {/* Bottom Sheet Container */}
         <motion.div
-  drag="y"
-  dragConstraints={{ top: 0 }}
-  dragElastic={0.2}
-  onDragEnd={(e, { offset, velocity }) => {
-    if (offset.y > 150 || velocity.y > 600) {
-      onClose();
-    }
-  }}
-  initial={{ y: "100%" }}
-  animate={{ y: 0 }}
-  exit={{ y: "100%" }}
-  transition={{ type: "spring", damping: 25, stiffness: 250 }}
-  style={{ height: '75vh' }}
-  className="relative w-full max-w-2xl mx-auto shrink-0 bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
->
+          drag="y"
+          dragConstraints={{ top: 0 }}
+          dragElastic={0.2}
+          onDragEnd={(e, { offset, velocity }) => {
+            if (offset.y > 150 || velocity.y > 600) {
+              onClose();
+            }
+          }}
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", damping: 25, stiffness: 250 }}
+          style={{ height: '75dvh', minHeight: '75dvh', maxHeight: '75dvh', display: 'flex', flexDirection: 'column' }}
+          className="relative w-full max-w-2xl mx-auto shrink-0 bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden shadow-2xl"
+        >
+
 
           {/* Swipe Handle */}
           <div className="flex justify-center p-3 shrink-0 cursor-grab active:cursor-grabbing">
@@ -2757,11 +2758,13 @@ function CommentsComponent({
             </button>
           </div>
 
-          {/* Comments List */}
-          <div
+                  {/* Comments List */}
+        <div
           ref={commentsListRef}
-          className="flex-1 min-h-0 overflow-y-auto scroll-smooth touch-auto p-4 space-y-2 custom-scrollbar"
-            >
+          style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}
+          className="p-4 space-y-2 custom-scrollbar"
+        >
+
 
             {sortedComments.length > 0 ? (
               sortedComments.map(comment => renderComment(comment))
