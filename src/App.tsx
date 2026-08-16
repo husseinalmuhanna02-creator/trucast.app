@@ -2642,22 +2642,21 @@ function CommentsComponent({
         />
 
         {/* Bottom Sheet Container */}
-        <motion.div 
-          drag="y"
-          dragConstraints={{ top: 0 }}
-          dragElastic={0.2}
-          onDragEnd={(e, { offset, velocity }) => {
-            if (offset.y > 150 || velocity.y > 600) {
-              onClose();
-            }
-          }}
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "spring", damping: 25, stiffness: 250 }}
-style={{ height: '75vh' }}
-className="relative w-full max-w-2xl mx-auto h-[75vh] bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
-        >
+<motion.div
+  drag="y"
+  dragConstraints={{ top: 0 }}
+  dragElastic={0.2}
+  onDragEnd={(e, { offset, velocity }) => {
+    if (offset.y > 150 || velocity.y > 600) {
+      onClose();
+    }
+  }}
+  initial={{ y: "100%" }}
+  animate={{ y: 0 }}
+  exit={{ y: "100%" }}
+  transition={{ type: "spring", damping: 25, stiffness: 250 }}
+  className="relative w-full max-w-2xl mx-auto h-[75vh] shrink-0 bg-zinc-950 border-t border-zinc-800 rounded-t-[32px] overflow-hidden flex flex-col shadow-2xl"
+>
           {/* Swipe Handle */}
           <div className="flex justify-center p-3 shrink-0 cursor-grab active:cursor-grabbing">
             <div className="w-12 h-1 bg-zinc-800 rounded-full" />
