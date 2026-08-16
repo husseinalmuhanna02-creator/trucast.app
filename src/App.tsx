@@ -9,6 +9,7 @@ if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
   }
 }
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from './localization';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
