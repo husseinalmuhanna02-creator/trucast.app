@@ -2759,7 +2759,8 @@ function CommentsComponent({
           {/* Comments List */}
           <div 
             ref={commentsListRef}
-            className="flex-1 overflow-y-auto min-h-0 scroll-smooth touch-auto p-4 space-y-2 custom-scrollbar"
+            style={{ minHeight: '50vh' }}
+            className="flex-1 overflow-y-auto scroll-smooth touch-auto p-4 space-y-2 custom-scrollbar"
           >
             {sortedComments.length > 0 ? (
               sortedComments.map(comment => renderComment(comment))
