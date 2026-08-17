@@ -8981,7 +8981,7 @@ const handleStartLive = async (title: string) => {
         )}
 
         {/* Form with input and send button */}
-        <form
+<form
   onSubmit={(e) => {
     e.preventDefault();
     if (!isSending && newComment.trim()) {
@@ -9016,19 +9016,13 @@ const handleStartLive = async (title: string) => {
     }`}
     aria-label="إرسال"
   >
-    <Send classNames="w-5 h-5" />
+    {isSending ? (
+      <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+    ) : (
+      <Send className="w-4 h-4 transform -rotate-45" />
+    )}
   </button>
 </form>
-          >
-            {isSending ? (
-              <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-            ) : (
-              <Send className="w-4 h-4 transform -rotate-45" />
-            )}
-          </button>
-        </form>
-      </div>
-
       {/* Helper Modals */}
       {showBgSettings && (
         <div className="absolute inset-x-4 bottom-24 z-[110] bg-zinc-950/95 backdrop-blur-md border border-zinc-800/80 rounded-3xl p-5 shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom-5 duration-300">
