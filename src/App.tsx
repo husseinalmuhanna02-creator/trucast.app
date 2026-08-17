@@ -9023,6 +9023,7 @@ const handleStartLive = async (title: string) => {
     )}
   </button>
 </form>
+</div>
 
       {/* Helper Modals */}
       {showBgSettings && (
