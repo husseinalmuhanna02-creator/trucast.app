@@ -8981,36 +8981,44 @@ const handleStartLive = async (title: string) => {
         )}
 
         {/* Form with input and send button */}
-        <form 
-          onSubmit={handleSendComment}
-          className="mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-white/25 rounded-2xl px-4 focus-within:border-blue-500/50 transition-all shadow-xl"
-        >
-          <input 
-            type="text" 
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder={t("ارسل تعليقاً...")} 
-            disabled={isSending}
-            className="flex-1 bg-transparent py-3 text-xs sm:text-sm font-semibold outline-none text-white placeholder:text-zinc-500 disabled:opacity-50 text-right"
-          />
-          <button 
-            type="submit" 
-            disabled={isSending || !newComment.trim()}
-            onClick={() => {
-              if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                try {
-                  navigator.vibrate(10);
-                } catch (e) {
-                  console.debug("navigator.vibrate failed/blocked", e);
-                }
-              }
-            }}
-            className={`send-comment-button transition-all flex items-center justify-center cursor-pointer p-1.5 rounded-xl ${
-              isSending || !newComment.trim() 
-                ? 'text-zinc-600 cursor-not-allowed scale-95' 
-                : 'text-blue-500 hover:scale-110 hover:text-blue-400 active:scale-90'
-            }`}
-            aria-label="إرسال"
+        <form
+  onSubmit={(e) => {
+    e.preventDefault();
+    if (!isSending && newComment.trim()) {
+      handleSendComment(e);
+    }
+  }}
+  className="mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center"
+>
+  <input
+    type="text"
+    value={newComment}
+    onChange={(e) => setNewComment(e.target.value)}
+    placeholder={t("ارسل تعليقاً...")}
+    disabled={isSending}
+    className="flex-1 bg-transparent py-2 px-3 text-xs sm:text-sm font-semibold outline-none text-white placeholder-zinc-500"
+  />
+  <button
+    type="submit"
+    disabled={isSending || !newComment.trim()}
+    onClick={(e) => {
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate(10); } catch (err) {}
+      }
+      if (!isSending && newComment.trim()) {
+        handleSendComment(e);
+      }
+    }}
+    className={`send-comment-button transition-all flex items-center justify-center p-2.5 rounded-xl ${
+      isSending || !newComment.trim()
+        ? 'text-zinc-600 cursor-not-allowed opacity-50'
+        : 'text-blue-500 hover:scale-105 active:scale-95 cursor-pointer bg-blue-500/10'
+    }`}
+    aria-label="إرسال"
+  >
+    <Send classNames="w-5 h-5" />
+  </button>
+</form>
           >
             {isSending ? (
               <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
