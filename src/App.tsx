@@ -8980,33 +8980,35 @@ const handleStartLive = async (title: string) => {
           </div>
         )}
 
-{/* Form with input and send button */}
-<form
-  onSubmit={async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!newComment.trim() || isSending) return;
-    try {
-      await handleSendComment(e);
-    } catch (err) {
-      console.error("فشل إرسال التعليق:", err);
-      alert("حدث خطأ أثناء الإرسال: " + (err as Error).message);
-    }
-  }}
-  className="relative z-50 mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center"
->
+{/* Input Area and send button without form element */}
+<div className="relative z-[9999] mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center">
   <input
     type="text"
     value={newComment}
     onChange={(e) => setNewComment(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (newComment.trim() && !isSending) {
+          handleSendComment(e);
+        }
+      }
+    }}
     placeholder={t("ارسل تعليقاً...")}
     disabled={isSending}
     className="flex-1 bg-transparent py-2 px-3 text-xs sm:text-sm font-semibold outline-none text-white placeholder-zinc-500"
   />
   <button
-    type="submit"
+    type="button"
     disabled={isSending || !newComment.trim()}
-    className={`relative z-50 transition-all flex items-center justify-center p-2.5 rounded-xl ${
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (newComment.trim() && !isSending) {
+        handleSendComment(e);
+      }
+    }}
+    className={`relative z-[10000] transition-all flex items-center justify-center p-2.5 rounded-xl ${
       isSending || !newComment.trim()
         ? 'text-zinc-600 cursor-not-allowed opacity-50'
         : 'text-blue-500 hover:scale-105 active:scale-95 cursor-pointer bg-blue-500/10'
@@ -9019,7 +9021,6 @@ const handleStartLive = async (title: string) => {
       <Send className="w-4 h-4 transform -rotate-45" />
     )}
   </button>
-</form>
 </div>
 
       {/* Helper Modals */}
