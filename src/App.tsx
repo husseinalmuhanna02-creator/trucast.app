@@ -3032,7 +3032,8 @@ function CommentsComponent({
             onClose={() => setShowGifPicker(false)} 
           />
         )}
-      </AnimatePresence>
+    </AnimatePresence>
+  </>
 );
 
   if (typeof document !== 'undefined') {
