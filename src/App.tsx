@@ -2352,12 +2352,17 @@ function CommentsComponent({
         >
 <img
   src={
-    (currentUser && (comment.userId === currentUser.uid || comment.userId === currentUser.id) ? (currentUser.photoURL || currentUser.userPhoto) : null) ||
     comment.userPhoto ||
     comment.photoURL ||
     comment.authorPhoto ||
     comment.userAvatar ||
-    (postContext && (comment.userId === postContext.userId || comment.userId === postOwnerId) ? postContext.userPhoto : null) ||
+    (typeof usersMap !== 'undefined' && usersMap?.[comment.userId]?.photoURL) ||
+    (typeof users !== 'undefined' && users?.[comment.userId]?.photoURL) ||
+    (typeof userProfile !== 'undefined' && userProfile?.photoURL) ||
+    (typeof userData !== 'undefined' && userData?.photoURL) ||
+    (typeof profile !== 'undefined' && profile?.photoURL) ||
+    currentUser?.photoURL ||
+    localStorage.getItem('userPhoto') ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`
   }
   alt={comment.userName || "User"}
@@ -2367,6 +2372,7 @@ function CommentsComponent({
     (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`;
   }}
 />
+
           {comment.userId === postOwnerId && (
             <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full p-0.5 border-2 border-zinc-950 shadow-md">
               <Check className="w-2 h-2 text-white font-bold" />
