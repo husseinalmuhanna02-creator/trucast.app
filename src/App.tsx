@@ -9000,8 +9000,9 @@ const handleStartLive = async (title: string) => {
   />
   <button
     type="submit"
-    disabled={isSending || !newComment.trim()}
+    disabled={isSending}
     onClick={(e) => {
+      console.log("Button clicked!");
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         try { navigator.vibrate(10); } catch (err) {}
       }
@@ -9009,9 +9010,9 @@ const handleStartLive = async (title: string) => {
         handleSendComment(e);
       }
     }}
-    className={`send-comment-button transition-all flex items-center justify-center p-2.5 rounded-xl ${
-      isSending || !newComment.trim()
-        ? 'text-zinc-600 cursor-not-allowed opacity-50'
+    className={`send-comment-button relative z-50 transition-all flex items-center justify-center p-2.5 rounded-xl ${
+      isSending 
+        ? 'text-zinc-600 cursor-not-allowed opacity-50' 
         : 'text-blue-500 hover:scale-105 active:scale-95 cursor-pointer bg-blue-500/10'
     }`}
     aria-label="إرسال"
