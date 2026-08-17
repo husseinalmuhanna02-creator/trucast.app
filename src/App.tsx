@@ -2631,7 +2631,9 @@ function CommentsComponent({
   }
 
     const modalContent = (
+  <>
     <div className="fixed inset-0 z-[9999] flex flex-col justify-end">
+
       {/* Blurred Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
