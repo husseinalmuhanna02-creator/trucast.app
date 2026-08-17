@@ -2350,8 +2350,8 @@ function CommentsComponent({
           onClick={() => onNavigateToUser(comment.userId)}
           className="shrink-0 cursor-pointer relative"
         >
-          <img
-  src={getAvatarUrl(comment.userPhoto || comment.photoURL || comment.authorPhoto || comment.userAvatar, comment.userName)}
+<img
+  src={getAvatarUrl(comment.userPhoto || comment.photoURL || comment.authorPhoto || (comment.userId === currentUser?.uid ? currentUser?.photoURL : null), comment.userName)}
   alt={comment.userName || "User"}
   className={`${isReply ? 'w-7 h-7' : 'w-9 h-9'} rounded-full border-2 border-zinc-800 object-cover`}
   referrerPolicy="no-referrer"
