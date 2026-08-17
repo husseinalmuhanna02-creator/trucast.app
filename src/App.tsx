@@ -2352,9 +2352,12 @@ function CommentsComponent({
         >
 <img
   src={
-    comment.userPhoto || 
-    comment.photoURL || 
-    comment.authorPhoto || 
+    (currentUser && (comment.userId === currentUser.uid || comment.userId === currentUser.id) ? (currentUser.photoURL || currentUser.userPhoto) : null) ||
+    comment.userPhoto ||
+    comment.photoURL ||
+    comment.authorPhoto ||
+    comment.userAvatar ||
+    (postContext && (comment.userId === postContext.userId || comment.userId === postOwnerId) ? postContext.userPhoto : null) ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`
   }
   alt={comment.userName || "User"}
