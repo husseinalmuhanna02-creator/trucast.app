@@ -2367,7 +2367,6 @@ function CommentsComponent({
     (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`;
   }}
 />
-
           {comment.userId === postOwnerId && (
             <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full p-0.5 border-2 border-zinc-950 shadow-md">
               <Check className="w-2 h-2 text-white font-bold" />
