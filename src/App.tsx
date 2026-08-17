@@ -3031,9 +3031,14 @@ function CommentsComponent({
           />
         )}
       </AnimatePresence>
-    </>
-  );
-}
+);
+
+  if (typeof document !== 'undefined') {
+    return createPortal(modalContent, document.body);
+  }
+
+  return modalContent;
+        }
 
 
 function PostCard({ 
