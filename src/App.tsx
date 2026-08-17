@@ -2352,12 +2352,9 @@ function CommentsComponent({
         >
 <img
   src={
-    (usersMap && usersMap[comment.userId]?.photoURL) ||
-    (users && users[comment.userId]?.photoURL) ||
-    comment.userPhoto ||
-    comment.photoURL ||
-    comment.authorPhoto ||
-    (comment.userId === currentUser?.uid ? currentUser?.photoURL : null) ||
+    comment.userPhoto || 
+    comment.photoURL || 
+    comment.authorPhoto || 
     `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`
   }
   alt={comment.userName || "User"}
