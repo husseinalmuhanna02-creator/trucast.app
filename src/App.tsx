@@ -8984,11 +8984,9 @@ const handleStartLive = async (title: string) => {
 <form
   onSubmit={(e) => {
     e.preventDefault();
-    if (!isSending && newComment.trim()) {
-      handleSendComment(e);
-    }
+    if (newComment.trim() && !isSending) handleSendComment(e);
   }}
-  className="mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center"
+  className="relative z-50 mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center"
 >
   <input
     type="text"
@@ -8999,20 +8997,23 @@ const handleStartLive = async (title: string) => {
     className="flex-1 bg-transparent py-2 px-3 text-xs sm:text-sm font-semibold outline-none text-white placeholder-zinc-500"
   />
   <button
-    type="submit"
-    disabled={isSending}
-    onClick={(e) => {
-      console.log("Button clicked!");
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate(10); } catch (err) {}
-      }
-      if (!isSending && newComment.trim()) {
+    type="button"
+    disabled={isSending || !newComment.trim()}
+    onTouchEnd={(e) => {
+      e.preventDefault();
+      if (newComment.trim() && !isSending) {
         handleSendComment(e);
       }
     }}
-    className={`send-comment-button relative z-50 transition-all flex items-center justify-center p-2.5 rounded-xl ${
-      isSending 
-        ? 'text-zinc-600 cursor-not-allowed opacity-50' 
+    onClick={(e) => {
+      e.preventDefault();
+      if (newComment.trim() && !isSending) {
+        handleSendComment(e);
+      }
+    }}
+    className={`relative z-[9999] pointer-events-auto transition-all flex items-center justify-center p-2.5 rounded-xl ${
+      isSending || !newComment.trim()
+        ? 'text-zinc-600 cursor-not-allowed opacity-50'
         : 'text-blue-500 hover:scale-105 active:scale-95 cursor-pointer bg-blue-500/10'
     }`}
     aria-label="إرسال"
