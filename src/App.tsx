@@ -2350,11 +2350,15 @@ function CommentsComponent({
           onClick={() => onNavigateToUser(comment.userId)}
           className="shrink-0 cursor-pointer relative"
         >
-          <img 
-            src={comment.userPhoto} 
-            className={`${isReply ? 'w-7 h-7' : 'w-9 h-9'} rounded-full border-2 border-zinc-900 object-cover shadow-lg group-hover/comment:scale-110 transition-transform duration-300`} 
-            alt="" 
-          />
+          <img
+  src={getAvatarUrl(comment.userPhoto || comment.photoURL || comment.authorPhoto || comment.userAvatar, comment.userName)}
+  alt={comment.userName || "User"}
+  className={`${isReply ? 'w-7 h-7' : 'w-9 h-9'} rounded-full border-2 border-zinc-800 object-cover`}
+  referrerPolicy="no-referrer"
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName || 'User')}&background=random`;
+  }}
+/>
           {comment.userId === postOwnerId && (
             <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full p-0.5 border-2 border-zinc-950 shadow-md">
               <Check className="w-2 h-2 text-white font-bold" />
