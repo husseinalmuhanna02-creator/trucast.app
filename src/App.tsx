@@ -2168,60 +2168,84 @@ function CommentsComponent({
   };
 
   const handleAddComment = async () => {
-    if ((!newComment.trim() && !selectedGifUrl && !attachedImage) || !currentUser) return;
-    const commentText = sanitizeText(newComment.trim());
-    const path = `${collectionPath}/${postId}/comments`;
-    
-    // Save previous values in case of failure
-    const prevNewComment = newComment;
-    const prevGifUrl = selectedGifUrl;
-    const prevReplyTo = replyTo;
-    const prevAttachedImage = attachedImage;
-    const prevAttachedImagePreview = attachedImagePreview;
+  if ((!newComment.trim() && !selectedGifUrl && !attachedImage) || !currentUser || !postId) return;
+  const commentText = sanitizeText(newComment.trim());
+  const path = `${collectionPath}/${postId}/comments`;
 
-    // Reset UI states immediately for fast optimistic feel
-    setNewComment("");
-    setSelectedGifUrl(null);
-    setReplyTo(null);
-    setAttachedImage(null);
-    setAttachedImagePreview(null);
+  // Save previous values in case of failure
+  const prevNewComment = newComment;
+  const prevGifUrl = selectedGifUrl;
+  const prevReplyTo = replyTo;
+  const prevAttachedImage = attachedImage;
+  const prevAttachedImagePreview = attachedImagePreview;
 
-    let finalImageUrl: string | null = null;
-    setIsUploadingImage(true);
+  // Reset UI states immediately for fast optimistic feel
+  setNewComment("");
+  setSelectedGifUrl(null);
+  setReplyTo(null);
+  setAttachedImage(null);
+  setAttachedImagePreview(null);
+
+  let finalImageUrl: string | null = null;
+  setIsUploadingImage(true);
+
+  try {
+    if (prevAttachedImage) {
+      const compressedFile = await compressImage(prevAttachedImage);
+      finalImageUrl = await uploadToCloudinarySigned(compressedFile);
+    }
+
+    await addDoc(collection(db, collectionPath, postId, 'comments'), {
+      userId: currentUser.uid,
+      userName: currentUser.displayName || "مستخدم",
+      userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'U')}&background=random`,
+      content: commentText,
+      gifUrl: prevGifUrl || null,
+      imageUrl: finalImageUrl || null,
+      parentId: prevReplyTo?.id || null,
+      likesCount: 0,
+      isPinned: false,
+      isPremium: isPremium,
+      createdAt: serverTimestamp()
+    });
 
     try {
-      if (prevAttachedImage) {
-        console.log("⚡ Compressing image before comment upload...");
-        const compressedFile = await compressImage(prevAttachedImage);
-        console.log("☁️ Uploading compressed image to Cloudinary...");
-        finalImageUrl = await uploadToCloudinarySigned(compressedFile);
-        console.log("✅ Compressed image uploaded successfully:", finalImageUrl);
-      }
+      await logActivity(currentUser.uid, 'comment_post', `علق على ${collectionPath === 'reels' ? 'فيديو ريلز' : 'منشور'}: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
+    } catch (logErr) {
+      console.warn("Log activity non-fatal error:", logErr);
+    }
 
-      await addDoc(collection(db, path), {
-        userId: currentUser.uid,
-        userName: currentUser.displayName || "مستخدم",
-        userPhoto: currentUser.photoURL || "",
-        content: commentText,
-        gifUrl: prevGifUrl || null,
-        imageUrl: finalImageUrl || null,
-        parentId: prevReplyTo?.id || null,
-        likesCount: 0,
-        isPinned: false,
-        isPremium: isPremium,
-        createdAt: serverTimestamp()
-      });
-
-      await logActivity(currentUser.uid, 'comment_post', `علّق على منشور: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
-      if (postOwnerId && postOwnerId !== currentUser.uid) {
+    if (postOwnerId && typeof postOwnerId === 'string' && postOwnerId.trim() !== '' && postOwnerId !== currentUser.uid) {
+      try {
         const notifRef = doc(collection(db, "users", postOwnerId, "notifications"));
         await setDoc(notifRef, {
-          title: "تعليق جديد 💬",
-          body: `${currentUser.displayName || "مستخدم"} علّق على منشورك: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`,
+          title: collectionPath === 'reels' ? "تعليق جديد على ريلز 🎬" : "تعليق جديد 💬",
+          body: `${currentUser.displayName || "مستخدم"}: علق "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`,
           type: "comment",
           postId: postId,
           senderId: currentUser.uid,
           senderName: currentUser.displayName || "مستخدم",
+          senderPhoto: currentUser.photoURL || "",
+          read: false,
+          createdAt: serverTimestamp()
+        });
+      } catch (notifErr) {
+        console.warn("Notification send non-fatal error:", notifErr);
+      }
+    }
+  } catch (e) {
+    console.error("Error adding comment with image:", e);
+    // Restore state on failure
+    setNewComment(prevNewComment);
+    setSelectedGifUrl(prevGifUrl);
+    setReplyTo(prevReplyTo);
+    setAttachedImage(prevAttachedImage);
+    setAttachedImagePreview(prevAttachedImagePreview);
+    handleFirestoreError(e, OperationType.CREATE, path);
+  } finally {
+    setIsUploadingImage(false);
+  }
+};
           senderPhoto: currentUser.photoURL || "",
           read: false,
           createdAt: serverTimestamp()
