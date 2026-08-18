@@ -2990,17 +2990,11 @@ function CommentsComponent({
                 
 <button
   type="submit"
-  onClick={(e) => {
-    e.preventDefault();
-    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
-      handleAddComment();
-    }
-  }}
   disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
-  className={`send-comment-button w-9 h-9 flex items-center justify-center rounded-full transition-all select-none active:scale-90 cursor-pointer ${
+  className={`send-comment-button w-9 h-9 flex items-center justify-center rounded-full transition-all select-none ${
     (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
-      ? 'bg-blue-600 hover:bg-blue-500 text-white scale-100 shadow-md shadow-blue-600/30'
-      : 'bg-zinc-800 text-zinc-600 scale-90 opacity-60 cursor-not-allowed'
+      ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/30'
+      : 'bg-zinc-800 text-zinc-600 opacity-60 cursor-not-allowed'
   }`}
   aria-label="إرسال التعليق"
 >
