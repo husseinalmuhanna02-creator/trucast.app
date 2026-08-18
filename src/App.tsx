@@ -8980,7 +8980,7 @@ const handleStartLive = async (title: string) => {
           </div>
         )}
 
-{/* Input Area and send button without form element */}
+{/* Input Area and send button */}
 <div className="relative z-[9999] mt-3 w-full flex gap-2 bg-black/60 backdrop-blur-md border border-zinc-800/80 p-2 rounded-xl items-center">
   <input
     type="text"
