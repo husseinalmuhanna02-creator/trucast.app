@@ -2985,21 +2985,29 @@ function CommentsComponent({
                   className="flex-1 bg-transparent border-none text-white text-[14px] outline-none resize-none py-3 scrollbar-hide font-medium max-h-32 disabled:opacity-55"
                 />
                 
-                <button 
-                  type="submit"
-                  disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
-                  className={`send-comment-button w-9 h-9 flex items-center justify-center rounded-full transition-all ${
-                    (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage 
-                      ? 'bg-blue-600 text-white scale-100' 
-                      : 'bg-zinc-800 text-zinc-600 scale-90'
-                  }`}
-                >
-                  {isUploadingImage ? (
-                    <Loader2 className="w-4 h-4 text-white animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                </button>
+<button
+  type="submit"
+  onClick={(e) => {
+    e.preventDefault();
+    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
+      handleAddComment();
+    }
+  }}
+  disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
+  className={`send-comment-button w-9 h-9 flex items-center justify-center rounded-full transition-all select-none active:scale-90 cursor-pointer ${
+    (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
+      ? 'bg-blue-600 hover:bg-blue-500 text-white scale-100 shadow-md shadow-blue-600/30'
+      : 'bg-zinc-800 text-zinc-600 scale-90 opacity-60 cursor-not-allowed'
+  }`}
+  aria-label="إرسال التعليق"
+>
+  {isUploadingImage ? (
+    <Loader2 className="w-4 h-4 text-white animate-spin" />
+  ) : (
+    <Send className="w-4 h-4" />
+  )}
+</button>
+
               </div>
             </form>
           </div>
