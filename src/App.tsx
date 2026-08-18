@@ -2170,7 +2170,9 @@ function CommentsComponent({
   const handleAddComment = async () => {
   if (!newComment.trim() && !selectedGifUrl && !attachedImage) return;
 
-if (!currentUser) {
+const activeUser = currentUser || auth?.currentUser;
+
+if (!activeUser) {
   alert("تنبيه: غير مسجل الدخول!");
   return;
 }
@@ -2206,9 +2208,9 @@ if (!postId) {
     }
 
     await addDoc(collection(db, collectionPath, postId, 'comments'), {
-      userId: currentUser.uid,
-      userName: currentUser.displayName || "مستخدم",
-      userPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'U')}&background=random`,
+      userId: activeUser.uid,
+      userName: activeUser.displayName || "مستخدم",
+      userPhoto: activeUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(activeUser.displayName || 'U')}&background=random`,
       content: commentText,
       gifUrl: prevGifUrl || null,
       imageUrl: finalImageUrl || null,
