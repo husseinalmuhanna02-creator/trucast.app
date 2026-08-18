@@ -2983,25 +2983,7 @@ function CommentsComponent({
                 />
                 
 <button
-  type="button"
-  onPointerDownCapture={(e) => {
-    // 1. نمنع المتصفح من إغلاق الكيبورد أو تغيير الأبعاد
-    e.preventDefault();
-    // 2. نمنع الشيت من ابتلاع اللمسة كسحب
-    e.stopPropagation();
-    
-    // 3. ننفذ الإرسال فوراً لحظة ملامسة الشاشة
-    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
-      handleAddComment();
-    }
-  }}
-  onClick={(e) => {
-    // كود احتياطي متطابق ليعمل على شاشات الكمبيوتر والماوس
-    e.preventDefault();
-    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
-      handleAddComment();
-    }
-  }}
+  type="submit"
   disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all active:scale-90 ${
     (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
