@@ -2982,9 +2982,14 @@ function CommentsComponent({
                   className="flex-1 bg-transparent border-none text-white text-[14px] outline-none resize-none py-3 scrollbar-hide font-medium max-h-32 disabled:opacity-55"
                 />
                 
-<button
+<<button
   type="button"
-  onClick={() => {
+  onPointerDown={(e) => {
+    e.stopPropagation();
+    if (!postId) {
+      alert("خطأ: لم يتم التعرف على معرف المنشور (postId)");
+      return;
+    }
     if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
       handleAddComment();
     }
@@ -2992,7 +2997,7 @@ function CommentsComponent({
   disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all active:scale-90 ${
     (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
-      ? 'bg-blue-600 text-white'
+      ? 'bg-blue-600 text-white cursor-pointer'
       : 'bg-zinc-800 text-zinc-600'
   }`}
   aria-label="إرسال التعليق"
@@ -3003,6 +3008,7 @@ function CommentsComponent({
     <Send className="w-4 h-4" />
   )}
 </button>
+
 
               </div>
             </form>
