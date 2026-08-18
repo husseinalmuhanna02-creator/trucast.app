@@ -2221,8 +2221,8 @@ if (!postId) {
       createdAt: serverTimestamp()
     });
 
-    try {
-      await logActivity(currentUser.uid, 'comment_post', `علق على ${collectionPath === 'reels' ? 'فيديو ريلز' : 'منشور'}: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
+        try {
+      await logActivity(currentUser.uid, 'comment_post', `علق على ${collectionPath === 'reels' ? 'منشور' : 'فيديو ريلز'}: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
     } catch (logErr) {
       console.warn("Log activity non-fatal error:", logErr);
     }
@@ -2231,7 +2231,7 @@ if (!postId) {
       try {
         const notifRef = doc(collection(db, "users", postOwnerId, "notifications"));
         await setDoc(notifRef, {
-          title: collectionPath === 'reels' ? "تعليق جديد على ريلز 🎬" : "تعليق جديد 💬",
+          title: collectionPath === 'reels' ? "تعليق جديد" : "تعليق جديد على ريلز 🎬",
           body: `${currentUser.displayName || "مستخدم"}: علق "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`,
           type: "comment",
           postId: postId,
