@@ -18929,14 +18929,14 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
         {/* Reels Comments Overlay */}
         <AnimatePresence>
           {showComments && (
-            <CommentsComponent 
-              postId={currentReel.id} 
-              collectionPath="reels"
-              currentUser={currentUser}
-              postOwnerId={currentReel.userId}
-              onNavigateToUser={onNavigateToUser}
-              onClose={() => setShowComments(false)}
-            />
+            <CommentsComponent
+  postId={currentReel?.id || currentReel?._id}
+  collectionPath="reels"
+  currentUser={currentUser || user}
+  postOwnerId={currentReel?.userId || currentReel?.ownerId}
+  onNavigateToUser={onNavigateToUser}
+  onClose={() => setShowComments(false)}
+/>
           )}
         </AnimatePresence>
 
