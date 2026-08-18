@@ -2168,7 +2168,17 @@ function CommentsComponent({
   };
 
   const handleAddComment = async () => {
-  if ((!newComment.trim() && !selectedGifUrl && !attachedImage) || !currentUser || !postId) return;
+  if (!newComment.trim() && !selectedGifUrl && !attachedImage) return;
+
+if (!currentUser) {
+  alert("تنبيه: غير مسجل الدخول!");
+  return;
+}
+
+if (!postId) {
+  alert("تنبيه: معرف الريل غير متاح (postId فارغ)");
+  return;
+}
   const commentText = sanitizeText(newComment.trim());
   const path = `${collectionPath}/${postId}/comments`;
 
@@ -2233,8 +2243,9 @@ function CommentsComponent({
         console.warn("Notification send non-fatal error:", notifErr);
       }
     }
-  } catch (e) {
-    console.error("Error adding comment with image:", e);
+} catch (e: any) {
+  console.error("Error adding comment with image:", e);
+  alert("سبب فشل الإرسال: " + (e?.message || JSON.stringify(e)));
     // Restore state on failure
     setNewComment(prevNewComment);
     setSelectedGifUrl(prevGifUrl);
