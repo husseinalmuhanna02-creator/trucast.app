@@ -2984,12 +2984,20 @@ function CommentsComponent({
                 
 <button
   type="button"
-  onPointerDown={(e) => {
+  onPointerDownCapture={(e) => {
+    // 1. نمنع المتصفح من إغلاق الكيبورد أو تغيير الأبعاد
+    e.preventDefault();
+    // 2. نمنع الشيت من ابتلاع اللمسة كسحب
     e.stopPropagation();
-    if (!postId) {
-      alert("خطأ: لم يتم التعرف على معرف المنشور (postId)");
-      return;
+    
+    // 3. ننفذ الإرسال فوراً لحظة ملامسة الشاشة
+    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
+      handleAddComment();
     }
+  }}
+  onClick={(e) => {
+    // كود احتياطي متطابق ليعمل على شاشات الكمبيوتر والماوس
+    e.preventDefault();
     if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
       handleAddComment();
     }
@@ -2997,7 +3005,7 @@ function CommentsComponent({
   disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all active:scale-90 ${
     (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
-      ? 'bg-blue-600 text-white cursor-pointer'
+      ? 'bg-blue-600 text-white cursor-pointer relative z-[99999]'
       : 'bg-zinc-800 text-zinc-600'
   }`}
   aria-label="إرسال التعليق"
