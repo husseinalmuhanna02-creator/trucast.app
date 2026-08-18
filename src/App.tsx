@@ -18930,10 +18930,10 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
         <AnimatePresence>
           {showComments && (
             <CommentsComponent
-  postId={currentReel?.id || currentReel?._id}
+  postId={currentReel?.id || currentReel?._id || ""}
   collectionPath="reels"
-  currentUser={currentUser || user}
-  postOwnerId={currentReel?.userId || currentReel?.ownerId}
+  currentUser={currentUser}
+  postOwnerId={currentReel?.userId || currentReel?.ownerId || ""}
   onNavigateToUser={onNavigateToUser}
   onClose={() => setShowComments(false)}
 />
