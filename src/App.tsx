@@ -2802,12 +2802,7 @@ function CommentsComponent({
           </div>
 
 {/* Input Area (Pinned to Bottom of Sheet) */}
-<div
-  onPointerDown={(e) => e.stopPropagation()}
-  onTouchStart={(e) => e.stopPropagation()}
-  onClick={(e) => e.stopPropagation()}
-  style={{ touchAction: 'none' }}
-  className="p-4 pb-8 bg-zinc-950 border-t border-zinc-900 shadow-[0_-10px_20px_rgba(0,0,0,0.4)] relative z-[9999]"
+<div className="p-4 pb-8 bg-zinc-950 border-t border-zinc-900 shadow-[0_-10px_20px_rgba(0,0,0,0.4)] relative z-50">
 >
 
             {replyTo && (
@@ -2989,12 +2984,17 @@ function CommentsComponent({
                 />
                 
 <button
-  type="submit"
+  type="button"
+  onClick={() => {
+    if ((newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage) {
+      handleAddComment();
+    }
+  }}
   disabled={(!newComment.trim() && !selectedGifUrl && !attachedImage) || isUploadingImage}
-  className={`send-comment-button w-9 h-9 flex items-center justify-center rounded-full transition-all select-none ${
+  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all active:scale-90 ${
     (newComment.trim() || selectedGifUrl || attachedImage) && !isUploadingImage
-      ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/30'
-      : 'bg-zinc-800 text-zinc-600 opacity-60 cursor-not-allowed'
+      ? 'bg-blue-600 text-white'
+      : 'bg-zinc-800 text-zinc-600'
   }`}
   aria-label="إرسال التعليق"
 >
