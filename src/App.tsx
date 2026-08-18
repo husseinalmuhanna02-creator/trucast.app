@@ -2802,7 +2802,11 @@ function CommentsComponent({
           </div>
 
           {/* Input Area (Pinned to Bottom of Sheet) */}
-          <div className="p-4 pb-8 bg-zinc-950 border-t border-zinc-900 shadow-[0_-10px_20px_rgba(0,0,0,0.4)]">
+          <div
+  onPointerDownCapture={(e) => e.stopPropagation()}
+  onTouchStartCapture={(e) => e.stopPropagation()}
+  className="p-4 pb-8 bg-zinc-950 border-t border-zinc-900 shadow-[0_-10px_20px_rgba(0,0,0,0.4)] relative z-20"
+>
             {replyTo && (
               <div className="mb-3 px-4 py-2.5 bg-blue-500/5 border border-blue-500/10 rounded-2xl flex items-center justify-between animate-in slide-in-from-bottom-2">
                 <p className="text-blue-400 text-[11px] font-black">جاري الرد على <span className="text-white">@{replyTo.userName}</span></p>
