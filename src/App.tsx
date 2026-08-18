@@ -2982,7 +2982,7 @@ function CommentsComponent({
                   className="flex-1 bg-transparent border-none text-white text-[14px] outline-none resize-none py-3 scrollbar-hide font-medium max-h-32 disabled:opacity-55"
                 />
                 
-<<button
+<button
   type="button"
   onPointerDown={(e) => {
     e.stopPropagation();
