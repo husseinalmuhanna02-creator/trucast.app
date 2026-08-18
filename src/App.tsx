@@ -2172,10 +2172,10 @@ function CommentsComponent({
 
 const activeUser = currentUser || auth?.currentUser;
 
-if (!activeUser) {
-  alert("تنبيه: غير مسجل الدخول!");
+if (!activeUser || !activeUser.uid) {
+  alert("تنبيه: تعذر جلب بيانات الحساب، يرجى إعادة تسجيل الدخول!");
   return;
-}
+  }
 
 if (!postId) {
   alert("تنبيه: معرف الريل غير متاح (postId فارغ)");
@@ -2222,22 +2222,22 @@ if (!postId) {
     });
 
         try {
-      await logActivity(currentUser.uid, 'comment_post', `علق على ${collectionPath === 'reels' ? 'منشور' : 'فيديو ريلز'}: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
+      await logActivity(activeUser.uid, 'comment_post', `علق على ${collectionPath === 'reels' ? 'فيديو ريلز' : 'منشور'}: "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`);
     } catch (logErr) {
       console.warn("Log activity non-fatal error:", logErr);
     }
 
-    if (postOwnerId && typeof postOwnerId === 'string' && postOwnerId.trim() !== '' && postOwnerId !== currentUser.uid) {
+    if (postOwnerId && typeof postOwnerId === 'string' && postOwnerId.trim() !== '' && postOwnerId !== activeUser.uid) {
       try {
         const notifRef = doc(collection(db, "users", postOwnerId, "notifications"));
         await setDoc(notifRef, {
-          title: collectionPath === 'reels' ? "تعليق جديد" : "تعليق جديد على ريلز 🎬",
-          body: `${currentUser.displayName || "مستخدم"}: علق "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`,
+          title: collectionPath === 'reels' ? "تعليق جديد على ريلز 🎬" : "تعليق جديد",
+          body: `${activeUser.displayName || "مستخدم"}: علق "${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}"`,
           type: "comment",
           postId: postId,
-          senderId: currentUser.uid,
-          senderName: currentUser.displayName || "مستخدم",
-          senderPhoto: currentUser.photoURL || "",
+          senderId: activeUser.uid,
+          senderName: activeUser.displayName || "مستخدم",
+          senderPhoto: activeUser.photoURL || "",
           read: false,
           createdAt: serverTimestamp()
         });
