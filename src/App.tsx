@@ -18809,7 +18809,9 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
                   : 'text-white group-hover:text-red-500'
               }`} 
             />
-            <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{likesCount}</span>
+          <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">
+            {reel?.likesCount || reel?.likes?.length || 0}
+          </span>
           </button>
 
 <button
