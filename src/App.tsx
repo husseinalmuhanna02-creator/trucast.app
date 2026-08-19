@@ -18798,54 +18798,59 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
             />
           </button>
 
-          <button 
-            onClick={handleLike}
-            className="flex flex-col items-center gap-1 group transition-transform active:scale-95 cursor-pointer"
-          >
-            <Heart 
-              className={`w-8 h-8 transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 ${
-                isLiked 
-                  ? 'text-red-600 fill-red-600 scale-110' 
-                  : 'text-white group-hover:text-red-500'
-              }`} 
-            />
-            <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{likesCount}</span>
-          </button>
+        {/* 1. زر الإعجاب */}
+        <button
+          onClick={handleLike}
+          className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
+        >
+          <Heart
+            className={`w-8 h-8 transition-all duration-300 filter drop-shadow-md ${
+              isLiked
+                ? 'text-red-600 fill-red-600 scale-110'
+                : 'text-white group-hover:text-red-500'
+            }`}
+          />
+          <span className="text-[10px] text-white font-black drop-shadow-md select-none">
+            {reel?.likesCount || reel?.likes?.length || 0}
+          </span>
+        </button>
 
-        {/* 1. زر التعليقات */}
+        {/* 2. زر التعليقات */}
         <button
           onClick={() => setShowComments(true)}
           className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
         >
           <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel ? (reel.commentsCount || reel.comments?.length || 0) : 0}
+            {reel?.commentsCount || reel?.commentCount || reel?.comments?.length || 0}
           </span>
         </button>
 
-        {/* 2. زر المشاركة */}
+        {/* 3. زر المشاركة */}
         <button
           onClick={() => setShowShareSheet(true)}
           className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
         >
           <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel ? (reel.sharesCount || reel.shares?.length || 0) : 0}
+            {reel?.sharesCount || reel?.shareCount || reel?.shares?.length || 0}
           </span>
         </button>
 
-        {/* 3. زر الحفظ */}
+        {/* 4. زر الحفظ */}
         <button
           onClick={() => setShowSaveModal(true)}
           className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
         >
           <Bookmark
             className={`w-8 h-8 transition-all duration-300 filter drop-shadow-md ${
-              isBookmarked ? 'text-yellow-500 fill-yellow-500 scale-110' : 'text-white group-hover:text-yellow-400'
+              isBookmarked
+                ? 'text-yellow-500 fill-yellow-500 scale-110'
+                : 'text-white group-hover:text-yellow-400'
             }`}
           />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel ? (reel.savesCount || reel.bookmarksCount || reel.saves?.length || 0) : 0}
+            {reel?.savesCount || reel?.saveCount || reel?.bookmarksCount || reel?.saves?.length || 0}
           </span>
         </button>
         </div>
