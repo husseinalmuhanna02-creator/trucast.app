@@ -18812,39 +18812,41 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
             <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{likesCount}</span>
           </button>
 
-          <button 
-            onClick={() => setShowComments(true)}
-            className="flex flex-col items-center gap-1 group transition-transform active:scale-95 cursor-pointer"
-          >
-            <MessageCircle 
-              className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 group-hover:text-blue-500" 
-            />
-            <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{t("التعليقات")}</span>
-          </button>
+          <button
+  onClick={() => setShowComments(true)}
+  className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
+>
+  <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
+  <span className="text-[10px] text-white font-black drop-shadow-md select-none">
+    {reel?.commentsCount || reel?.comments?.length || 0}
+  </span>
+</button>
 
-          <button 
-            onClick={() => setShowShareSheet(true)}
-            className="flex flex-col items-center gap-1 group transition-transform active:scale-95 cursor-pointer"
-          >
-            <Share2 
-              className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 group-hover:text-emerald-500" 
-            />
-            <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{t("شارك")}</span>
-          </button>
+<button
+  onClick={() => setShowShareSheet(true)}
+  className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
+>
+  <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
+  <span className="text-[10px] text-white font-black drop-shadow-md select-none">
+    {reel?.sharesCount || reel?.shares || 0}
+  </span>
+</button>
 
-          <button 
-            onClick={() => setShowSaveModal(true)}
-            className="flex flex-col items-center gap-1 group transition-transform active:scale-95 cursor-pointer"
-          >
-            <Bookmark 
-              className={`w-8 h-8 transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 ${
-                isBookmarked 
-                  ? 'text-yellow-500 fill-yellow-500 scale-110' 
-                  : 'text-white group-hover:text-yellow-500'
-              }`} 
-            />
-            <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{t("حفظ")}</span>
-          </button>
+<button
+  onClick={() => setShowSaveModal(true)}
+  className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
+>
+  <Bookmark
+    className={`w-8 h-8 transition-all duration-300 filter drop-shadow-md ${
+      isBookmarked
+        ? 'text-yellow-500 fill-yellow-500 scale-110'
+        : 'text-white group-hover:text-yellow-400'
+    }`}
+  />
+  <span className="text-[10px] text-white font-black drop-shadow-md select-none">
+    {reel?.savesCount || reel?.bookmarksCount || reel?.saves?.length || 0}
+  </span>
+</button>
         </div>
 
         {/* Save to List Modal */}
