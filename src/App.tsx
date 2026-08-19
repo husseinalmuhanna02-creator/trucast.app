@@ -18812,13 +18812,13 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
             <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">{likesCount}</span>
           </button>
 
-          <button
+<button
   onClick={() => setShowComments(true)}
   className="flex flex-col items-center gap-1 group transition-transform active:scale-90"
 >
   <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {reel?.commentsCount || reel?.comments?.length || 0}
+    {typeof reel !== 'undefined' ? (reel?.commentsCount ?? reel?.comments?.length ?? 0) : 0}
   </span>
 </button>
 
@@ -18828,7 +18828,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {reel?.sharesCount || reel?.shares || 0}
+    {typeof reel !== 'undefined' ? (reel?.sharesCount ?? (Array.isArray(reel?.shares) ? reel.shares.length : 0)) : 0}
   </span>
 </button>
 
@@ -18838,13 +18838,13 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <Bookmark
     className={`w-8 h-8 transition-all duration-300 filter drop-shadow-md ${
-      isBookmarked
+      typeof isBookmarked !== 'undefined' && isBookmarked
         ? 'text-yellow-500 fill-yellow-500 scale-110'
         : 'text-white group-hover:text-yellow-400'
     }`}
   />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {reel?.savesCount || reel?.bookmarksCount || reel?.saves?.length || 0}
+    {typeof reel !== 'undefined' ? (reel?.savesCount ?? reel?.bookmarksCount ?? (Array.isArray(reel?.saves) ? reel.saves.length : 0)) : 0}
   </span>
 </button>
         </div>
