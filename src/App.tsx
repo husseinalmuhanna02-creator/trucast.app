@@ -18819,7 +18819,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
         >
           <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel?.commentCount ?? reel?.commentsCount ?? (Array.isArray(reel?.comments) ? reel.comments.length : reel?.comments) ?? 0}
+            {reel ? (reel.commentsCount || reel.comments?.length || 0) : 0}
           </span>
         </button>
 
@@ -18830,7 +18830,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
         >
           <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel?.shareCount ?? reel?.sharesCount ?? (Array.isArray(reel?.shares) ? reel.shares.length : reel?.shares) ?? 0}
+            {reel ? (reel.sharesCount || reel.shares?.length || 0) : 0}
           </span>
         </button>
 
@@ -18841,13 +18841,11 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
         >
           <Bookmark
             className={`w-8 h-8 transition-all duration-300 filter drop-shadow-md ${
-              typeof isBookmarked !== 'undefined' && isBookmarked
-                ? 'text-yellow-500 fill-yellow-500 scale-110'
-                : 'text-white group-hover:text-yellow-400'
+              isBookmarked ? 'text-yellow-500 fill-yellow-500 scale-110' : 'text-white group-hover:text-yellow-400'
             }`}
           />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-            {reel?.saveCount ?? reel?.savesCount ?? reel?.bookmarkCount ?? reel?.bookmarksCount ?? (Array.isArray(reel?.saves) ? reel.saves.length : (Array.isArray(reel?.bookmarks) ? reel.bookmarks.length : reel?.saves)) ?? 0}
+            {reel ? (reel.savesCount || reel.bookmarksCount || reel.saves?.length || 0) : 0}
           </span>
         </button>
         </div>
