@@ -18818,7 +18818,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {typeof reel !== 'undefined' ? (reel?.commentsCount ?? reel?.comments?.length ?? 0) : 0}
+    {reel?.commentsCount || reel?.commentCount || reel?.comments?.length || 0}
   </span>
 </button>
 
@@ -18828,7 +18828,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {typeof reel !== 'undefined' ? (reel?.sharesCount ?? (Array.isArray(reel?.shares) ? reel.shares.length : 0)) : 0}
+    {reel?.sharesCount || reel?.shareCount || reel?.shares?.length || 0}
   </span>
 </button>
 
@@ -18844,7 +18844,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
     }`}
   />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {typeof reel !== 'undefined' ? (reel?.savesCount ?? reel?.bookmarksCount ?? (Array.isArray(reel?.saves) ? reel.saves.length : 0)) : 0}
+    {reel?.savesCount || reel?.saveCount || reel?.bookmarksCount || reel?.saves?.length || 0}
   </span>
 </button>
         </div>
