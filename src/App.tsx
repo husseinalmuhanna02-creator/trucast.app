@@ -204,6 +204,31 @@ import ReactPlayer from 'react-player';
 import { getApiUrl } from './config';
 const Player = ReactPlayer as any;
 
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: '#ff4d4d', backgroundColor: '#111', height: '100vh', overflow: 'auto', zIndex: 999999, position: 'fixed', inset: 0 }}>
+          <h2 style={{ color: '#fff', fontSize: '18px' }}>⚠️ تفاصيل الخطأ المسبب للكراش:</h2>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#ff6b6b', fontSize: '13px', marginTop: '10px' }}>
+            {this.state.error?.toString()}
+          </pre>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#888', fontSize: '11px', marginTop: '10px' }}>
+            {this.state.error?.stack}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // --- Firestore Error Handling ---
 enum OperationType {
   CREATE = 'create',
