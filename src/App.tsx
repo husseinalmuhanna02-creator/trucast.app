@@ -18804,7 +18804,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
           >
             <Heart 
               className={`w-8 h-8 transition-all duration-300 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 ${
-                isLiked 
+                typeof isLiked !== 'undefined' && isLiked
                   ? 'text-red-600 fill-red-600 scale-110' 
                   : 'text-white group-hover:text-red-500'
               }`} 
