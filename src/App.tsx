@@ -28917,7 +28917,7 @@ function ForwardChatList({ onSelect, currentUser }: { onSelect: (chatId: string)
 
 
 
-export default function App() {
+export function App() {
   const { t, language } = useLanguage();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [reconnectableStream, setReconnectableStream] = useState<any | null>(null);
