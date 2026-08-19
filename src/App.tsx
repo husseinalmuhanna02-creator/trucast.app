@@ -18853,9 +18853,6 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
             {reel?.savesCount || reel?.saveCount || reel?.bookmarksCount || reel?.saves?.length || 0}
           </span>
         </button>
-            {reel?.savesCount || reel?.saveCount || reel?.bookmarksCount || reel?.saves?.length || 0}
-          </span>
-        </button>
         </div>
 
         {/* Save to List Modal */}
