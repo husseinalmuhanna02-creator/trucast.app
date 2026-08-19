@@ -31659,3 +31659,11 @@ const handleTwitterLogin = async () => {
     </div>
   );
 }
+
+  export default function AppWrapped() {
+  return (
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+                                  }
