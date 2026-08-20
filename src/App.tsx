@@ -13,6 +13,7 @@ import { createPortal } from 'react-dom';
 import { useLanguage } from './localization';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
+import { Share } from '@capacitor/share';
 import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { 
   BarChart, 
