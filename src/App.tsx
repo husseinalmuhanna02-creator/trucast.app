@@ -19073,24 +19073,36 @@ useEffect(() => {
 
                   <button
   onClick={async () => {
-    setShowShareSheet(false);
-const shareUrl = `https://trucast-app-xx9e-sigma.vercel.app/?reel=${currentReel?.id}`;
+  setShowShareSheet(false);
+  const shareUrl = `https://trucast-app-xx9e-sigma.vercel.app/?reel=${currentReel?.id}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'TruCast Reel',
-          text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
-          url: shareUrl,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
+  try {
+    // 1. تجربة فتح مشاركة النظام الأصلية لتطبيق APK
+    if (Capacitor.isNativePlatform()) {
+      await Share.share({
+        title: 'TruCast',
+        text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
+        url: shareUrl,
+      });
+    } 
+    // 2. تجربة مشاركة متصفح كروم العادي
+    else if (navigator.share) {
+      await navigator.share({
+        title: 'TruCast',
+        text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
+        url: shareUrl,
+      });
+    } 
+    // 3. الخيار الاحتياطي للنسخ
+    else {
       await navigator.clipboard.writeText(shareUrl);
       alert("تم نسخ رابط المقطع بنجاح!");
     }
-  }}
+  } catch (err) {
+    console.log('تم إلغاء المشاركة أو حدث خطأ:', err);
+  }
+}}
+
   className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition-colors"
 >
   <div className="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-full flex items-center justify-center">
