@@ -18835,7 +18835,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
               }`} 
             />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">
-            {currentReel?.likesCount || currentReel?.likes?.length || 0}
+            {currentReel?.likesCount ?? currentReel?.likes?.length ?? 0}
           </span>
           </button>
 
@@ -18845,7 +18845,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {Number(currentReel?.commentsCount || 0)}
+    {currentReel?.commentsCount ?? currentReel?.comments?.length ?? 0}
   </span>
 </button>
 
@@ -18855,7 +18855,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
 >
   <Share2 className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {Number(currentReel?.sharesCount || 0)}
+    {currentReel?.sharesCount ?? currentReel?.shares?.length ?? currentReel?.shares ?? 0}
   </span>
 </button>
 
@@ -18871,7 +18871,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
     }`}
   />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-    {Number(currentReel?.savesCount || 0)}
+    {currentReel?.savesCount ?? currentReel?.saves?.length ?? currentReel?.bookmarks?.length ?? 0}
   </span>
 </button>
         </div>
