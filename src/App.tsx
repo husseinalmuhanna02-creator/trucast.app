@@ -18664,11 +18664,6 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
     );
   }
 
-  // 1. تعريف حالات العدادات
-const [likesCount, setLikesCount] = useState<number>(0);
-const [commentsCount, setCommentsCount] = useState<number>(0);
-const [savesCount, setSavesCount] = useState<number>(0);
-
 // 2. الاستماع التلقائي لأعداد المجموعات الفرعية من Firestore
 useEffect(() => {
   if (!currentReel?.id) return;
