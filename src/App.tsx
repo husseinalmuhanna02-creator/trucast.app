@@ -18664,6 +18664,32 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
     );
   }
 
+  // 1. تعريف حالات العدادات
+const [likesCount, setLikesCount] = useState<number>(0);
+const [commentsCount, setCommentsCount] = useState<number>(0);
+const [savesCount, setSavesCount] = useState<number>(0);
+
+// 2. الاستماع التلقائي لأعداد المجموعات الفرعية من Firestore
+useEffect(() => {
+  if (!currentReel?.id) return;
+
+  const unsubComments = onSnapshot(collection(db, "reels", currentReel.id, "comments"), (snap) => {
+    setCommentsCount(snap.size);
+  });
+  const unsubLikes = onSnapshot(collection(db, "reels", currentReel.id, "likes"), (snap) => {
+    setLikesCount(snap.size);
+  });
+  const unsubSaves = onSnapshot(collection(db, "reels", currentReel.id, "saves"), (snap) => {
+    setSavesCount(snap.size);
+  });
+
+  return () => {
+    unsubComments();
+    unsubLikes();
+    unsubSaves();
+  };
+}, [currentReel?.id]);
+  
   if (reels.length === 0) {
     return (
       <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black text-zinc-500 font-bold p-6 text-center z-0">
