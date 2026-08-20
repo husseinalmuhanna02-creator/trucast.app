@@ -19040,7 +19040,12 @@ useEffect(() => {
                 {/* Core Sharing Actions Row */}
                 <div className="grid grid-cols-4 gap-2 text-center">
                   <button 
-                    onClick={handleShareToStory}
+                    onClick={() => {
+  setShowShareSheet(false);
+  setStoryVideoUrl?.(currentReel?.videoUrl);
+  setShowCreateStoryModal?.(true);
+}}
+                                                
                     className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-900 border border-white/5 hover:border-emerald-500/20 transition-all group active:scale-95 cursor-pointer"
                   >
                     <div className="w-11 h-11 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center shadow-lg text-white">
