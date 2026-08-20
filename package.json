@@ -12,6 +12,7 @@
   },
     "dependencies": {
     "@capacitor/browser": "^6.0.0",
+    "@capacitor/share": "^6.0.0",
     "@google/genai": "^1.50.1",
     "@google/generative-ai": "^0.24.1",
     "@stream-io/video-react-sdk": "^1.39.1",
