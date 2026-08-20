@@ -18861,7 +18861,7 @@ useEffect(() => {
               }`} 
             />
           <span className="text-[10px] text-white font-black drop-shadow-md select-none mt-1">
-{typeof currentReel?.likes === 'number' ? currentReel.likes : 0}
+{likesCount}
           </span>
           </button>
 
@@ -18871,7 +18871,7 @@ useEffect(() => {
 >
   <MessageCircle className="w-8 h-8 text-white transition-all duration-300 filter drop-shadow-md" />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-{currentReel?.commentsCount ?? currentReel?.comments?.length ?? 0}
+{commentsCount}
   </span>
 </button>
 
@@ -18897,7 +18897,7 @@ useEffect(() => {
     }`}
   />
   <span className="text-[10px] text-white font-black drop-shadow-md select-none">
-{currentReel?.savesCount ?? currentReel?.saves ?? 0}
+{savesCount}
   </span>
 </button>
         </div>
