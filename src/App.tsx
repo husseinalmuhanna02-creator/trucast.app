@@ -18652,19 +18652,7 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
     }
   };
 
-  if (loading) {
-    return (
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black z-0">
-        <div className="w-full h-full flex flex-col justify-end p-10 space-y-6 animate-pulse bg-black">
-          <div className="w-16 h-16 bg-zinc-800 rounded-full" />
-          <div className="w-48 h-6 bg-zinc-800 rounded-lg" />
-          <div className="w-full h-20 bg-zinc-800 rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
-
-// 2. الاستماع التلقائي لأعداد المجموعات الفرعية من Firestore
+  // الاستماع التلقائي لأعداد المجموعات الفرعية من Firestore
 useEffect(() => {
   if (!currentReel?.id) return;
 
@@ -18684,6 +18672,18 @@ useEffect(() => {
     unsubSaves();
   };
 }, [currentReel?.id]);
+  
+  if (loading) {
+    return (
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black z-0">
+        <div className="w-full h-full flex flex-col justify-end p-10 space-y-6 animate-pulse bg-black">
+          <div className="w-16 h-16 bg-zinc-800 rounded-full" />
+          <div className="w-48 h-6 bg-zinc-800 rounded-lg" />
+          <div className="w-full h-20 bg-zinc-800 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
   
   if (reels.length === 0) {
     return (
