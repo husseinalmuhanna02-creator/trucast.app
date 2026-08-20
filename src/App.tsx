@@ -18346,22 +18346,33 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
   }, [currentReel?.userId]);
 
   useEffect(() => {
-    if (!showShareSheet || !currentUser) return;
-    setLoadingShareChats(true);
-    const q = query(
-      collection(db, 'chats'), 
-      where('participants', 'array-contains', currentUser.uid)
-    );
-    const unsub = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setShareSheetChats(list);
-      setLoadingShareChats(false);
-    }, (err) => {
-      console.error("Error loading share chats:", err);
-      setLoadingShareChats(false);
-    });
-    return unsub;
-  }, [showShareSheet, currentUser]);
+  if (!showShareSheet || !currentUser) return;
+  setLoadingShareChats(true);
+
+  // التأكد من جلب معرّف المستخدم سواء كان id أو uid
+  const userId = currentUser.uid || currentUser.id;
+  if (!userId) {
+    setLoadingShareChats(false);
+    return;
+  }
+
+  const q = query(
+    collection(db, 'chats'),
+    where('participants', 'array-contains', userId)
+  );
+
+  const unsub = onSnapshot(q, (snapshot) => {
+    const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setShareSheetChats(list);
+    setLoadingShareChats(false);
+  }, (err) => {
+    console.error("Error loading share chats:", err);
+    setLoadingShareChats(false);
+  });
+
+  return unsub;
+}, [showShareSheet, currentUser]);
+
 
   const handleShareToStory = async () => {
     if (!currentUser || !currentReel) return;
