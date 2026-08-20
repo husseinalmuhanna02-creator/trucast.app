@@ -18655,6 +18655,8 @@ function ReelsScreen({ onNavigateToUser, currentUser, onBack }: { onNavigateToUs
   const [commentsCount, setCommentsCount] = useState<number>(0);
 const [savesCount, setSavesCount] = useState<number>(0);
   
+  const [showCreateStoryModal, setShowCreateStoryModal] = useState<boolean>(false);
+const [storyVideoUrl, setStoryVideoUrl] = useState<string | undefined>("");
   // الاستماع التلقائي لأعداد المجموعات الفرعية من Firestore
 useEffect(() => {
   if (!currentReel?.id) return;
