@@ -19068,22 +19068,33 @@ useEffect(() => {
                     <span className="text-[10px] font-black text-zinc-300">دويتو ثنائي</span>
                   </button>
 
-                  <button 
-                    onClick={handleExternalShare}
-                    className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-900 border border-white/5 hover:border-amber-500/20 transition-all group active:scale-95 cursor-pointer"
-                  >
-                    <div className="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-full flex items-center justify-center shadow-lg text-white">
-                      <Share2 className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-black text-zinc-300">مشاركة أخرى</span>
-                  </button>
+                  <button
+  onClick={async () => {
+    setShowShareSheet(false);
+    const shareUrl = `${window.location.origin}/?reel=${currentReel?.id}`;
 
-                  <div className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/10 border border-dashed border-zinc-800 opacity-60">
-                    <div className="w-11 h-11 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500">
-                      <Check className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-black text-zinc-500">المزيد قريباً</span>
-                  </div>
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'TruCast Reel',
+          text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("تم نسخ رابط المقطع بنجاح!");
+    }
+  }}
+  className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition-colors"
+>
+  <div className="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-full flex items-center justify-center">
+    <Share2 className="w-5 h-5 text-white" />
+  </div>
+  <span className="text-[10px] font-black text-zinc-300">مشاركة أخرى</span>
+</button>
                 </div>
 
                 {/* Send via DM Section (إرسال كرسالة خاصة) */}
