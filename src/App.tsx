@@ -19073,7 +19073,7 @@ useEffect(() => {
                   <button
   onClick={async () => {
     setShowShareSheet(false);
-    const shareUrl = `${window.location.origin}/?reel=${currentReel?.id}`;
+const shareUrl = `https://trucast-app-xx9e-sigma.vercel.app/?reel=${currentReel?.id}`;
 
     if (navigator.share) {
       try {
