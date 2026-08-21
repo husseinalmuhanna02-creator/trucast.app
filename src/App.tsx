@@ -19107,14 +19107,13 @@ useEffect(() => {
 
 <button
   type="button"
-  className="relative z-[999] flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer"
+  className="relative z-10 flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer"
   onClick={(e) => {
     e.preventDefault();
     e.stopPropagation();
-    alert("تم الضغط بنجاح!");
     const dmElement = document.getElementById('dm-section');
     if (dmElement) {
-      dmElement.scrollIntoView({ behavior: 'smooth' });
+      dmElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }}
 >
