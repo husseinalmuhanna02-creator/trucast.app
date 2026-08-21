@@ -19107,13 +19107,18 @@ useEffect(() => {
 
 <button
   type="button"
-  className="relative z-10 flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer"
+  className="relative z-10 flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer active:scale-95"
   onClick={(e) => {
     e.preventDefault();
     e.stopPropagation();
     const dmElement = document.getElementById('dm-section');
     if (dmElement) {
       dmElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // إضافة توهج أزرق مؤقت لإظهار التفاعل للمستخدم
+      dmElement.classList.add('ring-2', 'ring-blue-500', 'rounded-xl', 'transition-all', 'duration-300');
+      setTimeout(() => {
+        dmElement.classList.remove('ring-2', 'ring-blue-500');
+      }, 1200);
     }
   }}
 >
