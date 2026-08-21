@@ -19082,53 +19082,36 @@ useEffect(() => {
                     <span className="text-[10px] font-black text-zinc-300">دويتو ثنائي</span>
                   </button>
 
-                  <button
+<button 
   onClick={async () => {
-  setShowShareSheet(false);
-  const shareUrl = `https://trucast-app-xx9e-sigma.vercel.app/?reel=${currentReel?.id}`;
-
-  try {
-    // 1. تجربة فتح مشاركة النظام الأصلية لتطبيق APK
-    if (Capacitor.isNativePlatform()) {
-      await Share.share({
-        title: 'TruCast',
-        text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
-        url: shareUrl,
-      });
-    } 
-    // 2. تجربة مشاركة متصفح كروم العادي
-    else if (navigator.share) {
-      await navigator.share({
-        title: 'TruCast',
-        text: currentReel?.caption || 'شاهد هذا المقطع على TruCast',
-        url: shareUrl,
-      });
-    } 
-    // 3. الخيار الاحتياطي للنسخ
-    else {
-      await navigator.clipboard.writeText(shareUrl);
-      alert("تم نسخ رابط المقطع بنجاح!");
-    }
-  } catch (err) {
-    console.log('تم إلغاء المشاركة أو حدث خطأ:', err);
-  }
-}}
+    setShowShareSheet(false);
+    const shareUrl = `https://trucast-app-xx9e-sigma.vercel.app/?reel=${currentReel?.id}`;
+    try {
+      if (typeof Capacitor !== 'undefined' && Capacitor?.isNativePlatform()) {
+        await Share.share({ title: 'TruCast', text: currentReel?.caption || 'شاهد هذا المقطع على TruCast', url: shareUrl });
+      } else if (navigator.share) {
+        await navigator.share({ title: 'TruCast', text: currentReel?.caption || 'شاهد هذا المقطع على TruCast', url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("تم نسخ رابط المقطع بنجاح!");
+      }
+    } catch (err) { console.log('تم إلغاء المشاركة أو حدث خطأ:', err); }
+  }}
+  className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition"
 >
-          <button className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition">
-          <div className="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-full flex items-center justify-center">
-            <Share2 className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-[10px] font-black text-zinc-300">مشاركة أخرى</span>
-        </button>
+  <div className="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-full flex items-center justify-center">
+    <Share2 className="w-5 h-5 text-white" />
+  </div>
+  <span className="text-[10px] font-black text-zinc-300">مشاركة أخرى</span>
+</button>
 
-<button
+<button 
   onClick={() => {
     const dmElement = document.getElementById('dm-section');
     if (dmElement) { dmElement.scrollIntoView({ behavior: 'smooth' }); }
   }}
   className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition"
 >
-  
   <div className="w-11 h-11 bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
     <MessageCircle className="w-5 h-5 text-white" />
   </div>
