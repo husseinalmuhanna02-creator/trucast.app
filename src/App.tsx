@@ -19105,21 +19105,24 @@ useEffect(() => {
   <span className="text-[10px] font-black text-zinc-300">مشاركة أخرى</span>
 </button>
 
-<button 
-  onClick={() => {
+<button
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const dmElement = document.getElementById('dm-section');
     if (dmElement) {
       dmElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      alert("لم يتم العثور على id='dm-section' في الصفحة!");
+      alert("خطأ: لم يتم العثور على id='dm-section'");
     }
   }}
-  className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition"
+  className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer"
 >
-  <div className="w-11 h-11 bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+  <div className="w-11 h-11 bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-full flex items-center justify-center pointer-events-none">
     <MessageCircle className="w-5 h-5 text-white" />
   </div>
-  <span className="text-[10px] font-black text-zinc-300">إرسال خاص</span>
+  <span className="text-[10px] font-black text-zinc-300 pointer-events-none">إرسال خاص</span>
 </button>
 
         </div>
