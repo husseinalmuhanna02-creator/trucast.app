@@ -19053,20 +19053,31 @@ useEffect(() => {
 
                 {/* Core Sharing Actions Row */}
                 <div className="grid grid-cols-4 gap-2 text-center">
-                  <button 
-                    onClick={() => {
-  setShowShareSheet(false);
-  setStoryVideoUrl?.(currentReel?.videoUrl);
-  setShowCreateStoryModal?.(true);
-}}
-                                                
-                    className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-900 border border-white/5 hover:border-emerald-500/20 transition-all group active:scale-95 cursor-pointer"
-                  >
-                    <div className="w-11 h-11 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center shadow-lg text-white">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-black text-zinc-300">نشر بالقصة</span>
-                  </button>
+<button
+  type="button"
+  className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition cursor-pointer active:scale-95"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setShowShareSheet(false);
+
+    if (typeof setShowCreateStoryModal === 'function') {
+      if (typeof setStoryVideoUrl === 'function') {
+        setStoryVideoUrl(currentReel?.videoUrl || currentReel?.video_url || '');
+      }
+      setShowCreateStoryModal(true);
+    } else {
+      alert("خطأ: دالة فتح نافذة القصة (setShowCreateStoryModal) غير معرّفة داخل هذا المكون!");
+    }
+  }}
+>
+  <div className="w-11 h-11 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center pointer-events-none">
+    <Sparkles className="w-5 h-5 text-white" />
+  </div>
+  <span className="text-[10px] font-black text-zinc-300 pointer-events-none">نشر بالقصة</span>
+</button>
+
 
                   <button 
                     onClick={() => {
