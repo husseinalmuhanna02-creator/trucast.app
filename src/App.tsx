@@ -19108,7 +19108,11 @@ useEffect(() => {
 <button 
   onClick={() => {
     const dmElement = document.getElementById('dm-section');
-    if (dmElement) { dmElement.scrollIntoView({ behavior: 'smooth' }); }
+    if (dmElement) {
+      dmElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      alert("لم يتم العثور على id='dm-section' في الصفحة!");
+    }
   }}
   className="flex flex-col items-center gap-2 p-3.5 rounded-2xl bg-zinc-900/40 hover:bg-zinc-800 transition"
 >
