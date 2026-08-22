@@ -19060,38 +19060,23 @@ useEffect(() => {
     e.preventDefault();
     e.stopPropagation();
 
-    try {
-      const keys = currentReel ? Object.keys(currentReel).join(', ') : 'غير موجود (null)';
-      const hasModalFunc = typeof setShowCreateStoryModal === 'function';
-      const hasUrlFunc = typeof setStoryVideoUrl === 'function';
-      
-      const targetVideoUrl = 
-        currentReel?.videoUrl || 
-        currentReel?.video_url || 
-        currentReel?.url || 
-        currentReel?.video || 
-        currentReel?.mediaUrl || 
-        currentReel?.src || 
-        'لم يتم العثور على رابط';
+    const targetVideoUrl = currentReel?.videoUrl || currentReel?.video_url;
 
-      alert(
-        `📊 تقرير تشخيص نشر القصة:\n\n` +
-        `1. أسماء عناصر المقطع: [${keys}]\n\n` +
-        `2. الرابط المستخرج: ${targetVideoUrl}\n\n` +
-        `3. دالة فتح النافذة: ${hasModalFunc ? '✅ موجودة' : '❌ مفقودة'}\n` +
-        `4. دالة حفظ الرابط: ${hasUrlFunc ? '✅ موجودة' : '❌ مفقودة'}`
-      );
-
-      if (hasUrlFunc && targetVideoUrl !== 'لم يتم العثور على رابط') {
+    if (targetVideoUrl) {
+      // 1. تمرير رابط الفيديو إلى حالة القصة
+      if (typeof setStoryVideoUrl === 'function') {
         setStoryVideoUrl(targetVideoUrl);
       }
-      if (hasModalFunc) {
-        setShowCreateStoryModal(true);
-      }
+
+      // 2. إغلاق شيت المشاركة
       setShowShareSheet(false);
 
-    } catch (err: any) {
-      alert(`⚠️ خطأ أثناء التشغيل: ${err?.message || err}`);
+      // 3. فتح نافذة تحرير وإنشاء القصة
+      setTimeout(() => {
+        if (typeof setShowCreateStoryModal === 'function') {
+          setShowCreateStoryModal(true);
+        }
+      }, 50);
     }
   }}
 >
@@ -19100,8 +19085,6 @@ useEffect(() => {
   </div>
   <span className="text-[10px] font-black text-zinc-300 pointer-events-none">نشر بالقصة</span>
 </button>
-
-
 
                   <button 
                     onClick={() => {
