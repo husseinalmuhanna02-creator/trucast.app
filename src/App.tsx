@@ -19063,20 +19063,20 @@ useEffect(() => {
     const targetVideoUrl = currentReel?.videoUrl || currentReel?.video_url;
 
     if (targetVideoUrl) {
-      // 1. تمرير رابط الفيديو إلى حالة القصة
+      // 1. حفظ رابط الفيديو
       if (typeof setStoryVideoUrl === 'function') {
         setStoryVideoUrl(targetVideoUrl);
       }
+      
+      // 2. فتح نافذة إنشاء القصة أولاً
+      if (typeof setShowCreateStoryModal === 'function') {
+        setShowCreateStoryModal(true);
+      }
 
-      // 2. إغلاق شيت المشاركة
-      setShowShareSheet(false);
-
-      // 3. فتح نافذة تحرير وإنشاء القصة
+      // 3. إغلاق قائمة المشاركة بعد ظهور نافذة القصة
       setTimeout(() => {
-        if (typeof setShowCreateStoryModal === 'function') {
-          setShowCreateStoryModal(true);
-        }
-      }, 50);
+        setShowShareSheet(false);
+      }, 300);
     }
   }}
 >
