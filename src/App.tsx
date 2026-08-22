@@ -19060,29 +19060,38 @@ useEffect(() => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 1. فحص واستخراج رابط الفيديو بكافة المسميات المحتملة
-    const targetVideoUrl = 
-      currentReel?.videoUrl || 
-      currentReel?.video_url || 
-      currentReel?.url || 
-      currentReel?.video || 
-      currentReel?.mediaUrl || 
-      currentReel?.src;
+    try {
+      const keys = currentReel ? Object.keys(currentReel).join(', ') : 'غير موجود (null)';
+      const hasModalFunc = typeof setShowCreateStoryModal === 'function';
+      const hasUrlFunc = typeof setStoryVideoUrl === 'function';
+      
+      const targetVideoUrl = 
+        currentReel?.videoUrl || 
+        currentReel?.video_url || 
+        currentReel?.url || 
+        currentReel?.video || 
+        currentReel?.mediaUrl || 
+        currentReel?.src || 
+        'لم يتم العثور على رابط';
 
-    if (!targetVideoUrl) {
-      alert("تنبيه: لم يتم العثور على رابط فيديو صالح داخل المقطع الحالي (currentReel)!");
-      return;
-    }
+      alert(
+        `📊 تقرير تشخيص نشر القصة:\n\n` +
+        `1. أسماء عناصر المقطع: [${keys}]\n\n` +
+        `2. الرابط المستخرج: ${targetVideoUrl}\n\n` +
+        `3. دالة فتح النافذة: ${hasModalFunc ? '✅ موجودة' : '❌ مفقودة'}\n` +
+        `4. دالة حفظ الرابط: ${hasUrlFunc ? '✅ موجودة' : '❌ مفقودة'}`
+      );
 
-    // 2. إغلاق قائمة المشاركة
-    setShowShareSheet(false);
+      if (hasUrlFunc && targetVideoUrl !== 'لم يتم العثور على رابط') {
+        setStoryVideoUrl(targetVideoUrl);
+      }
+      if (hasModalFunc) {
+        setShowCreateStoryModal(true);
+      }
+      setShowShareSheet(false);
 
-    // 3. تمرير الرابط وفتح نافذة إنشاء القصة
-    if (typeof setStoryVideoUrl === 'function') {
-      setStoryVideoUrl(targetVideoUrl);
-    }
-    if (typeof setShowCreateStoryModal === 'function') {
-      setShowCreateStoryModal(true);
+    } catch (err: any) {
+      alert(`⚠️ خطأ أثناء التشغيل: ${err?.message || err}`);
     }
   }}
 >
