@@ -19059,16 +19059,30 @@ useEffect(() => {
   onClick={(e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
+    // 1. فحص واستخراج رابط الفيديو بكافة المسميات المحتملة
+    const targetVideoUrl = 
+      currentReel?.videoUrl || 
+      currentReel?.video_url || 
+      currentReel?.url || 
+      currentReel?.video || 
+      currentReel?.mediaUrl || 
+      currentReel?.src;
+
+    if (!targetVideoUrl) {
+      alert("تنبيه: لم يتم العثور على رابط فيديو صالح داخل المقطع الحالي (currentReel)!");
+      return;
+    }
+
+    // 2. إغلاق قائمة المشاركة
     setShowShareSheet(false);
 
+    // 3. تمرير الرابط وفتح نافذة إنشاء القصة
+    if (typeof setStoryVideoUrl === 'function') {
+      setStoryVideoUrl(targetVideoUrl);
+    }
     if (typeof setShowCreateStoryModal === 'function') {
-      if (typeof setStoryVideoUrl === 'function') {
-        setStoryVideoUrl(currentReel?.videoUrl || currentReel?.video_url || '');
-      }
       setShowCreateStoryModal(true);
-    } else {
-      alert("خطأ: دالة فتح نافذة القصة (setShowCreateStoryModal) غير معرّفة داخل هذا المكون!");
     }
   }}
 >
@@ -19077,6 +19091,7 @@ useEffect(() => {
   </div>
   <span className="text-[10px] font-black text-zinc-300 pointer-events-none">نشر بالقصة</span>
 </button>
+
 
 
                   <button 
