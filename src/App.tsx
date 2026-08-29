@@ -167,7 +167,6 @@ import { LiveStreamScreen as StreamLiveStreamScreen, useLiveStreamMedia } from '
 import { TruCastLogo } from './components/TruCastLogo';
 import { auth, db, googleProvider } from './firebase';
 import { 
-  signInWithRedirect, 
   onAuthStateChanged, 
   signOut,
   User as FirebaseUser,
@@ -30607,7 +30606,7 @@ const login = async () => {
 
     if (Capacitor.isNativePlatform()) {
       // في بيئة تطبيق الأندرويد/الهاتف
-      await signInWithRedirect(auth, provider);
+      await (auth, provider);
     } else {
       // في بيئة المتصفح العادي
       await signInWithPopup(auth, provider);
@@ -30625,7 +30624,7 @@ const handleFacebookLogin = async () => {
   try {
     setLoading(true);
     const provider = new FacebookAuthProvider();
-    await signInWithRedirect(auth, provider);
+    await (auth, provider);
   } catch (error: any) {
     console.error("❌ Facebook Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/facebook');
@@ -30638,7 +30637,7 @@ const handleTwitterLogin = async () => {
   try {
     setLoading(true);
     const provider = new TwitterAuthProvider();
-    await signInWithRedirect(auth, provider);
+    await (auth, provider);
   } catch (error: any) {
     console.error("❌ Twitter Login failed:", error);
     handleFirestoreError(error, OperationType.GET, 'auth/twitter');
