@@ -14,8 +14,6 @@ jobs:
 
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
-      - run: npm install @capacitor/core@^6.0.0 @capacitor/android@^6.0.0 @capacitor/cli@^6.0.0 @capacitor/browser@^6.0.0 --legacy-peer-deps
-      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu @capacitor/assets --legacy-peer-deps
       - run: npx vite build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
