@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, Loader2, Sparkles, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../localization';
 
 interface GifPickerProps {
   onSelect: (gifUrl: string) => void;
@@ -33,7 +34,174 @@ const POPULAR_TAGS = [
   { label: "سلام", query: "hello wave" },
 ];
 
+const FALLBACK_GIFS: { id: string; title: string; tags: string[]; url: string }[] = [
+  // Laughing
+  {
+    id: "laugh_1",
+    title: "ضحك - Minions Laughing",
+    tags: ["funny", "laughing", "ضحك", "كوميدي", "مضحك"],
+    url: "https://media.giphy.com/media/26n6R5HO1IIeGC1Ry/giphy.gif"
+  },
+  {
+    id: "laugh_2",
+    title: "ضحك - Laughing Out Loud",
+    tags: ["funny", "laughing", "ضحك", "كوميدي", "مضحك"],
+    url: "https://media.giphy.com/media/l0Exd9M7P9O49R11K/giphy.gif"
+  },
+  {
+    id: "laugh_3",
+    title: "ضحك - Office Laugh",
+    tags: ["funny", "laughing", "ضحك", "كوميدي", "مضحك"],
+    url: "https://media.giphy.com/media/l3q2zVr6cu95nF6O4/giphy.gif"
+  },
+  // Excited
+  {
+    id: "excited_1",
+    title: "متحمس - Jonah Hill Excited",
+    tags: ["excited", "excitement", "متحمس", "حماس"],
+    url: "https://media.giphy.com/media/5Govl0XfK3DoI/giphy.gif"
+  },
+  {
+    id: "excited_2",
+    title: "متحمس - Dancing Excited",
+    tags: ["excited", "excitement", "متحمس", "حماس"],
+    url: "https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"
+  },
+  // Thank you
+  {
+    id: "thank_you_1",
+    title: "شكراً - Thank You So Much",
+    tags: ["thank you", "thanks", "شكرا", "شكراً", "تقدير"],
+    url: "https://media.giphy.com/media/3o7qDQ4kcSD1PLM3BK/giphy.gif"
+  },
+  {
+    id: "thank_you_2",
+    title: "شكراً - Minion Thanks",
+    tags: ["thank you", "thanks", "شكرا", "شكراً", "تقدير"],
+    url: "https://media.giphy.com/media/26vUxArW9aueVCtVA/giphy.gif"
+  },
+  // Congratulations
+  {
+    id: "congrats_1",
+    title: "مبروك - Leo Cheers",
+    tags: ["congratulations", "congrats", "cheers", "مبروك", "تهنئة"],
+    url: "https://media.giphy.com/media/12NUBkXghstdi/giphy.gif"
+  },
+  {
+    id: "congrats_2",
+    title: "مبروك - Congratulations Party",
+    tags: ["congratulations", "congrats", "cheers", "مبروك", "تهنئة"],
+    url: "https://media.giphy.com/media/26n6R5HO1IIeGC1Ry/giphy.gif"
+  },
+  // Shocked
+  {
+    id: "shocked_1",
+    title: "مندهش - Surprised Guy",
+    tags: ["shocked", "surprised", "مندهش", "مفاجأة"],
+    url: "https://media.giphy.com/media/tfUW8mhiFk8NlJhgEh/giphy.gif"
+  },
+  {
+    id: "shocked_2",
+    title: "مندهش - Shocked Cat",
+    tags: ["shocked", "surprised", "مندهش", "مفاجأة"],
+    url: "https://media.giphy.com/media/3o7527pa7qs9kCG78A/giphy.gif"
+  },
+  // Sad
+  {
+    id: "sad_1",
+    title: "حزين - Crying Baby",
+    tags: ["sad", "crying", "حزين", "بكاء"],
+    url: "https://media.giphy.com/media/l378giAZgxPw3eO52/giphy.gif"
+  },
+  {
+    id: "sad_2",
+    title: "حزين - Sad Puppy",
+    tags: ["sad", "crying", "حزين", "بكاء"],
+    url: "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif"
+  },
+  // Angry
+  {
+    id: "angry_1",
+    title: "غاضب - Angry Kid",
+    tags: ["angry", "mad", "غاضب", "زعلان"],
+    url: "https://media.giphy.com/media/11tIanzM6S8MJa/giphy.gif"
+  },
+  {
+    id: "angry_2",
+    title: "غاضب - Angry Face",
+    tags: ["angry", "mad", "غاضب", "زعلان"],
+    url: "https://media.giphy.com/media/3o6Zt7g9nH1nFGeBcQ/giphy.gif"
+  },
+  // Yes
+  {
+    id: "yes_1",
+    title: "نعم - Nodding Yes",
+    tags: ["yes", "nod", "نعم", "موافق"],
+    url: "https://media.giphy.com/media/j3x5hjUo6cl9E7L99B/giphy.gif"
+  },
+  {
+    id: "yes_2",
+    title: "نعم - Yes Agreement",
+    tags: ["yes", "nod", "نعم", "موافق"],
+    url: "https://media.giphy.com/media/26n6WMTN6Ueg993oc/giphy.gif"
+  },
+  // No
+  {
+    id: "no_1",
+    title: "لا - Shaking Head No",
+    tags: ["no", "never", "لا", "غير موافق"],
+    url: "https://media.giphy.com/media/hPPx8yk3Bmqys/giphy.gif"
+  },
+  {
+    id: "no_2",
+    title: "لا - No Way",
+    tags: ["no", "never", "لا", "غير موافق"],
+    url: "https://media.giphy.com/media/3o7abKhOpu0Nxsvu8w/giphy.gif"
+  },
+  // Hello
+  {
+    id: "hello_1",
+    title: "سلام - Hello Wave",
+    tags: ["hello", "wave", "hi", "سلام", "مرحبا"],
+    url: "https://media.giphy.com/media/V801buEwU98A0/giphy.gif"
+  },
+  {
+    id: "hello_2",
+    title: "سلام - Wave Welcome",
+    tags: ["hello", "wave", "hi", "سلام", "مرحبا"],
+    url: "https://media.giphy.com/media/3og0IPxMM0erATuefC/giphy.gif"
+  }
+];
+
+const mapLocalGifsToTenorGifs = (localGifs: typeof FALLBACK_GIFS): TenorGif[] => {
+  return localGifs.map(gif => ({
+    id: gif.id,
+    title: gif.title,
+    media_formats: {
+      tinygif: {
+        url: gif.url
+      },
+      gif: {
+        url: gif.url
+      }
+    }
+  }));
+};
+
+const getFilteredFallbackGifs = (query: string): TenorGif[] => {
+  if (!query || query.trim() === "") {
+    return mapLocalGifsToTenorGifs(FALLBACK_GIFS);
+  }
+  const cleanQuery = query.toLowerCase().trim();
+  const filtered = FALLBACK_GIFS.filter(gif => {
+    return gif.title.toLowerCase().includes(cleanQuery) || 
+           gif.tags.some(tag => tag.toLowerCase().includes(cleanQuery));
+  });
+  return mapLocalGifsToTenorGifs(filtered);
+};
+
 export function GifPicker({ onSelect, onClose }: GifPickerProps) {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [gifs, setGifs] = useState<TenorGif[]>([]);
   const [loading, setLoading] = useState(false);
@@ -56,7 +224,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
 
       const res = await fetch(url);
       if (!res.ok) {
-        throw new Error("فشل الاتصال بخدمة GIFs");
+        throw new Error(t("فشل الاتصال بخدمة GIFs"));
       }
       const data = await res.json();
       if (data && data.results) {
@@ -65,8 +233,9 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
         setGifs([]);
       }
     } catch (err: any) {
-      console.error("Error fetching GIFs:", err);
-      setError("تعذر تحميل صور GIF. يرجى المحاولة مرة أخرى.");
+      console.warn("Tenor API query failed, falling back to local database:", err);
+      const fallbackResults = getFilteredFallbackGifs(query);
+      setGifs(fallbackResults);
     } finally {
       setLoading(false);
     }
@@ -105,7 +274,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
             <div className="p-1.5 bg-violet-500/10 text-violet-400 rounded-lg">
               <Sparkles className="w-4 h-4" />
             </div>
-            <span className="font-black text-white text-base">إدراج صورة GIF</span>
+            <span className="font-black text-white text-base">{t("إدراج صورة GIF")}</span>
           </div>
           <button
             onClick={onClose}
@@ -122,7 +291,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ابحث عن صور GIF..."
+              placeholder={t("ابحث عن صور GIF...")}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl pl-4 pr-11 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all text-right"
               dir="rtl"
             />
@@ -151,7 +320,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
               }`}
             >
               <TrendingUp className="w-3 h-3" />
-              الشائع
+              {t("الشائع")}
             </button>
             {POPULAR_TAGS.map((tag) => (
               <button
@@ -163,7 +332,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
                     : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/60'
                 }`}
               >
-                {tag.label}
+                {t(tag.label)}
               </button>
             ))}
           </div>
@@ -178,7 +347,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
                 onClick={() => fetchGifs(searchQuery)}
                 className="mt-3 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black text-white hover:bg-zinc-800 transition-colors"
               >
-                إعادة المحاولة
+                {t("إعادة المحاولة")}
               </button>
             </div>
           )}
@@ -191,7 +360,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
 
           {!error && !loading && gifs.length === 0 && (
             <div className="flex flex-col items-center justify-center h-48 text-center text-zinc-500 font-bold">
-              <p>لم يتم العثور على نتائج</p>
+              <p>{t("لم يتم العثور على نتائج")}</p>
             </div>
           )}
 

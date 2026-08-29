@@ -18,6 +18,25 @@
       },
       "required": ["userId", "userName", "userPhoto", "createdAt"]
     },
+    "Story": {
+      "title": "Story",
+      "description": "A daily story that expires after 24 hours.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "image", "video"] },
+        "content": { "type": "string" },
+        "mediaUrl": { "type": "string" },
+        "bgColor": { "type": "string" },
+        "textColor": { "type": "string" },
+        "textSize": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "type", "createdAt", "expiresAt"]
+    },
     "Comment": {
       "title": "Comment",
       "description": "A comment on a post or a reply to another comment.",
@@ -277,7 +296,8 @@
         "mutedUsers": { "type": "array", "items": { "type": "object" } },
         "guestInvite": { "type": "object" },
         "guest": { "type": "object" },
-        "pkBattle": { "type": "object" }
+        "pkBattle": { "type": "object" },
+        "hostMutedParticipants": { "type": "array", "items": { "type": "string" }, "description": "Guests whose microphones are muted by host/moderator" }
       },
       "required": ["hostId", "hostName", "title", "status", "startedAt"]
     },
@@ -310,9 +330,93 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["title", "body", "createdAt"]
+    },
+    "VerificationRequest": {
+      "title": "Verification Request",
+      "description": "A verification request containing user identity documents.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "username": { "type": "string" },
+        "documentImage": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "documentImage", "status", "createdAt"]
+    },
+    "LiveGuestRequest": {
+      "title": "Live Guest Request",
+      "description": "A request by a viewer to join a live stream as a guest.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "status", "createdAt"]
+    },
+    "SupportTicket": {
+      "title": "Support Ticket",
+      "description": "A support request or help center ticket submitted by a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user who submitted the ticket" },
+        "category": { "type": "string", "description": "The category of the issue" },
+        "details": { "type": "string", "description": "Details about the problem or request" },
+        "status": { "type": "string", "enum": ["open", "resolved"], "description": "Current status of the ticket" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation" }
+      },
+      "required": ["userId", "category", "details", "createdAt"]
+    },
+    "KnownDevice": {
+      "title": "Known Device",
+      "description": "A browser/device authorized to access the user's account.",
+      "type": "object",
+      "properties": {
+        "deviceId": { "type": "string" },
+        "os": { "type": "string" },
+        "browser": { "type": "string" },
+        "lastActiveAt": { "type": "string", "format": "date-time" },
+        "isBlocked": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["deviceId", "os", "browser", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "Activity Log",
+      "description": "Represents an action performed by a user, such as publishing a post, liking, or commenting.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user who performed the action" },
+        "type": { "type": "string", "description": "The type of action performed" },
+        "description": { "type": "string", "description": "Arabic textual description of the action" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of the action" }
+      },
+      "required": ["userId", "type", "description", "createdAt"]
     }
   },
   "firestore": {
+    "/users/{userId}/activity_logs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Recent actions performed by this user"
+    },
+    "/users/{userId}/known_devices/{deviceId}": {
+      "schema": "KnownDevice",
+      "description": "Authorized devices/browsers for this user"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": "SupportTicket",
+      "description": "Help center support tickets submitted by users"
+    },
+    "/verification_requests/{userId}": {
+      "schema": "VerificationRequest",
+      "description": "Verification requests submitted by users"
+    },
     "/users/{userId}/notifications/{notificationId}": {
       "schema": "Notification",
       "description": "Notifications received by this user"
@@ -324,6 +428,10 @@
     "/lives/{streamId}/comments/{commentId}": {
       "schema": "LiveComment",
       "description": "Comments in a live stream"
+    },
+    "/lives/{streamId}/guest_requests/{requestId}": {
+      "schema": "LiveGuestRequest",
+      "description": "Requests to join as guest"
     },
     "/usernames/{username}": {
       "schema": "Username",
@@ -396,6 +504,10 @@
     "/favorites/{favId}": {
       "schema": "Favorite",
       "description": "User specific bookmarked posts"
+    },
+    "/stories/{storyId}": {
+      "schema": "Story",
+      "description": "Daily user-submitted stories"
     }
   }
 }

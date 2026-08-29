@@ -6,6 +6,7 @@ import fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
 import { GoogleGenAI, Type } from "@google/genai";
 import admin from 'firebase-admin';
+import crypto from 'crypto';
 
 import os from 'os';
 
@@ -23,7 +24,7 @@ try {
 // Initialize Firebase Admin
 if (firebaseConfig) {
   try {
-    if (!admin.apps || admin.apps.length === 0) {
+    if (admin.apps.length === 0) {
       // In Cloud Run, applicationDefault() will find Google's metadata credentials automatically.
       admin.initializeApp({
         projectId: firebaseConfig.projectId,
@@ -93,7 +94,55 @@ async function startServer() {
     return aiClient;
   }
 
+  function generateStreamToken(userId: string, secret: string): string {
+    const header = { alg: 'HS256', typ: 'JWT' };
+    const now = Math.floor(Date.now() / 1000);
+    const payload = {
+      user_id: userId,
+      iat: now,
+      exp: now + 24 * 60 * 60, // 24 hours
+    };
+
+    const base64UrlEncode = (str: string): string => {
+      return Buffer.from(str)
+        .toString('base64')
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
+    };
+
+    const headerEncoded = base64UrlEncode(JSON.stringify(header));
+    const payloadEncoded = base64UrlEncode(JSON.stringify(payload));
+    const signatureInput = `${headerEncoded}.${payloadEncoded}`;
+
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(signatureInput);
+    const signatureEncoded = hmac.digest('base64')
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+
+    return `${signatureInput}.${signatureEncoded}`;
+  }
+
   // API Routes
+    app.post('/api/stream/credentials', (req, res) => {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const apiKey = "93v2eu284nry"; 
+    const secret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc"; 
+
+    try {
+      const token = generateStreamToken(userId, secret);
+      res.json({ apiKey, token });
+    } catch (err: any) {
+      console.error("Error generating Stream token:", err);
+      res.status(500).json({ error: 'Failed to generate Stream credentials' });
+    }
+  });
   app.post('/api/gemini/suggest-replies', async (req, res) => {
     const { commentText } = req.body;
     if (!commentText) {
@@ -129,67 +178,44 @@ async function startServer() {
     }
   });
 
-  app.post('/api/user/update-profile', async (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthenticated. Missing token.' });
+  app.post('/api/gemini/smart-assist', async (req, res) => {
+    const { text, mode } = req.body;
+    if (!text && mode !== 'draft') {
+      return res.status(400).json({ error: 'Text is required unless drafting' });
     }
 
-    const token = authHeader.split('Bearer ')[1];
-    const { displayName, username, bio, photoURL, oldUsername } = req.body;
-
     try {
-      const decodedToken = await admin.auth().verifyIdToken(token);
-      const uid = decodedToken.uid;
+      const ai = getGeminiClient();
+      let prompt = '';
+      let systemInstruction = 'أنت مساعد ذكي مدمج في تطبيق محادثة عربي سريع ومتطور. ساعد المستخدم في تحسين أو ترجمة أو صياغة رسالته.';
 
-      if (!uid) {
-        return res.status(401).json({ error: 'Invalid token, uid not found.' });
+      if (mode === 'improve') {
+        prompt = `قم بتحسين الأسلوب وإعادة صياغة النص التالي باللغة العربية ليكون أكثر لباقة وجاذبية ووضوحاً، وحافظ على المعنى الأصلي دون تكلف:\n\n"${text}"`;
+      } else if (mode === 'correct') {
+        prompt = `قم بتصحيح الأخطاء الإملائية والنحوية وتعديل صياغة النص التالي باللغة العربية ليكون صحيحاً وخالياً تماماً من الأخطاء:\n\n"${text}"`;
+      } else if (mode === 'translate_en') {
+        prompt = `ترجم النص التالي بدقة إلى اللغة الإنجليزية بأسلوب طبيعي ومناسب للمحادثات:\n\n"${text}"`;
+      } else if (mode === 'translate_ar') {
+        prompt = `ترجم النص التالي بدقة إلى اللغة العربية بأسلوب طبيعي ومناسب للمحادثات:\n\n"${text}"`;
+      } else if (mode === 'draft') {
+        prompt = `صغ مسودة رسالة لبدء محادثة ودية ومناسبة باللغة العربية بناءً على هذا الوصف القصير أو الكلمات المفتاحية:\n\n"${text || 'تحية طيبة وسؤال عن الحال'}"`;
+      } else {
+        prompt = text;
       }
 
-      const db = firebaseConfig?.firestoreDatabaseId 
-        ? admin.firestore(firebaseConfig.firestoreDatabaseId) 
-        : admin.firestore();
-
-      const userRef = db.collection('users').doc(uid);
-
-      // If username is being changed, handle the usernames map
-      if (username) {
-        // If they have an old username, delete it
-        if (oldUsername && oldUsername !== username) {
-          try {
-            await db.collection('usernames').doc(oldUsername).delete();
-          } catch (e) {
-            console.error("Failed to delete old username in Admin SDK:", e);
-          }
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: {
+          systemInstruction,
+          temperature: 0.7,
         }
+      });
 
-        // Check if username is already taken by someone else
-        const usernameDoc = await db.collection('usernames').doc(username).get();
-        if (usernameDoc.exists && usernameDoc.data()?.uid !== uid) {
-          return res.status(400).json({ error: 'اسم المستخدم محجوز بالفعل.' });
-        }
-
-        // Save the new username mapping
-        await db.collection('usernames').doc(username).set({
-          uid: uid,
-          updatedAt: admin.firestore.FieldValue.serverTimestamp()
-        });
-      }
-
-      // Build update payload
-      const updatePayload: any = {};
-      if (displayName !== undefined) updatePayload.displayName = displayName;
-      if (username !== undefined) updatePayload.username = username;
-      if (bio !== undefined) updatePayload.bio = bio;
-      if (photoURL !== undefined) updatePayload.photoURL = photoURL;
-
-      // Update user document
-      await userRef.set(updatePayload, { merge: true });
-
-      res.json({ success: true, uid });
+      res.json({ result: response.text });
     } catch (error: any) {
-      console.error('Error updating user profile via Admin SDK:', error);
-      res.status(500).json({ error: error.message || 'Failed to update user profile' });
+      console.error('Error in smart-assist:', error);
+      res.status(500).json({ error: 'Failed to process AI request', details: error.message });
     }
   });
 
@@ -311,6 +337,19 @@ async function startServer() {
       res.status(500).json({ error: 'Failed to generate signature' });
     }
   });
+  
+app.post('/api/stream-token', (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+    const token = generateStreamToken(userId, "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc");
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
+});
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
@@ -326,7 +365,7 @@ async function startServer() {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
-
+  
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });

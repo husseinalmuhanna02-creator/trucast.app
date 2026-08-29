@@ -82,6 +82,7 @@ service cloud.firestore {
         && (data.get('isPremium', false) is bool)
         && (data.get('isVerified', false) is bool)
         && (data.get('stealthMode', false) is bool)
+        && (data.get('accountLocked', false) is bool)
         && (data.get('premiumSettings', null) == null || (
              data.premiumSettings is map &&
              (data.premiumSettings.get('bubbleColor', null) == null || data.premiumSettings.bubbleColor is string) &&
@@ -95,6 +96,15 @@ service cloud.firestore {
              (data.profileCustomization.get('fontFamily', '') is string) &&
              (data.profileCustomization.get('textColor', '') is string)
            ));
+    }
+
+    function isValidKnownDevice(data) {
+      return data.deviceId is string && data.deviceId.size() <= 128
+        && data.os is string && data.os.size() <= 100
+        && data.browser is string && data.browser.size() <= 100
+        && (data.get('isBlocked', false) is bool)
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp)
+        && (data.get('lastActiveAt', null) == null || data.lastActiveAt == request.time || data.lastActiveAt is timestamp);
     }
 
     function isValidReel(data) {
@@ -111,7 +121,7 @@ service cloud.firestore {
         && (!(data.type in ['private', 'direct', 'saved']) ? (data.name is string && data.name.size() <= 200) : true)
         && (data.get('description', null) == null || (data.description is string && data.description.size() <= 2000))
         && (data.get('avatarUrl', null) == null || (data.avatarUrl is string && data.avatarUrl.size() <= 2000000))
-        && (data.get('photoURL', null) == null || (data.photoURL is string && data.photoURL.size() <= 2000))
+        && (data.get('photoURL', null) == null || (data.photoURL is string && data.photoURL.size() <= 2000000))
         && (data.get('creatorId', null) == null || (data.creatorId is string && data.creatorId.size() <= 128))
         && (data.get('admins', null) == null || (data.admins is list && data.admins.size() >= 0))
         && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp)
@@ -172,8 +182,16 @@ service cloud.firestore {
 
     function isValidReport(data) {
       return data.reporterId == request.auth.uid
-        && data.reportedUserId is string
-        && data.messageId is string
+        && (data.get('reportedUserId', null) == null || data.reportedUserId is string)
+        && (data.get('reportedId', null) == null || data.reportedId is string)
+        && (data.get('messageId', null) == null || data.messageId is string)
+        && (data.get('postId', null) == null || data.postId is string)
+        && (data.get('reporterName', null) == null || data.reporterName is string)
+        && (data.get('reportedName', null) == null || data.reportedName is string)
+        && (data.get('postContent', null) == null || data.postContent is string)
+        && (data.get('type', null) == null || data.type is string)
+        && (data.get('details', null) == null || data.details is string)
+        && (data.get('status', null) == null || data.status is string)
         && data.reason is string
         && data.createdAt == request.time;
     }
@@ -232,7 +250,50 @@ service cloud.firestore {
         && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
     }
 
+    function isValidVerificationRequest(data) {
+      return data.uid == request.auth.uid
+        && data.displayName is string && data.displayName.size() <= 500
+        && (data.get('username', '') is string)
+        && data.documentImage is string && data.documentImage.size() <= 4000000
+        && data.status in ['pending', 'approved', 'rejected']
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp)
+        && (data.get('updatedAt', null) == null || data.updatedAt == request.time || data.updatedAt is timestamp);
+    }
+
+    function isValidStory(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 200
+        && data.userPhoto is string && data.userPhoto.size() <= 2000000
+        && data.type in ['text', 'image', 'video']
+        && (data.get('content', null) == null || (data.content is string && data.content.size() <= 10000))
+        && (data.get('mediaUrl', null) == null || (data.mediaUrl is string && data.mediaUrl.size() <= 2000000))
+        && (data.get('bgColor', null) == null || (data.bgColor is string && data.bgColor.size() <= 200))
+        && (data.get('textColor', null) == null || (data.textColor is string && data.textColor.size() <= 50))
+        && (data.get('textSize', null) == null || (data.textSize is string && data.textSize.size() <= 50))
+        && (data.get('createdAt', null) == null || data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    function isValidSupportTicket(data) {
+      return data.userId == request.auth.uid
+        && data.category is string && data.category.size() <= 200
+        && data.details is string && data.details.size() <= 10000
+        && (data.get('status', 'open') in ['open', 'resolved']);
+    }
+
+    function isValidActivityLog(data) {
+      return data.userId == request.auth.uid
+        && data.type is string && data.type.size() <= 100
+        && data.description is string && data.description.size() <= 1000;
+    }
+
     // --- Collection Rules ---
+
+    match /support_tickets/{ticketId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && isValidSupportTicket(incoming())
+                    && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+    }
 
     match /test/connection {
       allow read: if true;
@@ -373,6 +434,23 @@ service cloud.firestore {
         allow update: if isSignedIn() && isOwner(userId) && isValidNotification(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
         allow delete: if isSignedIn() && isOwner(userId);
       }
+
+      match /known_devices/{deviceId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+
+      match /activity_logs/{logId} {
+        allow list, get: if isSignedIn();
+        allow create: if isSignedIn() && isOwner(userId) && isValidActivityLog(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+        allow delete: if isSignedIn() && isOwner(userId);
+      }
+    }
+
+    match /verification_requests/{userId} {
+      allow get: if isSignedIn() && isOwner(userId);
+      allow create: if isSignedIn() && isOwner(userId) && isValidVerificationRequest(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+      allow update: if isSignedIn() && isOwner(userId) && isValidVerificationRequest(incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp);
+      allow delete: if isSignedIn() && isOwner(userId);
     }
 
     match /test/connection {
@@ -484,6 +562,13 @@ service cloud.firestore {
       allow delete: if isSignedIn() && isOwner(existing().userId);
     }
 
+    match /stories/{storyId} {
+      allow list, get: if isSignedIn();
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid && isValidStory(incoming()) && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+      allow update: if isSignedIn() && isOwner(existing().userId) && isValidStory(incoming()) && incoming().userId == existing().userId && incoming().createdAt == existing().createdAt;
+      allow delete: if isSignedIn() && isOwner(existing().userId);
+    }
+
     match /lives/{streamId} {
       allow list, get: if true;
       allow create: if isVerified() && isValidLiveStream(incoming()) && incoming().startedAt == request.time;
@@ -497,13 +582,13 @@ service cloud.firestore {
             existing().get('moderatorIds', []).hasAny([request.auth.uid]) && 
             incoming().get('hostId', '') == existing().get('hostId', '') && 
             incoming().get('startedAt', null) == existing().get('startedAt', null) &&
-            incoming().diff(existing()).affectedKeys().hasOnly(['pinnedComment', 'mutedIds', 'mutedUsers', 'blockedIds', 'blockedUsers', 'poll']))
+            incoming().diff(existing()).affectedKeys().hasOnly(['pinnedComment', 'mutedIds', 'mutedUsers', 'blockedIds', 'blockedUsers', 'poll', 'hostMutedParticipants']))
             
         // Action by Viewer/Guest/Participant: Can interact with polls, pk battles, guest invites, or viewerCount
         || (isSignedIn() && 
             incoming().get('hostId', '') == existing().get('hostId', '') && 
             incoming().get('startedAt', null) == existing().get('startedAt', null) &&
-            incoming().diff(existing()).affectedKeys().hasOnly(['viewerCount', 'guestInvite', 'guest', 'pkBattle', 'poll']))
+            incoming().diff(existing()).affectedKeys().hasOnly(['viewerCount', 'guestInvite', 'guest', 'pkBattle', 'poll', 'hostMutedParticipants', 'cohostInvite', 'pendingCoHostRequests', 'coHostStreamIds', 'coHosts', 'coHostStreamId', 'coHostName', 'coHostPhoto', 'coHostActive']))
       );
       allow delete: if isVerified() && isOwner(existing().get('hostId', ''));
 
@@ -514,6 +599,16 @@ service cloud.firestore {
           (incoming().userId == 'system' && isHostOrModerator(streamId))
         ) && incoming().createdAt == request.time;
         allow delete: if isVerified() && (isOwner(existing().get('userId', '')) || isOwner(get(/databases/$(database)/documents/lives/$(streamId)).data.get('hostId', '')));
+      }
+
+      match /guest_requests/{requestId} {
+        allow list, get: if isSignedIn();
+        allow create: if isSignedIn() && (requestId == request.auth.uid)
+                      && incoming().uid == request.auth.uid
+                      && incoming().status == 'pending';
+        allow update, delete: if isSignedIn() && (
+          requestId == request.auth.uid || isHostOrModerator(streamId)
+        );
       }
     }
   }

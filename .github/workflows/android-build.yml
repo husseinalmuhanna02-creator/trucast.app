@@ -1,26 +1,60 @@
 name: Build Android APK
+
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with: { node-version: '20' }
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - run: rm -f package-lock.json
       - run: npm install --legacy-peer-deps
-      - run: npm install -D typescript @rollup/rollup-linux-x64-gnu
-      - run: npm run build
-      - run: rm -rf android
-      - run: npx cap add android
-      - run: npx cap sync android
-      - uses: actions/setup-java@v3
-        with: { distribution: 'zulu', java-version: '21' }
-      - run: |
+      - run: npm install @capacitor/core@^6.0.0 @capacitor/android@^6.0.0 @capacitor/cli@^6.0.0 @capacitor/browser@^6.0.0 --legacy-peer-deps
+      - run: npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss typescript @rollup/rollup-linux-x64-gnu @capacitor/assets --legacy-peer-deps
+      - run: npx vite build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+
+      - name: Prepare and Sync Android
+        run: |
+         if [ -f "android/app/src/main/AndroidManifest.xml" ]; then
+          cp android/app/src/main/AndroidManifest.xml ./AndroidManifest.xml.bak
+         fi
+
+         rm -rf android
+         npx @capacitor/cli add android
+
+         if [ -f "./AndroidManifest.xml.bak" ]; then
+           cp ./AndroidManifest.xml.bak android/app/src/main/AndroidManifest.xml
+         fi
+
+         npx @capacitor/assets generate --android || true
+         npx @capacitor/cli sync android
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Build APK via Gradle
+        run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
       - uses: actions/upload-artifact@v4
         with:
           name: TruCast-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          

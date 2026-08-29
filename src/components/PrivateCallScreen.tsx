@@ -1,0 +1,749 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '../localization';
+import { User as FirebaseUser } from 'firebase/auth';
+import { Chat, CallSession } from '../types';
+import { db, auth } from '../firebase';
+import { doc, getDoc, updateDoc, serverTimestamp, addDoc, collection } from 'firebase/firestore';
+import {
+  StreamVideo,
+  StreamCall,
+  StreamVideoClient,
+  useCall,
+  useCallStateHooks,
+  ParticipantView,
+} from '@stream-io/video-react-sdk';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Mic, 
+  MicOff, 
+  Video, 
+  VideoOff, 
+  PhoneOff, 
+  X, 
+  Monitor, 
+  Menu, 
+  Sliders, 
+  VolumeX, 
+  Edit2, 
+  Sparkles,
+  ChevronDown,
+  AlertTriangle
+} from 'lucide-react';
+import '@stream-io/video-react-sdk/dist/css/styles.css';
+import { getApiUrl } from '../config';
+
+const WhiteboardPanel = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useLanguage();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [color, setColor] = useState('#3b82f6');
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 4;
+  }, []);
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.strokeStyle = color;
+    setIsDrawing(true);
+  };
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  return (
+    <div className="absolute inset-y-4 right-4 w-80 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-[32px] p-6 z-[60] flex flex-col shadow-2xl font-sans" dir="rtl">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <h4 className="text-white font-black text-sm">{t("السبورة الذكية التفاعلية")} 📋</h4>
+        </div>
+        <button onClick={onClose} className="p-1 text-zinc-500 hover:text-white transition-all bg-zinc-900/50 rounded-lg hover:bg-zinc-800">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={272}
+        height={340}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+        className="flex-1 bg-zinc-900/50 border border-zinc-800 rounded-2xl cursor-crosshair touch-none"
+      />
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex gap-2">
+          {['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#ffffff'].map((c) => (
+            <button
+              key={c}
+              onClick={() => setColor(c)}
+              className={`w-6 h-6 rounded-full border transition-all ${color === c ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'}`}
+              style={{ backgroundColor: c }}
+            />
+          ))}
+        </div>
+        <button onClick={clearCanvas} className="text-xs text-zinc-400 hover:text-red-400 font-black transition-colors px-3 py-1.5 bg-zinc-900 rounded-xl border border-zinc-800">
+          {t("مسح اللوحة")}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const PrivateCallContent = ({ 
+  currentUser,
+  chat,
+  callSession,
+  onClose 
+}: { 
+  currentUser: FirebaseUser | null,
+  chat: Chat,
+  callSession: CallSession,
+  onClose: () => void 
+}) => {
+  const { t } = useLanguage();
+  const call = useCall();
+  const { useCameraState, useMicrophoneState, useScreenShareState, useParticipants } = useCallStateHooks();
+  const { status: camStatus } = useCameraState();
+  const { status: micStatus } = useMicrophoneState();
+  const { isEnabled: isScreenSharing } = useScreenShareState();
+  const participants = useParticipants();
+
+  const isCamOn = camStatus === 'enabled';
+  const isMicOn = micStatus === 'enabled';
+
+  const localParticipant = participants.find(p => p.isLocalParticipant);
+  const remoteParticipant = participants.find(p => !p.isLocalParticipant);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [noiseReduction, setNoiseReduction] = useState(false);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
+  const [muteNew, setMuteNew] = useState(false);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [showToast, setShowToast] = useState<string | null>(null);
+    const [myAvatar, setMyAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMyAvatar = async () => {
+      if (auth.currentUser?.uid) {
+        try {
+          const userSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            setMyAvatar(data.avatar || data.photoURL || data.avatarUrl || data.image || auth.currentUser?.photoURL || null);
+          }
+        } catch (e) {
+          console.error("Error fetching avatar:", e);
+        }
+      }
+    };
+    fetchMyAvatar();
+  }, []);
+    const [remoteAvatar, setRemoteAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRemoteAvatar = async () => {
+      const remoteId = remoteParticipant?.userId;
+      if (remoteId) {
+        try {
+          const userSnap = await getDoc(doc(db, 'users', remoteId));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            setRemoteAvatar(data.avatar || data.photoURL || data.avatarUrl || data.image || null);
+          }
+        } catch (e) {
+          console.error("Error fetching remote avatar:", e);
+        }
+      }
+    };
+    fetchRemoteAvatar();
+  }, [remoteParticipant?.userId]);
+  
+  // تتبع انضمام الطرف الآخر ووقت البداية
+  const [hasOtherJoined, setHasOtherJoined] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (participants && participants.length > 1 && !hasOtherJoined) {
+      setHasOtherJoined(true);
+      startTimeRef.current = Date.now();
+    }
+  }, [participants, hasOtherJoined]);
+
+  // دالة تنسيق مدة المكالمة
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) return `${secs} ثانية`;
+    return `${mins} د/ ${secs} ث`;
+  };
+
+  // دالة إرسال تقرير المكالمة للمحادثة
+    const sendCallLogToChat = async () => {
+    if (!chat?.id) return;
+    try {
+      let messageText = '';
+      let callStatus = '';
+
+      if (!hasOtherJoined) {
+        messageText = '🚫 مكالمة فائتة';
+        callStatus = 'missed';
+      } else {
+        const durationSec = startTimeRef.current
+          ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+          : 0;
+        messageText = `📞 مكالمة انتهت (${formatDuration(durationSec)})`;
+        callStatus = 'ended';
+      }
+
+      await addDoc(collection(db, 'chats', chat.id, 'messages'), {
+        senderId: currentUser?.uid || '',
+        text: messageText,
+        content: messageText,
+        message: messageText,
+        type: 'text',
+        callStatus: callStatus,
+        createdAt: serverTimestamp(),
+      });
+
+      await updateDoc(doc(db, 'chats', chat.id), {
+        lastMessage: messageText,
+        lastMessageTimestamp: serverTimestamp(),
+        activeCallId: null,
+      });
+    } catch (e) {
+      console.error('Error logging call:', e);
+    }
+  };
+  
+  const triggerToast = (msg: string) => {
+    setShowToast(msg);
+    setTimeout(() => setShowToast(null), 3000);
+  };
+
+  const toggleCamera = async () => {
+    try {
+      if (call) await call.camera.toggle();
+    } catch (err) {
+      console.error("Error toggling camera:", err);
+    }
+  };
+
+  const toggleMic = async () => {
+    try {
+      if (call) await call.microphone.toggle();
+    } catch (err) {
+      console.error("Error toggling microphone:", err);
+    }
+  };
+
+  const toggleScreenShare = async () => {
+    try {
+      if (call) await call.screenShare.toggle();
+    } catch (err) {
+      console.error("Error toggling screen share:", err);
+    }
+  };
+
+  const handleLeaveClick = () => {
+    const isOwner = (call?.state as any)?.createdByUserId === currentUser?.uid || (call?.state as any)?.createdBy?.id === currentUser?.uid || currentUser?.uid === (chat as any)?.createdById;
+    if (isOwner) {
+      setShowLeaveConfirm(true);
+    } else {
+      executeLeave();
+    }
+  };
+
+  const executeLeave = async () => {
+    try {
+      if (call) await call.leave();
+    } catch (err) {
+      console.warn("Error leaving call:", err);
+    }
+    onClose();
+  };
+
+          const executeEndCall = () => {
+    // 1. إرسال تقرير المكالمة (مدة المكالمة أو مكالمة فائتة)
+    sendCallLogToChat();
+
+    // 2. إغلاق الشاشة والعودة للدردشة فوراً
+    if (onClose) onClose();
+
+    // 3. تحديث قاعدة البيانات والتنظيف في الخلفية
+    try {
+      if (chat?.id && callSession?.id && typeof db !== 'undefined') {
+        updateDoc(doc(db, 'chats', chat.id, 'calls', callSession.id), {
+          active: false,
+          status: 'ended',
+          endedAt: serverTimestamp()
+        }).catch(() => {});
+
+        updateDoc(doc(db, 'chats', chat.id), {
+          activeCallId: null,
+          activeCallHostId: null,
+          activeCallHostName: null,
+          activeCallHostPhoto: null,
+          activeCallType: null,
+          activeCallStartedAt: null
+        }).catch(() => {});
+      }
+    } catch (e) {}
+
+    try {
+      if (callSession) callSession.leave().catch(() => {});
+    } catch (e) {}
+  };
+
+  return (
+    <div className="flex-1 flex flex-col relative h-full">
+      <div className="absolute top-6 left-6 z-[70] font-sans" dir="rtl">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="flex items-center gap-2 bg-zinc-950/85 hover:bg-zinc-900 text-white px-4 py-3 rounded-2xl border border-white/10 shadow-2xl transition-all hover:scale-105 active:scale-95"
+        >
+          <Menu className="w-5 h-5 text-blue-500" />
+          <span className="text-xs font-black">{t("خيارات المكالمة")}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {isMenuOpen && (
+          <div className="absolute top-full left-0 mt-3 w-64 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-3 shadow-2xl space-y-1.5 z-[70] animate-in fade-in slide-in-from-top-3">
+            <button
+              onClick={() => {
+                setNoiseReduction(!noiseReduction);
+                triggerToast(!noiseReduction ? t("تم تفعيل عزل الضوضاء 🎙️") : t("تم إلغاء تفعيل عزل الضوضاء"));
+                setIsMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-zinc-900/50 text-right transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Sliders className={`w-4.5 h-4.5 ${noiseReduction ? 'text-emerald-500' : 'text-zinc-400'}`} />
+                <span className="text-xs font-bold text-white">{t("تقليل الضوضاء النشط")}</span>
+              </div>
+              {noiseReduction && <div className="w-2 h-2 rounded-full bg-emerald-500" />}
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1 min-h-0 relative bg-slate-950">
+        <AnimatePresence mode="wait">
+          {remoteParticipant ? (
+            <motion.div 
+              key="active-call"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-full relative"
+            >
+              {(() => {
+                const isRemoteCamOn = !!(
+                  remoteParticipant.videoStream || 
+                  (remoteParticipant as any).isVideoEnabled || 
+                  (remoteParticipant as any).hasVideo || 
+                  (remoteParticipant as any).videoStreamTrack ||
+                  remoteParticipant.publishedTracks?.includes(2)
+                );
+                return isRemoteCamOn ? (
+                  <ParticipantView
+                    participant={remoteParticipant}
+                    trackType="videoTrack"
+                    className="w-full h-full object-cover"
+                    ParticipantViewUI={() => null}
+                  />
+                ) : (
+                  <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-zinc-950/95" style={{ direction: 'rtl' }}>
+                    <div className="absolute top-0 left-0 w-1 h-1 opacity-0 overflow-hidden pointer-events-none z-[-50]">
+                      <ParticipantView participant={remoteParticipant} trackType="none" ParticipantViewUI={() => null} />
+                    </div>
+                    <div className="relative mb-6">
+                      <div className="absolute -inset-4 bg-indigo-500/10 rounded-full blur-2xl animate-pulse" />
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center relative z-10 shadow-2xl">
+                  {(remoteAvatar || remoteParticipant.image || remoteParticipant.avatar) ? (
+                    <img 
+                      src={remoteAvatar || remoteParticipant.image || remoteParticipant.avatar || ''} 
+                      alt="Remote User" 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <span className="text-2xl font-black text-indigo-400">
+                      {(remoteParticipant.name || remoteParticipant.userId || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                        
+                      </div>
+                    </div>
+                    <h3 className="text-white font-black text-lg mb-1">{remoteParticipant.name || remoteParticipant.userId}</h3>
+                    <p className="text-zinc-500 font-bold text-xs">{t("الكاميرا مغلقة حالياً")}</p>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="waiting"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-950 via-zinc-950 to-slate-950"
+              style={{ direction: 'rtl' }}
+            >
+              <div className="relative mb-6">
+                <div className="absolute -inset-6 bg-indigo-500/15 rounded-full blur-3xl animate-pulse" />
+                <div className="w-20 h-20 bg-indigo-600/10 text-indigo-400 rounded-full flex items-center justify-center relative border border-indigo-500/20 animate-bounce">
+                  <Sparkles className="w-8 h-8 text-indigo-400 animate-pulse" />
+                </div>
+              </div>
+              <h3 className="text-white font-black text-base mb-2">{t("في انتظار انضمام الطرف الآخر...")}</h3>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {localParticipant && (
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="absolute bottom-28 right-6 w-32 h-44 md:w-40 md:h-56 bg-zinc-950/90 border border-white/10 rounded-[24px] overflow-hidden shadow-2xl z-40 group hover:border-indigo-500/40 transition-all duration-300"
+            style={{ direction: 'rtl' }}
+          >
+            {isCamOn ? (
+              <ParticipantView
+                participant={localParticipant}
+                trackType="videoTrack"
+                className="w-full h-full object-cover scale-x-[-1]"
+                ParticipantViewUI={() => null}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 border border-white/10 flex items-center justify-center mb-2 shadow-inner">
+                  {myAvatar ? (
+                    <img 
+                      src={myAvatar} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <span className="text-sm font-black text-zinc-400">
+                      {(auth.currentUser?.displayName || localParticipant.name || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </div>
+
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-zinc-950/80 backdrop-blur-xl px-6 py-4 rounded-3xl border border-white/10 shadow-2xl z-50">
+        <button
+          onClick={toggleMic}
+          className={`p-4 rounded-2xl transition-all active:scale-95 ${
+            !isMicOn ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+          }`}
+        >
+          {!isMicOn ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+        </button>
+
+        <button
+          onClick={() => {
+  if (onClose) onClose();
+  executeEndCall();
+}}
+          
+          className="p-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl transition-all shadow-lg shadow-red-600/30 active:scale-95"
+        >
+          <PhoneOff className="w-6 h-6" />
+        </button>
+
+        <button
+          onClick={toggleCamera}
+          className={`p-4 rounded-2xl transition-all active:scale-95 ${
+            !isCamOn ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+          }`}
+        >
+          {!isCamOn ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
+        </button>
+      </div>
+    </div>
+  );
+};
+class CallErrorBoundary extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null, info: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, info: any) {
+    this.setState({ info });
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 999999, backgroundColor: '#000', color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+          <h2 style={{ color: '#ef4444', fontWeight: 'bold', fontSize: '20px' }}>تفاصيل الخطأ:</h2>
+          <pre style={{ marginTop: '16px', fontSize: '12px', color: '#fca5a5', width: '90%', overflow: 'auto', whiteSpace: 'pre-wrap' }}>
+            {this.state.error?.toString()}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export const PrivateCallScreen = ({
+  currentUser,
+  chat,
+  call,
+  onClose,
+  onNavigateToUser
+}: {
+  currentUser: FirebaseUser | null,
+  chat: Chat,
+  call: CallSession,
+  onClose: () => void,
+  onNavigateToUser: (uid: string) => void
+}) => {
+  const { t } = useLanguage();
+  const [client, setClient] = useState<StreamVideoClient | null>(null);
+  const [streamCall, setStreamCall] = useState<any>(null);
+  const [callError, setCallError] = useState<string | null>(null);
+
+  // 🟢 إضافة حالة الصلاحيات الجديدة هنا:
+  const [isPermissionsGranted, setIsPermissionsGranted] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    if (!currentUser) return;
+
+    let active = true;
+    let streamClient: StreamVideoClient | null = null;
+    let myCall: any = null;
+
+    const requestMediaPermissions = async () => {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          stream.getTracks().forEach(track => track.stop());
+          if (active) setIsPermissionsGranted(true);
+        }
+      } catch (err) {
+        console.warn("Camera/Mic permission failed. Trying audio only.", err);
+        try {
+          if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+            if (active) setIsPermissionsGranted(true);
+          }
+        } catch (audioErr: any) {
+          if (active) setIsPermissionsGranted(false);
+          throw new Error("لم يتم منح صلاحيات الميكروفون أو الكاميرا. يرجى تفعيلها من إعدادات الهاتف");
+        }
+      }
+    };
+
+    const initStream = async () => {
+      try {
+        setCallError(null);
+        await requestMediaPermissions();
+
+        const apiKey = "93v2eu284nry";
+    const apiSecret = "vp3rtevs3svsa7zr798f83xyasv9yray9ks4nz6t9b5hkcdmushzvmznp68t7vrc";
+
+    if (!active) return;
+
+    // دالة توليد توكن JWT مشفر معتمد من Stream على الهاتف مباشرة
+    const generateStreamToken = async (userId: string, secret: string) => {
+      const base64Url = (str: string) =>
+        btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const header = base64Url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+      const payload = base64Url(JSON.stringify({ user_id: userId }));
+      const dataToSign = `${header}.${payload}`;
+
+      const encoder = new TextEncoder();
+      const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+      );
+      const signatureBuffer = await crypto.subtle.sign("HMAC", key, encoder.encode(dataToSign));
+      const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
+        .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+      return `${dataToSign}.${signature}`;
+    };
+
+    const user = {
+      id: currentUser.uid,
+      name: currentUser.displayName || t('مستخدم'),
+      image: currentUser.photoURL || '',
+    };
+
+    const token = await generateStreamToken(currentUser.uid, apiSecret);
+
+    streamClient = new StreamVideoClient({
+      apiKey,
+      user,
+      token,
+    });
+
+        setClient(streamClient);
+
+        const channelName = call.id || chat.id || "private_call";
+        myCall = streamClient.call('default', channelName);
+
+        await myCall.join({ create: true });
+        await myCall.camera.disable();
+
+        if (!active) {
+          myCall.leave().catch(() => {});
+          streamClient.disconnectUser().catch(() => {});
+          return;
+        }
+        setStreamCall(myCall);
+      } catch (err: any) {
+        console.error("Error joining Stream Video Call:", err);
+        setCallError(err.message || "حدث خطأ غير معروف أثناء تهيئة المكالمة");
+      }
+    };
+
+    initStream();
+
+    return () => {
+      active = false;
+      if (myCall) myCall.leave().catch(() => {});
+      if (streamClient) streamClient.disconnectUser().catch(() => {});
+    };
+  }, [currentUser, call.id, chat.id]);
+
+  // 1. في حال رفض الصلاحيات أو حدوث خطأ
+  if (callError || isPermissionsGranted === false) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center w-full h-full bg-slate-950 text-white p-6">
+        <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full">
+          <X className="w-5 h-5" />
+        </button>
+        <div className="w-20 h-20 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center mb-4">
+          <AlertTriangle className="w-10 h-10" />
+        </div>
+        <h3 className="text-xl font-black mb-3 text-red-400">{t("تنبيه الصلاحيات")}</h3>
+        <p className="text-zinc-300 font-bold text-sm text-center max-w-sm mb-8 leading-relaxed">
+          {callError || t("يرجى منح صلاحية الكاميرا والمايكروفون للتمكن من إجراء المكالمة.")}
+        </p>
+        <button onClick={onClose} className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold">
+          {t("عودة للدردشة")}
+        </button>
+      </div>
+    );
+  }
+
+  // 2. أثناء التحقق من الصلاحيات أو تهيأة الاتصال
+  if (isPermissionsGranted === null || !client || !streamCall) {
+    return (
+      <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center w-full h-full bg-slate-950 text-white">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-3 bg-zinc-900/80 rounded-full text-white/80 hover:text-white hover:bg-zinc-800 transition-colors z-50"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <div className="flex flex-col items-center max-w-sm text-center">
+          <div className="relative mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-500 border-r-transparent"></div>
+            <Video className="w-6 h-6 text-indigo-500 absolute inset-0 m-auto" />
+          </div>
+          <h3 className="text-xl font-black mb-2">{t("جاري بدء الاتصال...")}</h3>
+        </div>
+      </div>
+    );
+  }
+
+            // دالة إنهاء شاملة ومضمونة تقتل الواجهة فوراً
+    // دالة إنهاء آمنة ومضمونة
+  const handleForceKill = () => {
+    // 1. الخروج من الواجهة والعودة للدردشة فوراً
+    try {
+      if (onClose) onClose();
+    } catch (e) {
+      console.error("Error calling onClose:", e);
+    }
+
+    // 2. التنظيف في الخلفية
+    try {
+      if (streamCall) streamCall.leave().catch(() => {});
+      if (client) client.disconnectUser().catch(() => {});
+    } catch (e) {}
+
+    try {
+      if (chat?.id) {
+        updateDoc(doc(db, 'chats', chat.id), { activeCallId: null }).catch(() => {});
+      }
+    } catch (e) {}
+  };
+
+  return (
+    <div className="fixed inset-0 z-[99999] flex flex-col w-full bg-slate-950 overflow-hidden" style={{ height: '100dvh' }}>
+      {/* زر إغلاق الطوارئ العلوي */}
+      <button
+        onClick={handleForceKill}
+        className="absolute top-4 right-4 z-[100000] p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl active:scale-95 transition-all"
+        title="إنهاء المكالمة"
+      >
+        <X className="w-6 h-6" />
+      </button>
+
+      <StreamVideo client={client}>
+        <StreamCall call={streamCall}>
+          <div className="absolute inset-0 w-full h-full flex flex-col z-0 overflow-hidden">
+            <PrivateCallContent
+              currentUser={currentUser}
+              chat={chat}
+              callSession={call}
+              onClose={handleForceKill}
+            />
+          </div>
+        </StreamCall>
+      </StreamVideo>
+    </div>
+  );
+};
+            

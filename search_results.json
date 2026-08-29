@@ -1,0 +1,2019 @@
+[
+  {
+    "lineNum": 1248,
+    "text": "{paymentStep === 'success' && \"اكتمل التفعيل بنجاح!\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 1949,
+    "text": "await logActivity(currentUser.uid, 'comment_post', `علّق على منشور: \"${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}\"`);",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 1954,
+    "text": "body: `${currentUser.displayName || \"مستخدم\"} علّق على منشورك: \"${commentText.slice(0, 30)}${commentText.length > 30 ? '...' : ''}\"`,",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2111,
+    "text": "<span className=\"text-[9px] text-blue-400 font-black uppercase tracking-tighter bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/15\">صاحب المنشور</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2196,
+    "text": "<span>تعديل التعليق</span>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 2220,
+    "text": "<span>مشاركة في القصة</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 2234,
+    "text": "<span>مشاركة في ريلز</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 2399,
+    "text": "<span className=\"text-[12px] text-zinc-300 font-bold\">نقاش حول منشور <strong className=\"text-white\">@{postContext.userName}</strong></span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2402,
+    "text": "<span className=\"text-[10px] text-zinc-500 font-bold\">{showContextPreview ? \"إخفاء المنشور\" : \"عرض المنشور\"}</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2411,
+    "text": "{postContext.content || \"لا يوجد نص في هذا المنشور\"}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2631,
+    "text": "<h3 className=\"text-xl font-black text-white\">تعديل التعليق</h3>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 2646,
+    "text": "حفظ التعديلات",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 2839,
+    "text": "await logActivity(currentUser.uid, 'like_post', `أعجب بمنشور ${post.userName ? `@${post.userName}` : 'مستخدم'}`);",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 2844,
+    "text": "body: `${currentUser.displayName || \"مستخدم\"} أعجب بمنشورك`,",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3034,
+    "text": "alert(\"تم نسخ رابط المنشور!\");",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3060,
+    "text": "<span>تعديل المنشور</span>",
+    "matched": [
+      "منشور",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 3072,
+    "text": "<span>حذف المنشور</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3123,
+    "text": "<h3 className=\"text-xl font-black text-white mb-2\">حذف المنشور</h3>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3124,
+    "text": "<p className=\"text-zinc-400 font-medium mb-8\">هل أنت متأكد من رغبتك في حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3176,
+    "text": "<h3 className=\"text-lg font-black text-white\">تعديل المنشور</h3>",
+    "matched": [
+      "منشور",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 3190,
+    "text": "<label className=\"text-xs font-bold text-zinc-400 block\">نص المنشور / الوصف</label>",
+    "matched": [
+      "منشور",
+      "الوصف"
+    ]
+  },
+  {
+    "lineNum": 3204,
+    "text": "<span className=\"text-xs font-bold\">تعديل استطلاع الرأي</span>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 3245,
+    "text": "حفظ التعديلات",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 3396,
+    "text": "title=\"مشاركة استطلاع الرأي\"",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 3399,
+    "text": "<span>{pollCopied ? \"تم النسخ!\" : \"مشاركة\"}</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 3608,
+    "text": "alert(\"تم نسخ رابط المنشور!\");",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3612,
+    "text": "title: \"مشاركة جديدة 🔄\",",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 3613,
+    "text": "body: `${currentUser?.displayName || \"مستخدم\"} شارك منشورك بنسخ الرابط`,",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3625,
+    "text": "title=\"نسخ رابط المنشور\"",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 3630,
+    "text": "<span className=\"text-xs font-bold hidden sm:inline\">مشاركة</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 3638,
+    "text": "title=\"مشاركة على X\"",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 3802,
+    "text": "مشاركة",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 5496,
+    "text": "alert('مشاركة الشاشة غير مدعومة في متصفحك الحالي.');",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 5875,
+    "text": "alert(\"⚠️ عذراً، لقد تم كتمك من الكتابة في هذا البث.\");",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 5939,
+    "text": "text: `🚫 تم كتم المستخدم @${name} من قبل الإدارة.`,",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 6852,
+    "text": "title={localMusicMute ? \"تشغيل الصوت محلياً\" : \"كتم الصوت محلياً\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 7612,
+    "text": "title={isHost ? \"كتم كاميرا الضيف\" : \"حالة كاميرا الضيف\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 7626,
+    "text": "title={isHost ? \"كتم مايك الضيف\" : \"حالة ميكروفون الضيف\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 7697,
+    "text": "title={!isStreamMuted ? \"كتم الصوت\" : \"تشغيل الصوت\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 7912,
+    "text": "title={isScreenSharing ? \"إيقاف مشاركة الشاشة\" : \"مشاركة الشاشة\"}",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 7925,
+    "text": "title={isMicEnabled ? \"كتم الميكروفون\" : \"تشغيل الميكروفون\"}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 8833,
+    "text": "<p className=\"text-xs font-black text-purple-300\">مشاركة في القصة</p>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 8898,
+    "text": "{stream?.mutedIds?.includes(selectedCommentForOptions.userId) ? 'إلغاء كتم الصوت عن المتابع' : 'كتم المتابع'}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 8947,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-normal mt-0.5\">منح المستخدم صلاحيات الإشراف وكتم المزعجين لمساعدتك في البث</p>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 8992,
+    "text": "{ id: 'moderators', label: 'المشرفون 🛡️', color: 'text-emerald-400 bg-emerald-500/5' },",
+    "matched": [
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 8993,
+    "text": "{ id: 'muted', label: 'المكتومون 🔇', color: 'text-amber-400 bg-amber-500/5' },",
+    "matched": [
+      "المكتومون"
+    ]
+  },
+  {
+    "lineNum": 8994,
+    "text": "{ id: 'blocked', label: 'المحظورون 🚫', color: 'text-red-400 bg-red-500/5' }",
+    "matched": [
+      "المحظورون"
+    ]
+  },
+  {
+    "lineNum": 9090,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold leading-relaxed\">المشرفون يمتلكون صلاحية كتم أو حظر المتابعين لمساعدتك في تنظيم البث.</p>",
+    "matched": [
+      "كتم",
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 9128,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold leading-relaxed\">المكتومون يمكنهم متابعة البث لكن يمنعون من كتابة أي تعليقات.</p>",
+    "matched": [
+      "المكتومون"
+    ]
+  },
+  {
+    "lineNum": 9143,
+    "text": "إلغاء الكتم",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 9154,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold leading-relaxed\">المحظورون يطردون فوراً من البث ويمنعون من الدخول للبث مرة أخرى.</p>",
+    "matched": [
+      "المحظورون"
+    ]
+  },
+  {
+    "lineNum": 9251,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold leading-relaxed\">اختر أحد المذيعين النشطين حالياً لربط بثين معاً ومشاركة شاشة البث والجمهور والتعليقات والبدء في تحديات حية!</p>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 9371,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold leading-relaxed\">اختر أحد المتواجدين النشطين في التطبيق لإرسال دعوة استضافة مشاركة فورية ومشاركة شاشة الفيديو والبث معاً.</p>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 9471,
+    "text": "<span className=\"text-[9px] text-zinc-500 font-medium\">الانتقال لصفحة الضيف واستعراض منشوراته</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 9486,
+    "text": "<span className=\"text-[9px] text-red-500/70 font-medium\">إنهاء المكالمة وإزالة الضيف من قائمة البث المشترك</span>",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 9779,
+    "text": "ابحث عن قصيدة أو مقطع صوتي في يوتيوب، أو أدخل الرابط/معرف الفيديو مباشرة لمزامنته وتشغيله لجميع الحاضرين في البث المباشر فوراً!",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 9784,
+    "text": "<label className=\"text-[10px] font-black text-zinc-400 block\">بحث في اليوتيوب أو إدخال رابط مباشر:</label>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 9790,
+    "text": "placeholder=\"ابحث أو الصق رابط فيديو يوتيوب هنا...\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 9807,
+    "text": "<span>{youtubeSearchQuery.trim() ? \"نتائج البحث والمقترحات\" : \"الصوتيات والقصائد المقترحة\"}</span>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 9953,
+    "text": "<span className=\"text-xs font-black text-emerald-400 block mb-0.5\">دعوة استضافة مشاركة نشطة 🟢</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 10821,
+    "text": "await logActivity(currentUser.uid, 'create_post', 'نشر منشورًا جديدًا');",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 10888,
+    "text": "title=\"البحث\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 10982,
+    "text": "body: \"علّقت سارة على منشورك: فكرة ممتازة جداً بالتوفيق!\",",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 10992,
+    "text": "body: \"أعجب محمد بمنشورك الأخير حول خصوصية البيانات\",",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11001,
+    "text": "title: \"مشاركة جديدة 🔄\",",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 11002,
+    "text": "body: \"قام خالد بمشاركة منشورك بنسخ رابط المشاركة\",",
+    "matched": [
+      "منشور",
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 11491,
+    "text": "<p className=\"text-zinc-500 text-xl font-black\">لا توجد منشورات تتطابق مع بحثك</p>",
+    "matched": [
+      "منشور",
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 11752,
+    "text": "{metricType === 'engagement' && 'مخطط تفاعل المنشورات (إعجابات وتعليقات)'}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11895,
+    "text": "معدل التفاعل المتوسط لكل منشور (Average Engagement Rate)",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11898,
+    "text": "تحليل نسبة تفاعل الجمهور ونشاطهم الإجمالي مقارنة بعدد المنشورات والمتابعين في هذه الفترة",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11904,
+    "text": "حساب حي ({actualPostsCount} منشور)",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11913,
+    "text": "<span className=\"text-zinc-500 text-xs font-bold mb-3\">نسبة التفاعل لكل منشور</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11945,
+    "text": "تعتمد النسبة على معادلة تفاعل الجمهور لكل منشور في المتوسط بالنسبة لإجمالي المتابعين.",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11949,
+    "text": "{/* العمود الثاني: إحصائيات التفاعل لكل منشور */}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11955,
+    "text": "<span className=\"text-zinc-400 text-xs font-bold\">التفاعل لكل منشور:</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 11999,
+    "text": "معدل تفاعلك الحالي يضعك في صدارة الحسابات النشطة. تفاعل الجمهور مع منشوراتك يظهر ولاءً عالياً واهتماماً كبيراً بالمحتوى الذي تقدمه.",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12003,
+    "text": "<span>إجمالي منشورات الفترة:</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12004,
+    "text": "<span className=\"text-white font-mono font-black\">{postsCount} منشور</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12013,
+    "text": "<strong>نصيحة ذكية:</strong> منشورات ريلز ومقاطع الفيديو القصيرة تساهم في رفع نسبة الوصول والمشاهدات بمعدل <span className=\"text-emerald-500 font-bold\">%٣٤+</span> مقارنة بالصور التقليدية.",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12339,
+    "text": "title=\"تخصيص المظهر\"",
+    "matched": [
+      "المظهر"
+    ]
+  },
+  {
+    "lineNum": 12416,
+    "text": "<p className=\"text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-1\">منشور</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12443,
+    "text": "تعديل الملف الشخصي",
+    "matched": [
+      "تعديل الملف الشخصي",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 12446,
+    "text": "مشاركة",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 12461,
+    "text": "<span>منشوراتي</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 12488,
+    "text": "<span>الإحصائيات</span>",
+    "matched": [
+      "الإحصائيات"
+    ]
+  },
+  {
+    "lineNum": 12986,
+    "text": "<li>{t(\"تمكينك من بدء بث مباشر ومشاركة الفيديو والصوت مباشرة مع متابعيك.\")}</li>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 13001,
+    "text": "<h4 className=\"text-zinc-900 dark:text-white font-black text-base\">{t(\"التحكم في بياناتك وتعديلها\")}</h4>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 13003,
+    "text": "{t(\"لديك كامل الصلاحية والتحكم في بياناتك الشخصية؛ حيث يمكنك تعديل اسمك، اسم المستخدم الخاص بك، السيرة الذاتية، وصورتك الشخصية، أو إزالتها في أي وقت من خلال قائمة الإعدادات.\")}",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 13363,
+    "text": "if (!confirm(\"هل أنت متأكد من حذف هذا المجلد؟ لن يتم حذف المنشورات المحفوظة، ستعود إلى المجلد العام.\")) return;",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 13621,
+    "text": "<h3 className=\"text-white font-black text-xl px-2\">{t(\"تعديل البيانات الشخصية\")}</h3>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 13623,
+    "text": "{/* مستوى اكتمال الملف الشخصي */}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 13631,
+    "text": "<h3 className=\"text-sm font-black text-white\">مستوى اكتمال ملفك الشخصي</h3>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 13786,
+    "text": "<p className=\"text-xs font-black\">رائع! ملفك الشخصي مكتمل بنسبة 100%</p>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 14338,
+    "text": "label: t('عرض عدد المنشورات'),",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 14345,
+    "text": "label: t('الإحصائيات المجهولة'),",
+    "matched": [
+      "الإحصائيات"
+    ]
+  },
+  {
+    "lineNum": 14436,
+    "text": "{t(\"في TruCast، نؤمن أن الخصوصية لا تعني الاختفاء، بل تعني السيطرة. الإحصائيات المجهولة تمنع التصنيف الاجتماعي المبني على الأرقام وتركز على جودة المحتوى.\")}",
+    "matched": [
+      "الإحصائيات"
+    ]
+  },
+  {
+    "lineNum": 14819,
+    "text": "<p className=\"text-zinc-500 text-[10px] font-black uppercase tracking-widest\">{t(\"إجمالي المنشورات\")}</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 14895,
+    "text": "<h4 className=\"text-white font-black text-lg\">{t(\"أبرز المنشورات\")}</h4>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 14928,
+    "text": "<p className=\"text-zinc-600 text-xs font-bold\">{t(\"لا توجد منشورات كافية للتحليل\")}</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 14968,
+    "text": "{ id: 'liveInteractions', label: t('تنبيهات التفاعلات المباشرة'), desc: t('تلقي إشعارات فورية عند الإعجاب بمنشوراتك، التعليق عليها، مشاركتها أو متابعتك'), enabled: currentSettings.liveInteractions !== false },",
+    "matched": [
+      "منشور",
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 15209,
+    "text": "{t(\"المستخدمون المدرجون في هذه القائمة لن يتمكنوا من مراسلتك، متابعتك، أو رؤية منشوراتك وبثك المباشر.\")}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15275,
+    "text": "{t(\"سيتمكن مجدداً من رؤية منشوراتك، مراسلتك، ومتابعة حسابك.\")}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15319,
+    "text": "<span>{t(\"المنشورات\")}</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15547,
+    "text": "{ icon: <User />, label: 'تعديل البيانات الشخصية', view: 'personal' },",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 15552,
+    "text": "{ icon: <Moon />, label: 'المظهر', view: 'appearance' },",
+    "matched": [
+      "المظهر"
+    ]
+  },
+  {
+    "lineNum": 15756,
+    "text": "await logActivity(currentUser.uid, 'create_post', 'نشر منشور وسائط جديدًا');",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15783,
+    "text": "<h2 className=\"text-lg font-black text-white\">{collectionPath === 'reels' ? \"إنشاء مقطع ريلز جديد\" : \"إنشاء منشور جديد\"}</h2>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15819,
+    "text": "<h3 className=\"text-zinc-400 font-bold text-sm px-2\">وصف المنشور</h3>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15823,
+    "text": "placeholder=\"اكتب وصفاً لمنشورك...\"",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 15913,
+    "text": ": \"سيظهر هذا المنشور في الصفحة الرئيسية لجميع المتابعين والمستخدمين.\"}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 16100,
+    "text": "<p className=\"text-zinc-500 font-bold text-sm mb-8\">ابحث عن مستخدمين بواسطة اسم المستخدم الخاص بهم</p>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 16108,
+    "text": "placeholder=\"ابحث عن @username...\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 16146,
+    "text": "<p className=\"text-zinc-500 text-xs font-medium\">{tagObj.count} منشور متداول</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 16160,
+    "text": "<p className=\"text-white font-black\">البحث عن \"{searchQuery}\"</p>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 16161,
+    "text": "<p className=\"text-zinc-500 text-xs font-medium\">عرض كل النتائج لهذا البحث</p>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 16187,
+    "text": "<span className=\"text-[10px] font-bold text-zinc-600\">{tagObj.count} منشور</span>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 16224,
+    "text": "المنشورات ({postResults.length})",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 16286,
+    "text": "<p className=\"text-zinc-400 font-black text-xl mb-2\">لم نجد منشورات</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 16569,
+    "text": "content: currentReel.caption || \"مشاركة من الريلز 🎬\",",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 16578,
+    "text": "alert(\"تمت المشاركة في قصتك بنجاح! 🎉\");",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 16582,
+    "text": "alert(\"حدث خطأ أثناء المشاركة في القصة.\");",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 17161,
+    "text": "مشاركة المحتوى المرئي 🎬",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 17204,
+    "text": "<span className=\"text-[10px] font-black text-zinc-300\">مشاركة أخرى</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 17560,
+    "text": "\"مشاركة في قصتي\"",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 18187,
+    "text": "placeholder=\"اسم المجموعة...\"",
+    "matched": [
+      "اسم المجموعة"
+    ]
+  },
+  {
+    "lineNum": 18192,
+    "text": "يمكنك إضافة لغاية 200,000 عضو، تخصيص الصلاحيات، وإضافة مشرفين.",
+    "matched": [
+      "عضو",
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 18770,
+    "text": "{privacy?.showPostCount !== false ? `${posts.length} منشور` : 'محتوى محمي'}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 18817,
+    "text": "مشاركة الملف الشخصي",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 18931,
+    "text": "سيتمكن مجدداً من رؤية منشوراتك، مراسلتك، ومتابعة حسابك.",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 19060,
+    "text": "<p className=\"text-[9px] font-black text-zinc-500 uppercase tracking-widest mt-1\">منشور</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 19110,
+    "text": "تعديل الحساب",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 19148,
+    "text": "{t(\"مراسلة\")}",
+    "matched": [
+      "مراسلة"
+    ]
+  },
+  {
+    "lineNum": 19165,
+    "text": "{t(\"المنشورات\")}",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 19205,
+    "text": "<p className=\"relative z-10 font-black text-xl tracking-tight\">لا توجد منشورات متاحة</p>",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 19569,
+    "text": "placeholder=\"ابحث عن مجموعات أو قنوات...\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 19610,
+    "text": "{chat.participants.length} عضو",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 19632,
+    "text": "<p className=\"text-zinc-500 font-bold\">لم يتم العثور على نتائج للبحث</p>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 20654,
+    "text": "حدد الأعضاء المسموح لهم بالرسم والكتابة على السبورة حالياً.",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 20657,
+    "text": "<p className=\"text-center text-xs text-zinc-500 py-6 font-bold\">لا يوجد أعضاء في المكالمة حالياً</p>",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 20673,
+    "text": "{p.role === 'owner' && <span className=\"text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-md font-black\">المالك</span>}",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 20994,
+    "text": "<h3 className=\"font-black text-lg text-zinc-100\">إدارة الصلاحيات</h3>",
+    "matched": [
+      "الصلاحيات",
+      "إدارة الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 20995,
+    "text": "<p className=\"text-[10px] text-zinc-500 font-bold mt-0.5\">تخصيص أذونات المشرفين والأعضاء</p>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 21037,
+    "text": "<h4 className=\"text-[10px] font-black text-blue-500 uppercase tracking-widest px-1\">صلاحيات الأعضاء العامة (Members)</h4>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 21141,
+    "text": "placeholder=\"ابحث باسم العضو أو المعرّف...\"",
+    "matched": [
+      "بحث",
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 21170,
+    "text": "لم يتم العثور على أعضاء مطابقة للبحث",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 21221,
+    "text": "{isParticipantAdmin ? 'مشرف' : 'عضو'}",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 21369,
+    "text": "<h3 className=\"font-black text-base text-zinc-100\">تأكيد تعديل الصلاحيات</h3>",
+    "matched": [
+      "تعديل",
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 21371,
+    "text": "هل أنت متأكد من رغبتك في حفظ التغييرات الجديدة على صلاحيات المجموعة والمشرفين والأعضاء؟ سيتم تطبيق الصلاحيات فوراً على جميع المستخدمين المعنيين.",
+    "matched": [
+      "الأعضاء",
+      "الصلاحيات",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 21399,
+    "text": "alert(\"تم حفظ صلاحيات المجموعة والأعضاء بنجاح!\");",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 21402,
+    "text": "alert(\"حدث خطأ أثناء حفظ الصلاحيات.\");",
+    "matched": [
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 21589,
+    "text": "title: isPrivate ? `مكالمة مع ${chat.otherUser?.displayName || \"مستخدم\"}` : (chat.name || \"مكالمة جماعية\"),",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 22228,
+    "text": "if (activeCall) return \"📞 مكالمة نشطة\";",
+    "matched": [
+      "مكالمة نشطة",
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 22238,
+    "text": "return `${chat.participants?.length || 0} عضو`;",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 22313,
+    "text": "<h2 className=\"text-lg font-black\">التفاعلات</h2>",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 22324,
+    "text": "<h3 className=\"text-xs font-black text-blue-500 uppercase tracking-widest\">نمط التفاعلات</h3>",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 22326,
+    "text": "{ id: 'all', label: 'كل التفاعلات', icon: '✨', desc: 'السماح بجميع الرموز التعبيرية' },",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 22327,
+    "text": "{ id: 'some', label: 'بعض التفاعلات', icon: '🌗', desc: 'السماح برموز مختارة فقط' },",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 22328,
+    "text": "{ id: 'none', label: 'إيقاف التفاعلات', icon: '🚫', desc: 'لا يسمح بالتفاعل على الرسائل' }",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 22453,
+    "text": "<h2 className=\"text-lg font-black\">الصلاحيات</h2>",
+    "matched": [
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 22525,
+    "text": "هذه الصلاحيات تنطبق على جميع أعضاء المجموعة الافتراضييين، يمكنك تخصيص صلاحيات المشرفين بشكل منفصل.",
+    "matched": [
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 22541,
+    "text": "<h2 className=\"text-lg font-black text-right\">الأعضاء المكتومون</h2>",
+    "matched": [
+      "الأعضاء",
+      "المكتومون",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22555,
+    "text": "<h3 className=\"font-bold text-sm\">الأعضاء الذين تم كتمهم</h3>",
+    "matched": [
+      "كتم",
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22557,
+    "text": "الأعضاء المكتومون لا يمكنهم إرسال رسائل أو التحدث في هذه المجموعة حتى يتم إلغاء كتمهم من قبل المشرفين.",
+    "matched": [
+      "كتم",
+      "الأعضاء",
+      "المكتومون",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22563,
+    "text": "<h3 className=\"text-xs font-black text-zinc-500 uppercase px-4 text-right\">الأعضاء المكتومون حالياً ({mutedList.length})</h3>",
+    "matched": [
+      "الأعضاء",
+      "المكتومون",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22584,
+    "text": "alert(\"تم إلغاء الكتم بنجاح!\");",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 22587,
+    "text": "alert(\"فشلت عملية إلغاء الكتم.\");",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 22593,
+    "text": "إلغاء الكتم",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 22637,
+    "text": "<h2 className=\"text-lg font-black text-right\">المحظورون 🚫</h2>",
+    "matched": [
+      "المحظورون"
+    ]
+  },
+  {
+    "lineNum": 22653,
+    "text": "الأعضاء المحظورون يطردون نهائياً ويتم إيقاف دخولهم أو انضمامهم للمجموعة مجدداً حتى يتم إلغاء حظرهم.",
+    "matched": [
+      "الأعضاء",
+      "المحظورون",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22659,
+    "text": "<h3 className=\"text-xs font-black text-zinc-500 uppercase px-4 text-right\">المحظورون حالياً ({bannedList.length})</h3>",
+    "matched": [
+      "المحظورون"
+    ]
+  },
+  {
+    "lineNum": 22680,
+    "text": "alert(\"تم إلغاء حظر العضو بنجاح ويمكنه الانضمام مجدداً!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 22730,
+    "text": "<h2 className=\"text-lg font-black\">المشرفون</h2>",
+    "matched": [
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 22743,
+    "text": "<h3 className=\"font-bold\">المكافح العنيف للإزعاج</h3>",
+    "matched": [
+      "المكافح العنيف للإزعاج"
+    ]
+  },
+  {
+    "lineNum": 22755,
+    "text": "<span>إضافة مشرف (من قائمة الأعضاء)</span>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 22759,
+    "text": "<h3 className=\"text-xs font-black text-zinc-500 uppercase px-4\">المشرفون الحاليون</h3>",
+    "matched": [
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 22784,
+    "text": "<p className=\"text-[10px] text-zinc-500 mt-0.5\">{username || 'بواسطة المالك'}</p>",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 22847,
+    "text": "isAdminOrOwner && !activeCall && { label: 'بدء مكالمة جماعية', icon: <PhoneCall className=\"w-4 h-4 text-emerald-500\" />, onClick: startCall },",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 22871,
+    "text": "placeholder=\"وسم العضو (مثال: مؤسس)\"",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 22960,
+    "text": "<h3 className=\"text-xl font-black text-white\">إضافة أعضاء</h3>",
+    "matched": [
+      "إضافة أعضاء"
+    ]
+  },
+  {
+    "lineNum": 22976,
+    "text": "placeholder=\"ابحث عن اسم أو اسم مستخدم...\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 22986,
+    "text": "<p className=\"text-xs font-bold text-zinc-600\">جاري البحث...</p>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 23044,
+    "text": "<h2 className=\"text-lg font-black\">الأعضاء</h2>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23056,
+    "text": "alert(\"عذراً، فقط مالك المجموعة والمشرفين يمكنهم تغيير إعدادات إخفاء الأعضاء.\");",
+    "matched": [
+      "الأعضاء",
+      "مالك",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23066,
+    "text": "alert(newHideMembers ? \"تم إخفاء قائمة الأعضاء بنجاح!\" : \"تم إظهار قائمة الأعضاء بنجاح!\");",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23069,
+    "text": "alert(\"حدث خطأ أثناء تغيير إعدادات إخفاء الأعضاء.\");",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23079,
+    "text": "<h3 className=\"font-bold text-sm\">إخفاء الأعضاء</h3>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23080,
+    "text": "<p className=\"text-[10px] text-zinc-500 mt-0.5\">عند التفعيل، سيتم إخفاء الأعضاء العاديين ويظهر فقط المالك والمشرفين للجميع.</p>",
+    "matched": [
+      "الأعضاء",
+      "مالك",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23098,
+    "text": "إضافة أعضاء",
+    "matched": [
+      "إضافة أعضاء"
+    ]
+  },
+  {
+    "lineNum": 23109,
+    "text": "<h3 className=\"text-xs font-black text-zinc-500 uppercase\">{chat?.participants?.length || 0} عضو</h3>",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23201,
+    "text": "<span className=\"text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-md font-black shrink-0\">مالك</span>",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 23234,
+    "text": "title=\"تعديل صلاحيات هذا العضو\"",
+    "matched": [
+      "عضو",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 23248,
+    "text": "alert(\"تم إلغاء صلاحيات الإشراف عن العضو بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23253,
+    "text": "alert(\"تم ترقية العضو إلى مشرف بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23257,
+    "text": "alert(\"حدث خطأ أثناء تعديل صلاحيات العضو\");",
+    "matched": [
+      "عضو",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 23266,
+    "text": "{isParticipantAdmin ? \"تنزيل لمستوي عضو\" : \"ترقية لمشرف\"}",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23283,
+    "text": "alert(\"تم إلغاء الكتم عن العضو بنجاح!\");",
+    "matched": [
+      "كتم",
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23288,
+    "text": "alert(\"تم كتم العضو بنجاح!\");",
+    "matched": [
+      "كتم",
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23292,
+    "text": "alert(\"حدث خطأ أثناء تغيير حالة كتم العضو\");",
+    "matched": [
+      "كتم",
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 23304,
+    "text": "<span>إلغاء الكتم</span>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 23309,
+    "text": "<span>كتم</span>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 23348,
+    "text": "<h2 className=\"text-lg font-black\">الإحصائيات</h2>",
+    "matched": [
+      "الإحصائيات"
+    ]
+  },
+  {
+    "lineNum": 23359,
+    "text": "{ label: 'الأعضاء', value: chat?.participants?.length || 0, trend: '+5.2%', positive: true },",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23624,
+    "text": "<h2 className=\"text-lg font-black\">تعديل</h2>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 23631,
+    "text": "alert(\"الرابط المخصص قصير جداً (يجب أن يكون 3 أحرف على الأقل)\");",
+    "matched": [
+      "الرابط المخصص"
+    ]
+  },
+  {
+    "lineNum": 23635,
+    "text": "alert(\"الرابط المخصص محجوز بالفعل! يرجى اختيار رابط آخر.\");",
+    "matched": [
+      "الرابط المخصص"
+    ]
+  },
+  {
+    "lineNum": 23899,
+    "text": "<label className=\"text-[10px] font-black text-blue-500 uppercase tracking-widest px-4\">الوصف</label>",
+    "matched": [
+      "الوصف"
+    ]
+  },
+  {
+    "lineNum": 23903,
+    "text": "placeholder=\"اكتب وصفاً مختصراً...\"",
+    "matched": [
+      "اكتب وصفاً مختصراً"
+    ]
+  },
+  {
+    "lineNum": 23910,
+    "text": "<label className=\"text-[10px] font-black text-blue-500 uppercase tracking-widest px-4\">الرابط المخصص</label>",
+    "matched": [
+      "الرابط المخصص"
+    ]
+  },
+  {
+    "lineNum": 23952,
+    "text": "<h3 className=\"text-[10px] font-black text-zinc-500 uppercase tracking-widest px-2\">الإعدادات المتقدمة</h3>",
+    "matched": [
+      "الإعدادات المتقدمة"
+    ]
+  },
+  {
+    "lineNum": 23955,
+    "text": "{ id: 'reactions', label: 'التفاعلات', icon: <Smile className=\"w-5 h-5 text-pink-500\" />, show: isAdminOrOwner },",
+    "matched": [
+      "التفاعلات"
+    ]
+  },
+  {
+    "lineNum": 23956,
+    "text": "{ id: 'permissions', label: 'الصلاحيات', icon: <Key className=\"w-5 h-5 text-amber-500\" />, suffix: <span className=\"text-xs font-bold text-zinc-500\">2/13</span>, show: isAdminOrOwner },",
+    "matched": [
+      "الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 23957,
+    "text": "{ id: 'manage-permissions', label: 'إدارة الصلاحيات', icon: <LockKeyhole className=\"w-5 h-5 text-indigo-400\" />, show: isAdminOrOwner, isPopup: true },",
+    "matched": [
+      "الصلاحيات",
+      "إدارة الصلاحيات"
+    ]
+  },
+  {
+    "lineNum": 23958,
+    "text": "{ id: 'admins', label: 'المشرفون', icon: <ShieldCheck className=\"w-5 h-5 text-blue-500\" />, suffix: <span className=\"text-xs font-bold text-zinc-500\">{chat?.admins?.length || 0}</span>, show: isAdminOrOwner },",
+    "matched": [
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 23959,
+    "text": "{ id: 'muted', label: 'المكتومون', icon: <VolumeX className=\"w-5 h-5 text-amber-500\" />, suffix: <span className=\"text-xs font-bold text-zinc-500\">{chat?.mutedMembers?.length || 0}</span>, show: isAdminOrOwner },",
+    "matched": [
+      "المكتومون"
+    ]
+  },
+  {
+    "lineNum": 23960,
+    "text": "{ id: 'banned', label: 'المحظورون', icon: <ShieldAlert className=\"w-5 h-5 text-red-500\" />, suffix: <span className=\"text-xs font-bold text-zinc-500\">{chat?.bannedMembers?.length || 0}</span>, show: isAdminOrOwner },",
+    "matched": [
+      "المحظورون"
+    ]
+  },
+  {
+    "lineNum": 23961,
+    "text": "{ id: 'members', label: 'الأعضاء', icon: <Users className=\"w-5 h-5 text-indigo-500\" />, suffix: <span className=\"text-xs font-bold text-zinc-500\">{chat?.participants?.length || 0}</span>, show: true },",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 23962,
+    "text": "{ id: 'statistics', label: 'الإحصائيات', icon: <BarChart2 className=\"w-5 h-5 text-emerald-500\" />, show: true },",
+    "matched": [
+      "الإحصائيات"
+    ]
+  },
+  {
+    "lineNum": 23963,
+    "text": "{ id: 'appearance', label: 'المظهر', icon: <Sparkles className=\"w-5 h-5 text-purple-500\" />, badge: 'NEW', show: true },",
+    "matched": [
+      "المظهر"
+    ]
+  },
+  {
+    "lineNum": 24007,
+    "text": "<span className=\"text-sm font-bold text-zinc-200\">المكافح العنيف للإزعاج</span>",
+    "matched": [
+      "المكافح العنيف للإزعاج"
+    ]
+  },
+  {
+    "lineNum": 24025,
+    "text": "<span className=\"text-sm font-bold text-zinc-200\">إخفاء الأعضاء</span>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 24026,
+    "text": "<span className=\"text-[10px] text-zinc-600 font-bold\">فقط المشرفون يمكنهم رؤية القائمة</span>",
+    "matched": [
+      "المشرفون"
+    ]
+  },
+  {
+    "lineNum": 24231,
+    "text": "<h2 className=\"text-lg font-black\">المظهر والتصميم</h2>",
+    "matched": [
+      "المظهر"
+    ]
+  },
+  {
+    "lineNum": 24327,
+    "text": "<h3 className=\"font-black text-base text-zinc-100\">إدارة العضو</h3>",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24353,
+    "text": "alert(\"تم إلغاء صلاحيات الإشراف عن العضو بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24358,
+    "text": "alert(\"تم ترقية العضو إلى مشرف بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24362,
+    "text": "alert(\"حدث خطأ أثناء تعديل صلاحيات الإشراف\");",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 24372,
+    "text": "{chat?.admins?.includes(longPressedUser.userId) ? \"تنزيل لمستوى عضو (إلغاء الإشراف)\" : \"ترقية إلى مشرف\"}",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24393,
+    "text": "<span className=\"text-sm font-bold text-zinc-200\">تعديل صلاحيات العضو</span>",
+    "matched": [
+      "عضو",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 24403,
+    "text": "alert(\"لا يمكن إزالة مالك المجموعة!\");",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 24422,
+    "text": "alert(\"تم إزالة العضو من المجموعة بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24425,
+    "text": "alert(\"حدث خطأ أثناء إزالة العضو من المجموعة\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24458,
+    "text": "<h3 className=\"font-black text-base text-zinc-100\">الوسائط المشتركة</h3>",
+    "matched": [
+      "الوسائط المشتركة"
+    ]
+  },
+  {
+    "lineNum": 24552,
+    "text": "<span className=\"text-sm font-bold text-zinc-300\">مشاركة الرابط</span>",
+    "matched": [
+      "مشاركة"
+    ]
+  },
+  {
+    "lineNum": 24615,
+    "text": "<span className=\"text-[10px] font-black text-zinc-500 tracking-tighter\">مراسلة</span>",
+    "matched": [
+      "مراسلة"
+    ]
+  },
+  {
+    "lineNum": 24628,
+    "text": "<span className=\"text-[10px] font-black text-zinc-500 tracking-tighter\">مكالمة</span>",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 24653,
+    "text": "{chat.mutedBy?.includes(currentUser?.uid || \"\") ? 'إلغاء الكتم' : 'كتم'}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 24666,
+    "text": "<span className=\"text-[10px] font-black text-zinc-500 tracking-tighter\">بحث</span>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 24672,
+    "text": "<h3 className=\"text-xs font-black text-blue-500 uppercase tracking-widest\">المعلومات</h3>",
+    "matched": [
+      "المعلومات"
+    ]
+  },
+  {
+    "lineNum": 24687,
+    "text": "<span>إضافة أعضاء</span>",
+    "matched": [
+      "إضافة أعضاء"
+    ]
+  },
+  {
+    "lineNum": 24701,
+    "text": "<p className=\"text-[10px] text-zinc-600 font-bold mt-1\">الرابط المخصص</p>",
+    "matched": [
+      "الرابط المخصص"
+    ]
+  },
+  {
+    "lineNum": 24707,
+    "text": "alert(\"تم نسخ الرابط المخصص بنجاح!\");",
+    "matched": [
+      "الرابط المخصص"
+    ]
+  },
+  {
+    "lineNum": 24747,
+    "text": "<p className=\"text-sm font-bold text-zinc-200\">الوسائط المشتركة</p>",
+    "matched": [
+      "الوسائط المشتركة"
+    ]
+  },
+  {
+    "lineNum": 24778,
+    "text": "<p className=\"text-sm font-bold text-zinc-200\">الأعضاء</p>",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 24780,
+    "text": "{chat.hideMembers ? 'تم إخفاء الأعضاء العاديين' : `${chat.participants?.length || 0} عضو`}",
+    "matched": [
+      "الأعضاء",
+      "عضو",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 24794,
+    "text": "alert(newHide ? \"تم إخفاء الأعضاء العاديين!\" : \"تم إظهار جميع الأعضاء!\");",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 24805,
+    "text": "{chat.hideMembers ? \"إظهار الكل\" : \"إخفاء الأعضاء\"}",
+    "matched": [
+      "الأعضاء",
+      "الأعضاء",
+      "إخفاء الأعضاء"
+    ]
+  },
+  {
+    "lineNum": 24909,
+    "text": "مالك",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 24917,
+    "text": "عضو",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24973,
+    "text": "<h3 className=\"font-black text-base text-zinc-100\">إدارة العضو</h3>",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 24999,
+    "text": "alert(\"تم إلغاء صلاحيات الإشراف عن العضو بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25004,
+    "text": "alert(\"تم ترقية العضو إلى مشرف بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25008,
+    "text": "alert(\"حدث خطأ أثناء تعديل صلاحيات الإشراف\");",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 25018,
+    "text": "{chat?.admins?.includes(longPressedUser.userId) ? \"تنزيل لمستوى عضو (إلغاء الإشراف)\" : \"ترقية إلى مشرف\"}",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25039,
+    "text": "<span className=\"text-sm font-bold text-zinc-200\">تعديل صلاحيات العضو</span>",
+    "matched": [
+      "عضو",
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 25049,
+    "text": "alert(\"لا يمكن إزالة مالك المجموعة!\");",
+    "matched": [
+      "مالك"
+    ]
+  },
+  {
+    "lineNum": 25098,
+    "text": "<h3 className=\"font-black text-lg text-zinc-100\">تأكيد إزالة العضو</h3>",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25100,
+    "text": "هل أنت متأكد من رغبتك في إزالة العضو <span className=\"text-rose-400 font-bold\">{userToRemove.displayName}</span> من المجموعة؟ لن يتمكن من قراءة أو كتابة أي رسائل بعد الآن.",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25123,
+    "text": "alert(\"تم إزالة العضو من المجموعة بنجاح!\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25126,
+    "text": "alert(\"حدث خطأ أثناء إزالة العضو\");",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 25249,
+    "text": "title=\"انضم للمكالمة النشطة\"",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 25257,
+    "text": "title={chat?.type === 'group' ? \"بدء مكالمة جماعية\" : \"بدء مكالمة\"}",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 25269,
+    "text": "title=\"البحث في الرسائل\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 25291,
+    "text": "{chat?.type === 'group' ? \"بدء مكالمة جماعية\" : \"بدء مكالمة\"}",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 25310,
+    "text": "{chat?.mutedBy?.includes(currentUser?.uid || \"\") ? 'إلغاء كتم الإشعارات' : 'كتم الإشعارات'}",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 25350,
+    "text": "placeholder=\"البحث في الرسائل...\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 25406,
+    "text": "<p className=\"text-white font-black text-sm tracking-tight\">مكالمة نشطة الآن</p>",
+    "matched": [
+      "مكالمة نشطة",
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 25427,
+    "text": "<span>نتائج البحث عن: <strong className=\"text-white\">\"{searchQuery}\"</strong></span>",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 25434,
+    "text": "title=\"إلغاء البحث\"",
+    "matched": [
+      "بحث"
+    ]
+  },
+  {
+    "lineNum": 25771,
+    "text": "<span>إلغاء كتم الإشعارات</span>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 25776,
+    "text": "<span>كتم الإشعارات</span>",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 25797,
+    "text": "<p className=\"font-black text-[10px] text-yellow-500 uppercase tracking-widest mb-0.5\">تعديل الرسالة</p>",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 25850,
+    "text": "placeholder={editingMessage ? \"تعديل الرسالة...\" : isUploading ? \"جاري الرفع...\" : \"الرسالة...\"}",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 25946,
+    "text": "? \"تم كتمك بواسطة المشرفين في هذه المجموعة ولا يمكنك إرسال رسائل.\"",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 26009,
+    "text": "تعديل",
+    "matched": [
+      "تعديل"
+    ]
+  },
+  {
+    "lineNum": 27233,
+    "text": "handleFirestoreError(new Error(`إعدادات Firebase غير مكتملة: ${missing.join(', ')}`), OperationType.GET, 'config');",
+    "matched": [
+      "كتم"
+    ]
+  },
+  {
+    "lineNum": 28613,
+    "text": "{ label: t('منشور نصي'), icon: <Edit2 className=\"w-7 h-7\" />, color: 'bg-zinc-800', action: () => { requestTabChange('home'); setCreateMode('posts'); setIsAddMenuOpen(false); } },",
+    "matched": [
+      "منشور"
+    ]
+  },
+  {
+    "lineNum": 28656,
+    "text": "body: \"لقد أصبحت الآن عضواً متميزاً في TruCast!\",",
+    "matched": [
+      "عضو"
+    ]
+  },
+  {
+    "lineNum": 28784,
+    "text": "<span>مكالمة واردة...</span>",
+    "matched": [
+      "مكالمة"
+    ]
+  },
+  {
+    "lineNum": 28879,
+    "text": "<h3 className=\"text-sm font-black text-white\">المنشور</h3>",
+    "matched": [
+      "منشور"
+    ]
+  }
+]
