@@ -4130,14 +4130,19 @@ onClick={() => {
     triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
   }
 
-  if ('speechSynthesis' in window) {
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
-  const msg = new SpeechSynthesisUtterance("السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر");
-  msg.lang = 'ar-SA';
-  msg.rate = 0.9;
-  msg.pitch = 0.85;
-  window.speechSynthesis.speak(msg);
+  try {
+  const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
+  const audio = new Audio(url);
+  audio.volume = 1.0;
+  audio.play().catch(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    }
+  });
+} catch (e) {
+  console.error("Audio error:", e);
 }
 }}
 
@@ -4169,14 +4174,19 @@ onClick={() => {
     triggerToast("تم انضمام غدير إلى البث المباشر! 🎙️");
   }
 
-  if ('speechSynthesis' in window) {
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
-  const msg = new SpeechSynthesisUtterance("السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم جميعاً في البث المباشر");
-  msg.lang = 'ar-SA';
-  msg.rate = 0.9;
-  msg.pitch = 1.25;
-  window.speechSynthesis.speak(msg);
+  try {
+  const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
+  const audio = new Audio(url);
+  audio.volume = 1.0;
+  audio.play().catch(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    }
+  });
+} catch (e) {
+  console.error("Audio error:", e);
 }
 }}
 
