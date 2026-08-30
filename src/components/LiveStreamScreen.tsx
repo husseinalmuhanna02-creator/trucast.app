@@ -4130,16 +4130,15 @@ onClick={() => {
     triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
   }
 
-  try {
-    const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
-    const url = 'https://api.streamelements.com/kappa/v2/speech?voice=Tarik&text=' + encodeURIComponent(text);
-    
-    // تشغيل مباشر لتخطي حظر Autoplay في Android WebView
-    const audio = new Audio(url);
-    audio.play().catch((e) => console.error("Audio error:", e));
-  } catch (e) {
-    console.error("Audio error:", e);
-  }
+  if ('speechSynthesis' in window) {
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+  const msg = new SpeechSynthesisUtterance("السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر");
+  msg.lang = 'ar-SA';
+  msg.rate = 0.9;
+  msg.pitch = 0.85;
+  window.speechSynthesis.speak(msg);
+}
 }}
 
 
@@ -4170,16 +4169,15 @@ onClick={() => {
     triggerToast("تم انضمام غدير إلى البث المباشر! 🎙️");
   }
 
-  try {
-    const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم جميعاً في البث المباشر";
-    const url = 'https://api.streamelements.com/kappa/v2/speech?voice=Zeina&text=' + encodeURIComponent(text);
-    
-    // تشغيل مباشر
-    const audio = new Audio(url);
-    audio.play().catch((e) => console.error("Audio error:", e));
-  } catch (e) {
-    console.error("Audio error:", e);
-  }
+  if ('speechSynthesis' in window) {
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+  const msg = new SpeechSynthesisUtterance("السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم جميعاً في البث المباشر");
+  msg.lang = 'ar-SA';
+  msg.rate = 0.9;
+  msg.pitch = 1.25;
+  window.speechSynthesis.speak(msg);
+}
 }}
 
 
