@@ -4131,18 +4131,33 @@ onClick={() => {
   }
 
   try {
+  alert("1- تم الضغط على علي، جاري تجهيز الصوت...");
   const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
   const audio = new Audio(url);
-  audio.volume = 1.0;
-  audio.play().catch(() => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-    }
-  });
-} catch (e) {
-  console.error("Audio error:", e);
+
+  audio.play()
+    .then(() => {
+      alert("2- نجح التشغيل عبر Audio MP3!");
+    })
+    .catch((err) => {
+      alert("2- فشل Audio MP3 السبب:\n" + err.name + ": " + err.message);
+
+      // اختبار البديل speechSynthesis
+      if ('speechSynthesis' in window) {
+        alert("3- جاري تجربة speechSynthesis المحلي...");
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ar-SA';
+        msg.onstart = () => alert("4- بدأ speechSynthesis بالنطق!");
+        msg.onerror = (e) => alert("4- خطأ في speechSynthesis:\n" + e.error);
+        window.speechSynthesis.speak(msg);
+      } else {
+        alert("3- speechSynthesis غير مدعوم على هاتفك!");
+      }
+    });
+} catch (e: any) {
+  alert("خطأ عام في النظام:\n" + e.message);
 }
 }}
 
@@ -4175,18 +4190,33 @@ onClick={() => {
   }
 
   try {
+  alert("1- تم الضغط على غدير، جاري تجهيز الصوت...");
   const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
   const audio = new Audio(url);
-  audio.volume = 1.0;
-  audio.play().catch(() => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-    }
-  });
-} catch (e) {
-  console.error("Audio error:", e);
+
+  audio.play()
+    .then(() => {
+      alert("2- نجح التشغيل عبر Audio MP3!");
+    })
+    .catch((err) => {
+      alert("2- فشل Audio MP3 السبب:\n" + err.name + ": " + err.message);
+
+      // اختبار البديل speechSynthesis
+      if ('speechSynthesis' in window) {
+        alert("3- جاري تجربة speechSynthesis المحلي...");
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ar-SA';
+        msg.onstart = () => alert("4- بدأ speechSynthesis بالنطق!");
+        msg.onerror = (e) => alert("4- خطأ في speechSynthesis:\n" + e.error);
+        window.speechSynthesis.speak(msg);
+      } else {
+        alert("3- speechSynthesis غير مدعوم على هاتفك!");
+      }
+    });
+} catch (e: any) {
+  alert("خطأ عام في النظام:\n" + e.message);
 }
 }}
 
