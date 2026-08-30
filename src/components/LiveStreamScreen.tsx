@@ -4133,13 +4133,25 @@ onClick={() => {
   try {
   const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
   const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zayd&text=${encodeURIComponent(text)}`;
-  const audio = new Audio(url);
-  audio.volume = 1.0;
-  audio.play().catch((err) => {
-    console.error("Audio play error:", err);
-  });
+
+  const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+  const audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => audioCtx.decodeAudioData(buffer))
+    .then((decodedData) => {
+      const source = audioCtx.createBufferSource();
+      source.buffer = decodedData;
+      source.connect(audioCtx.destination);
+      source.start(0);
+    })
+    .catch((err) => console.error("Audio fetch/decode error:", err));
 } catch (e) {
-  console.error("Audio system error:", e);
+  console.error("Web Audio API error:", e);
 }
 }}
 
@@ -4174,13 +4186,25 @@ onClick={() => {
   try {
   const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
   const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zeina&text=${encodeURIComponent(text)}`;
-  const audio = new Audio(url);
-  audio.volume = 1.0;
-  audio.play().catch((err) => {
-    console.error("Audio play error:", err);
-  });
+
+  const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+  const audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => audioCtx.decodeAudioData(buffer))
+    .then((decodedData) => {
+      const source = audioCtx.createBufferSource();
+      source.buffer = decodedData;
+      source.connect(audioCtx.destination);
+      source.start(0);
+    })
+    .catch((err) => console.error("Audio fetch/decode error:", err));
 } catch (e) {
-  console.error("Audio system error:", e);
+  console.error("Web Audio API error:", e);
 }
 }}
 
