@@ -4138,37 +4138,65 @@ onClick={() => {
     triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
   }
 
-  try {
-  const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
-  const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
-  const host = "streamlined-edge-tts.p.rapidapi.com";
-  const voice = "ar-SA-HamedNeural";
-  const url = `https://${host}/tts?text=${encodeURIComponent(text)}&voice=${voice}`;
+      try {
+      const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
+      const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
+      const host = "streamlined-edge-tts.p.rapidapi.com";
+      const voice = "ar-SA-HamedNeural";
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "x-rapidapi-key": apiKey,
-      "x-rapidapi-host": host
-    }
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("خطأ سيرفر: " + res.status);
-      return res.blob();
-    })
-    .then((blob) => {
-      if ((window as any).aiAudio) {
-        (window as any).aiAudio.pause();
+      // دالة نطق النص وفتح المايك تلقائياً بعد انتهاء الصوت
+      const speakText = (speechText: string) => {
+        const url = `https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`;
+        
+        fetch(url, {
+          headers: {
+            "x-rapidapi-key": apiKey,
+            "x-rapidapi-host": host
+          }
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("خطأ سيرفر: " + res.status);
+            return res.blob();
+          })
+          .then((blob) => {
+            if ((window as any).aiAudio) {
+              (window as any).aiAudio.pause();
+            }
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+            (window as any).aiAudio = audio;
+
+            // فتح المايك للاستماع لك فور انتهاء علي من الكلام
+            audio.onended = () => {
+              if (recognition) {
+                try { recognition.start(); } catch (e) {}
+              }
+            };
+
+            audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
+          })
+          .catch((err) => alert("❌ خطأ شبكة: " + err.message));
+      };
+
+      // ربط المايك لتلقي كلامك وإرساله للذكاء الاصطناعي
+      if (recognition) {
+        recognition.onresult = async (event: any) => {
+          const userSpeech = event.results[0][0].transcript;
+          
+          // إرسال كلامك لدالة الذكاء الاصطناعي ونطق الرد
+          if (typeof handleAIChat === "function") {
+            const aiReply = await handleAIChat(userSpeech);
+            speakText(aiReply);
+          }
+        };
       }
-      const audioUrl = URL.createObjectURL(blob);
-      const audio = new Audio(audioUrl);
-      (window as any).aiAudio = audio;
-      audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
-    })
-    .catch((err) => alert("❌ خطأ شبكة: " + err.message));
-} catch (e: any) {
-  alert("❌ خطأ رئيسي: " + e.message);
-}
+
+      // نطق مقدمة الترحيب الأولى عند الانضمام
+      speakText(text);
+
+    } catch (e: any) {
+      alert("❌ خطأ رئيسي: " + e.message);
+    }
 }}
 
 
