@@ -73,6 +73,14 @@ import {
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StreamAudioPlayer } from './StreamAudioPlayer';
+// إعداد محرك التعرف على الصوت
+const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+
+if (recognition) {
+  recognition.lang = 'ar-SA';
+  recognition.interimResults = false;
+}
 
 // Sub-component to safely consume Stream Video contexts/hooks
 const LiveStreamContent = ({ 
