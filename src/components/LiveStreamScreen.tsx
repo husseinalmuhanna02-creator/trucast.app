@@ -4134,6 +4134,8 @@ onClick={() => {
   const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
   const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zayd&text=${encodeURIComponent(text)}`;
 
+  alert("1️⃣ بدأ جلب الصوت...");
+
   if ((window as any).aiAudio) {
     (window as any).aiAudio.pause();
   }
@@ -4141,9 +4143,27 @@ onClick={() => {
   const audio = new Audio(url);
   (window as any).aiAudio = audio;
   audio.volume = 1.0;
-  audio.play().catch((err) => console.error("Audio error:", err));
-} catch (e) {
-  console.error("System error:", e);
+
+  audio.oncanplaythrough = () => {
+    alert("2️⃣ تم تجهيز الملف بنجاح!");
+  };
+
+  audio.onerror = () => {
+    alert("❌ خطأ شبكة/حظر: " + (audio.error ? audio.error.code : "ملف غير مدعوم"));
+  };
+
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        alert("3️⃣ يتم تشغيل الصوت الآن!");
+      })
+      .catch((err) => {
+        alert("❌ خطأ مشغل (Autoplay): " + err.name + " - " + err.message);
+      });
+  }
+} catch (e: any) {
+  alert("❌ خطأ كود رئيسي: " + e.message);
 }
 }}
 
@@ -4179,6 +4199,8 @@ onClick={() => {
   const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
   const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zeina&text=${encodeURIComponent(text)}`;
 
+  alert("1️⃣ بدأ جلب الصوت...");
+
   if ((window as any).aiAudio) {
     (window as any).aiAudio.pause();
   }
@@ -4186,9 +4208,27 @@ onClick={() => {
   const audio = new Audio(url);
   (window as any).aiAudio = audio;
   audio.volume = 1.0;
-  audio.play().catch((err) => console.error("Audio error:", err));
-} catch (e) {
-  console.error("System error:", e);
+
+  audio.oncanplaythrough = () => {
+    alert("2️⃣ تم تجهيز الملف بنجاح!");
+  };
+
+  audio.onerror = () => {
+    alert("❌ خطأ شبكة/حظر: " + (audio.error ? audio.error.code : "ملف غير مدعوم"));
+  };
+
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        alert("3️⃣ يتم تشغيل الصوت الآن!");
+      })
+      .catch((err) => {
+        alert("❌ خطأ مشغل (Autoplay): " + err.name + " - " + err.message);
+      });
+  }
+} catch (e: any) {
+  alert("❌ خطأ كود رئيسي: " + e.message);
 }
 }}
 
