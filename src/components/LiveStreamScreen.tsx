@@ -4132,38 +4132,34 @@ onClick={() => {
 
   try {
   const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
-  const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zayd&text=${encodeURIComponent(text)}`;
+  const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
+  const host = "streamlined-edge-tts.p.rapidapi.com";
+  const voice = "ar-SA-HamedNeural";
+  const url = `https://${host}/tts?text=${encodeURIComponent(text)}&voice=${voice}`;
 
-  alert("1️⃣ بدأ جلب الصوت...");
-
-  if ((window as any).aiAudio) {
-    (window as any).aiAudio.pause();
-  }
-
-  const audio = new Audio(url);
-  (window as any).aiAudio = audio;
-  audio.volume = 1.0;
-
-  audio.oncanplaythrough = () => {
-    alert("2️⃣ تم تجهيز الملف بنجاح!");
-  };
-
-  audio.onerror = () => {
-    alert("❌ خطأ شبكة/حظر: " + (audio.error ? audio.error.code : "ملف غير مدعوم"));
-  };
-
-  const playPromise = audio.play();
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        alert("3️⃣ يتم تشغيل الصوت الآن!");
-      })
-      .catch((err) => {
-        alert("❌ خطأ مشغل (Autoplay): " + err.name + " - " + err.message);
-      });
-  }
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": apiKey,
+      "x-rapidapi-host": host
+    }
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("خطأ سيرفر: " + res.status);
+      return res.blob();
+    })
+    .then((blob) => {
+      if ((window as any).aiAudio) {
+        (window as any).aiAudio.pause();
+      }
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      (window as any).aiAudio = audio;
+      audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
+    })
+    .catch((err) => alert("❌ خطأ شبكة: " + err.message));
 } catch (e: any) {
-  alert("❌ خطأ كود رئيسي: " + e.message);
+  alert("❌ خطأ رئيسي: " + e.message);
 }
 }}
 
@@ -4196,39 +4192,35 @@ onClick={() => {
   }
 
   try {
-  const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
-  const url = `https://api.streamelements.com/kappa/v2/speech?voice=Zeina&text=${encodeURIComponent(text)}`;
+  const text = "السلام عليكم ورح مة الله، معكم غدير، أهلاً بكم في البث المباشر";
+  const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
+  const host = "streamlined-edge-tts.p.rapidapi.com";
+  const voice = "ar-SA-ZariyahNeural";
+  const url = `https://${host}/tts?text=${encodeURIComponent(text)}&voice=${voice}`;
 
-  alert("1️⃣ بدأ جلب الصوت...");
-
-  if ((window as any).aiAudio) {
-    (window as any).aiAudio.pause();
-  }
-
-  const audio = new Audio(url);
-  (window as any).aiAudio = audio;
-  audio.volume = 1.0;
-
-  audio.oncanplaythrough = () => {
-    alert("2️⃣ تم تجهيز الملف بنجاح!");
-  };
-
-  audio.onerror = () => {
-    alert("❌ خطأ شبكة/حظر: " + (audio.error ? audio.error.code : "ملف غير مدعوم"));
-  };
-
-  const playPromise = audio.play();
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        alert("3️⃣ يتم تشغيل الصوت الآن!");
-      })
-      .catch((err) => {
-        alert("❌ خطأ مشغل (Autoplay): " + err.name + " - " + err.message);
-      });
-  }
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": apiKey,
+      "x-rapidapi-host": host
+    }
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("خطأ سيرفر: " + res.status);
+      return res.blob();
+    })
+    .then((blob) => {
+      if ((window as any).aiAudio) {
+        (window as any).aiAudio.pause();
+      }
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      (window as any).aiAudio = audio;
+      audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
+    })
+    .catch((err) => alert("❌ خطأ شبكة: " + err.message));
 } catch (e: any) {
-  alert("❌ خطأ كود رئيسي: " + e.message);
+  alert("❌ خطأ رئيسي: " + e.message);
 }
 }}
 
