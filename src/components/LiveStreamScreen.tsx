@@ -4138,11 +4138,16 @@ onClick={() => {
     triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
   }
 
-          try {
+    try {
       const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
       const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
       const host = "streamlined-edge-tts.p.rapidapi.com";
       const voice = "ar-SA-HamedNeural";
+
+      const notify = (msg: string) => {
+        if (typeof triggerToast === "function") triggerToast(msg);
+        console.log(msg);
+      };
 
       const speakText = (speechText: string) => {
         const url = `https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`;
@@ -4165,43 +4170,43 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-            // كود تشخيص تشغيل المايك فور الانتهاء من التحدث
             audio.onended = () => {
-              if (recognition) {
+              if (typeof recognition !== "undefined" && recognition) {
                 try {
+                  notify("🎤 جاري تشغيل المايك للاستماع لك...");
                   recognition.start();
                 } catch (e: any) {
-                  alert("❌ تعذر تشغيل المايك: " + e.message);
+                  notify("❌ تعذر تشغيل المايك: " + e.message);
                 }
               } else {
-                alert("⚠️ النظام لا يدعم SpeechRecognition");
+                notify("⚠️ النظام لا يدعم SpeechRecognition تلقائياً");
               }
             };
 
-            audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
+            audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
           })
-          .catch((err) => alert("❌ خطأ شبكة: " + err.message));
+          .catch((err) => notify("❌ خطأ شبكة: " + err.message));
       };
 
-      // كود تشخيص التقاط الكلام ودالة الذكاء الاصطناعي
-      if (recognition) {
+      if (typeof recognition !== "undefined" && recognition) {
         recognition.onerror = (event: any) => {
-          alert("❌ خطأ المايك: " + event.error);
+          notify("❌ خطأ المايك: " + event.error);
         };
 
         recognition.onresult = async (event: any) => {
           const userSpeech = event.results[0][0].transcript;
-          alert("🗣️ تم التقاط كلامك: " + userSpeech);
+          notify("🗣️ تم التقاط كلامك: " + userSpeech);
 
           if (typeof handleAIChat === "function") {
             try {
+              notify("🤖 الذكاء الاصطناعي يعالج الإجابة...");
               const aiReply = await handleAIChat(userSpeech);
               speakText(aiReply);
             } catch (err: any) {
-              alert("❌ خطأ في الذكاء الاصطناعي: " + err.message);
+              notify("❌ خطأ في دالة الذكاء الاصطناعي: " + err.message);
             }
           } else {
-            alert("⚠️ تنبيه: دالة handleAIChat غير معرّفة في هذا الملف!");
+            notify("⚠️ تنبيه: دالة handleAIChat غير معرّفة بهذا الملف!");
           }
         };
       }
@@ -4209,7 +4214,7 @@ onClick={() => {
       speakText(text);
 
     } catch (e: any) {
-      alert("❌ خطأ رئيسي: " + e.message);
+      if (typeof triggerToast === "function") triggerToast("❌ خطأ رئيسي: " + e.message);
     }
 }}
 
@@ -4241,11 +4246,16 @@ onClick={() => {
     triggerToast("تم انضمام غدير إلى البث المباشر! 🎙️");
   }
 
-          try {
+    try {
       const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
       const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
       const host = "streamlined-edge-tts.p.rapidapi.com";
       const voice = "ar-SA-ZariyahNeural";
+
+      const notify = (msg: string) => {
+        if (typeof triggerToast === "function") triggerToast(msg);
+        console.log(msg);
+      };
 
       const speakText = (speechText: string) => {
         const url = `https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`;
@@ -4269,40 +4279,42 @@ onClick={() => {
             (window as any).aiAudio = audio;
 
             audio.onended = () => {
-              if (recognition) {
+              if (typeof recognition !== "undefined" && recognition) {
                 try {
+                  notify("🎤 جاري تشغيل المايك للاستماع لك...");
                   recognition.start();
                 } catch (e: any) {
-                  alert("❌ تعذر تشغيل المايك: " + e.message);
+                  notify("❌ تعذر تشغيل المايك: " + e.message);
                 }
               } else {
-                alert("⚠️ النظام لا يدعم SpeechRecognition");
+                notify("⚠️ النظام لا يدعم SpeechRecognition تلقائياً");
               }
             };
 
-            audio.play().catch((e) => alert("❌ خطأ مشغل: " + e.message));
+            audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
           })
-          .catch((err) => alert("❌ خطأ شبكة: " + err.message));
+          .catch((err) => notify("❌ خطأ شبكة: " + err.message));
       };
 
-      if (recognition) {
+      if (typeof recognition !== "undefined" && recognition) {
         recognition.onerror = (event: any) => {
-          alert("❌ خطأ المايك: " + event.error);
+          notify("❌ خطأ المايك: " + event.error);
         };
 
         recognition.onresult = async (event: any) => {
           const userSpeech = event.results[0][0].transcript;
-          alert("🗣️ تم التقاط كلامك: " + userSpeech);
+          notify("🗣️ تم التقاط كلامك: " + userSpeech);
 
           if (typeof handleAIChat === "function") {
             try {
+              notify("🤖 الذكاء الاصطناعي يعالج الإجابة...");
               const aiReply = await handleAIChat(userSpeech);
               speakText(aiReply);
             } catch (err: any) {
-              alert("❌ خطأ في الذكاء الاصطناعي: " + err.message);
+              notify("❌ خطأ في دالة الذكاء الاصطناعي: " + err.message);
             }
           } else {
-            alert("⚠️ تنبيه: دالة handleAIChat غير معرّفة في هذا الملف!");
+            notify("⚠️ تنبيه: دالة handleAIChat غير معرّفة بهذا الملف!");
           }
         };
       }
@@ -4310,7 +4322,7 @@ onClick={() => {
       speakText(text);
 
     } catch (e: any) {
-      alert("❌ خطأ رئيسي: " + e.message);
+      if (typeof triggerToast === "function") triggerToast("❌ خطأ رئيسي: " + e.message);
     }
 }}
 
