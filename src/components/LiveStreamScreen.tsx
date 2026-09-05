@@ -73,20 +73,40 @@ import {
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StreamAudioPlayer } from './StreamAudioPlayer';
-// إعداد محرك التعرف على الصوت المحدث
-const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+import { SpeechRecognition } from '@capgo/capacitor-speech-recognition';
 
-if (recognition) {
-  recognition.lang = 'ar-SA';
-  recognition.continuous = false;
-  recognition.interimResults = false;
+// دالة الاستماع الصوتية المحدثة عبر أندرويد
+const listenAndRespond = async (speakFn: (text: string) => void) => {
+  try {
+    const hasPermission = await SpeechRecognition.hasPermission();
+    if (!hasPermission.permission) {
+      await SpeechRecognition.requestPermission();
+    }
 
-  // إعادة هيئة المايك تلقائياً فور توقفه
-  recognition.onend = () => {
-    console.log("🎤 المايك توقف، جاهز لإعادة الاستدعاء");
-  };
-}
+    if (typeof triggerToast === "function") triggerToast("🎤 المايك يستمع لك الآن...");
+
+    const result = await SpeechRecognition.start({
+      language: 'ar-SA',
+      maxResults: 1,
+      prompt: 'تحدث الآن...',
+      partialResults: false,
+      popup: false,
+    });
+
+    if (result.matches && result.matches.length > 0) {
+      const userSpeech = result.matches[0];
+      if (typeof triggerToast === "function") triggerToast("🗣️ تم التقاط كلامك: " + userSpeech);
+
+      if (typeof handleAIChat === "function") {
+        const aiReply = await handleAIChat(userSpeech);
+        speakFn(aiReply);
+      }
+    }
+  } catch (e: any) {
+    if (typeof triggerToast === "function") triggerToast("❌ خطأ المايك: " + (e.message || e));
+  }
+};
+
 
 // Sub-component to safely consume Stream Video contexts/hooks
 const LiveStreamContent = ({ 
