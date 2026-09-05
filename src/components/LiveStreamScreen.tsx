@@ -73,13 +73,19 @@ import {
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StreamAudioPlayer } from './StreamAudioPlayer';
-// إعداد محرك التعرف على الصوت
+// إعداد محرك التعرف على الصوت المحدث
 const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
 if (recognition) {
   recognition.lang = 'ar-SA';
+  recognition.continuous = false;
   recognition.interimResults = false;
+
+  // إعادة هيئة المايك تلقائياً فور توقفه
+  recognition.onend = () => {
+    console.log("🎤 المايك توقف، جاهز لإعادة الاستدعاء");
+  };
 }
 
 // Sub-component to safely consume Stream Video contexts/hooks
