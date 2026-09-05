@@ -4138,13 +4138,12 @@ onClick={() => {
     triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
   }
 
-      try {
+          try {
       const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
       const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
       const host = "streamlined-edge-tts.p.rapidapi.com";
       const voice = "ar-SA-HamedNeural";
 
-      // دالة نطق النص وفتح المايك تلقائياً بعد انتهاء الصوت
       const speakText = (speechText: string) => {
         const url = `https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`;
         
@@ -4166,10 +4165,16 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-            // فتح المايك للاستماع لك فور انتهاء علي من الكلام
+            // كود تشخيص تشغيل المايك فور الانتهاء من التحدث
             audio.onended = () => {
               if (recognition) {
-                try { recognition.start(); } catch (e) {}
+                try {
+                  recognition.start();
+                } catch (e: any) {
+                  alert("❌ تعذر تشغيل المايك: " + e.message);
+                }
+              } else {
+                alert("⚠️ النظام لا يدعم SpeechRecognition");
               }
             };
 
@@ -4178,20 +4183,29 @@ onClick={() => {
           .catch((err) => alert("❌ خطأ شبكة: " + err.message));
       };
 
-      // ربط المايك لتلقي كلامك وإرساله للذكاء الاصطناعي
+      // كود تشخيص التقاط الكلام ودالة الذكاء الاصطناعي
       if (recognition) {
+        recognition.onerror = (event: any) => {
+          alert("❌ خطأ المايك: " + event.error);
+        };
+
         recognition.onresult = async (event: any) => {
           const userSpeech = event.results[0][0].transcript;
-          
-          // إرسال كلامك لدالة الذكاء الاصطناعي ونطق الرد
+          alert("🗣️ تم التقاط كلامك: " + userSpeech);
+
           if (typeof handleAIChat === "function") {
-            const aiReply = await handleAIChat(userSpeech);
-            speakText(aiReply);
+            try {
+              const aiReply = await handleAIChat(userSpeech);
+              speakText(aiReply);
+            } catch (err: any) {
+              alert("❌ خطأ في الذكاء الاصطناعي: " + err.message);
+            }
+          } else {
+            alert("⚠️ تنبيه: دالة handleAIChat غير معرّفة في هذا الملف!");
           }
         };
       }
 
-      // نطق مقدمة الترحيب الأولى عند الانضمام
       speakText(text);
 
     } catch (e: any) {
@@ -4227,13 +4241,12 @@ onClick={() => {
     triggerToast("تم انضمام غدير إلى البث المباشر! 🎙️");
   }
 
-      try {
+          try {
       const text = "السلام عليكم ورحمة الله، معكم غدير، أهلاً بكم في البث المباشر";
       const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
       const host = "streamlined-edge-tts.p.rapidapi.com";
       const voice = "ar-SA-ZariyahNeural";
 
-      // دالة نطق النص وفتح المايك تلقائياً بعد انتهاء غدير من الكلام
       const speakText = (speechText: string) => {
         const url = `https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`;
         
@@ -4255,10 +4268,15 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-            // فتح المايك فور انتهاء غدير من الحديث
             audio.onended = () => {
               if (recognition) {
-                try { recognition.start(); } catch (e) {}
+                try {
+                  recognition.start();
+                } catch (e: any) {
+                  alert("❌ تعذر تشغيل المايك: " + e.message);
+                }
+              } else {
+                alert("⚠️ النظام لا يدعم SpeechRecognition");
               }
             };
 
@@ -4267,19 +4285,28 @@ onClick={() => {
           .catch((err) => alert("❌ خطأ شبكة: " + err.message));
       };
 
-      // ربط المايك لاستقبال صوتك وتمريره للذكاء الاصطناعي
       if (recognition) {
+        recognition.onerror = (event: any) => {
+          alert("❌ خطأ المايك: " + event.error);
+        };
+
         recognition.onresult = async (event: any) => {
           const userSpeech = event.results[0][0].transcript;
-          
+          alert("🗣️ تم التقاط كلامك: " + userSpeech);
+
           if (typeof handleAIChat === "function") {
-            const aiReply = await handleAIChat(userSpeech);
-            speakText(aiReply);
+            try {
+              const aiReply = await handleAIChat(userSpeech);
+              speakText(aiReply);
+            } catch (err: any) {
+              alert("❌ خطأ في الذكاء الاصطناعي: " + err.message);
+            }
+          } else {
+            alert("⚠️ تنبيه: دالة handleAIChat غير معرّفة في هذا الملف!");
           }
         };
       }
 
-      // تشغيل الترحيب الأولي
       speakText(text);
 
     } catch (e: any) {
