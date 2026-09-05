@@ -4196,17 +4196,8 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-            audio.onended = () => {
-              if (typeof recognition !== "undefined" && recognition) {
-                try {
-                  notify("🎤 جاري تشغيل المايك للاستماع لك...");
-                  recognition.start();
-                } catch (e: any) {
-                  notify("❌ تعذر تشغيل المايك: " + e.message);
-                }
-              } else {
-                notify("⚠️ النظام لا يدعم SpeechRecognition تلقائياً");
-              }
+                        audio.onended = () => {
+              listenAndRespond(speakText);
             };
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
@@ -4304,17 +4295,8 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-            audio.onended = () => {
-              if (typeof recognition !== "undefined" && recognition) {
-                try {
-                  notify("🎤 جاري تشغيل المايك للاستماع لك...");
-                  recognition.start();
-                } catch (e: any) {
-                  notify("❌ تعذر تشغيل المايك: " + e.message);
-                }
-              } else {
-                notify("⚠️ النظام لا يدعم SpeechRecognition تلقائياً");
-              }
+                        audio.onended = () => {
+              listenAndRespond(speakText);
             };
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
