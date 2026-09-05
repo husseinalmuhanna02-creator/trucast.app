@@ -4205,29 +4205,6 @@ onClick={() => {
           .catch((err) => notify("❌ خطأ شبكة: " + err.message));
       };
 
-      if (typeof recognition !== "undefined" && recognition) {
-        recognition.onerror = (event: any) => {
-          notify("❌ خطأ المايك: " + event.error);
-        };
-
-        recognition.onresult = async (event: any) => {
-          const userSpeech = event.results[0][0].transcript;
-          notify("🗣️ تم التقاط كلامك: " + userSpeech);
-
-          if (typeof handleAIChat === "function") {
-            try {
-              notify("🤖 الذكاء الاصطناعي يعالج الإجابة...");
-              const aiReply = await handleAIChat(userSpeech);
-              speakText(aiReply);
-            } catch (err: any) {
-              notify("❌ خطأ في دالة الذكاء الاصطناعي: " + err.message);
-            }
-          } else {
-            notify("⚠️ تنبيه: دالة handleAIChat غير معرّفة بهذا الملف!");
-          }
-        };
-      }
-
       speakText(text);
 
     } catch (e: any) {
@@ -4303,29 +4280,6 @@ onClick={() => {
           })
           .catch((err) => notify("❌ خطأ شبكة: " + err.message));
       };
-
-      if (typeof recognition !== "undefined" && recognition) {
-        recognition.onerror = (event: any) => {
-          notify("❌ خطأ المايك: " + event.error);
-        };
-
-        recognition.onresult = async (event: any) => {
-          const userSpeech = event.results[0][0].transcript;
-          notify("🗣️ تم التقاط كلامك: " + userSpeech);
-
-          if (typeof handleAIChat === "function") {
-            try {
-              notify("🤖 الذكاء الاصطناعي يعالج الإجابة...");
-              const aiReply = await handleAIChat(userSpeech);
-              speakText(aiReply);
-            } catch (err: any) {
-              notify("❌ خطأ في دالة الذكاء الاصطناعي: " + err.message);
-            }
-          } else {
-            notify("⚠️ تنبيه: دالة handleAIChat غير معرّفة بهذا الملف!");
-          }
-        };
-      }
 
       speakText(text);
 
