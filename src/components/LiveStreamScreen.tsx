@@ -78,32 +78,92 @@ import { SpeechRecognition } from '@capgo/capacitor-speech-recognition';
 // دالة الاستماع الصوتية المحدثة عبر أندرويد
 const listenAndRespond = async (speakFn: (text: string) => void) => {
   try {
-    const hasPermission = await SpeechRecognition.hasPermission();
-    if (!hasPermission.permission) {
-      await SpeechRecognition.requestPermission();
-    }
+    const isNative = typeof (window as any).Capacitor !== "undefined" && (window as any).Capacitor.isNativePlatform();
 
-    if (typeof triggerToast === "function") triggerToast("🎤 المايك يستمع لك الآن...");
-
-    const result = await SpeechRecognition.start({
-      language: 'ar-SA',
-      maxResults: 1,
-      prompt: 'تحدث الآن...',
-      partialResults: false,
-      popup: false,
-    });
-
-    if (result.matches && result.matches.length > 0) {
-      const userSpeech = result.matches[0];
-      if (typeof triggerToast === "function") triggerToast("🗣️ تم التقاط كلامك: " + userSpeech);
-
-      if (typeof handleAIChat === "function") {
-        const aiReply = await handleAIChat(userSpeech);
-        speakFn(aiReply);
+    if (isNative) {
+      // 📱 الأندرويد الأصلي (Capacitor)
+      const perm = await SpeechRecognition.checkPermissions();
+      if (perm.speechRecognition !== "granted") {
+        await SpeechRecognition.requestPermissions();
       }
+
+      if (typeof triggerToast === "function") triggerToast("🎤 جاري تشغيل المايك للاستماع لك...");
+
+      let userText = "";
+
+      // الاستماع للنتائج
+      const partialListener = await SpeechRecognition.addListener("partialResults", (data: any) => {
+        if (data.matches && data.matches.length > 0) {
+          userText = data.matches[0];
+        }
+      });
+
+      // عند انتهاء المستخدم من الكلام
+      const stateListener = await SpeechRecognition.addListener("listeningState", async (event: any) => {
+        const status = event.status || event.state;
+        if (status === "stopped" || status === "idle") {
+          await partialListener.remove();
+          await stateListener.remove();
+
+          if (userText && userText.trim().length > 0) {
+            if (typeof triggerToast === "function") triggerToast("🗣️ تم التقاط كلامك: " + userText);
+            if (typeof handleAIChat === "function") {
+              try {
+                if (typeof triggerToast === "function") triggerToast("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
+                const aiReply = await handleAIChat(userText);
+                speakFn(aiReply);
+              } catch (err: any) {
+                if (typeof notify === "function") notify("❌ خطأ الذكاء الاصطناعي: " + err.message);
+              }
+            }
+          }
+        }
+      });
+
+      await SpeechRecognition.start({
+        language: "ar-SA",
+        maxResults: 1,
+        partialResults: true,
+        popup: false,
+      });
+
+    } else {
+      // 🌐 المتصفح (Web Fallback)
+      const WebSpeech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!WebSpeech) {
+        if (typeof notify === "function") notify("❌ المايك غير مدعوم في هذا المتصفح");
+        return;
+      }
+
+      if (typeof triggerToast === "function") triggerToast("🎤 جاري تشغيل المايك للاستماع لك...");
+
+      const recognition = new WebSpeech();
+      recognition.lang = "ar-SA";
+      recognition.interimResults = false;
+
+      recognition.onerror = (event: any) => {
+        if (typeof notify === "function") notify("❌ خطأ المايك: " + event.error);
+      };
+
+      recognition.onresult = async (event: any) => {
+        const userSpeech = event.results[0][0].transcript;
+        if (typeof notify === "function") notify("🗣️ تم التقاط كلامك: " + userSpeech);
+
+        if (typeof handleAIChat === "function") {
+          try {
+            if (typeof notify === "function") notify("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
+            const aiReply = await handleAIChat(userSpeech);
+            speakFn(aiReply);
+          } catch (err: any) {
+            if (typeof notify === "function") notify("❌ خطأ الذكاء الاصطناعي: " + err.message);
+          }
+        }
+      };
+
+      recognition.start();
     }
-  } catch (e: any) {
-    if (typeof triggerToast === "function") triggerToast("❌ خطأ المايك: " + (e.message || e));
+  } catch (err: any) {
+    if (typeof notify === "function") notify("❌ خطأ في المايك: " + err.message);
   }
 };
 
