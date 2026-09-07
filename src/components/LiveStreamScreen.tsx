@@ -126,23 +126,24 @@ const listenAndRespond = async (
 };
 
 
-    // 3. عند انتهاء الكلام، يتم إرسال النص للذكاء الاصطناعي
+  // 3. عند انتهاء الكلام، يتم إرسال النص للذكاء الاصطناعي
+  try {
     if (result && result.matches && result.matches.length > 0) {
-      const userSpeech = result.matches[0];
-      showLog("🗣️ تم التقاط كلامك: " + userSpeech);
+        const userSpeech = result.matches[0];
+        showLog("🎤 تم التقاط كلامك: " + userSpeech);
 
-      if (handleAIChatFn) {
-        showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
-        const aiReply = await handleAIChatFn(userSpeech);
-        speakFn(aiReply);
-      }
+        if (handleAIChatFn) {
+            showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
+            const aiReply = await handleAIChatFn(userSpeech);
+            speakFn(aiReply);
+        }
     } else {
-      showLog("⚠️ لم يتم التعرف على الصوت، حاول مرة أخرى.");
+        showLog("⚠️ لم يتم التعرف على الصوت، حاول مرة أخرى");
     }
   } catch (err: any) {
-    showLog("❌ خطأ في المايك: " + (err.message || String(err)));
+      showLog("❌ خطأ في المايك " + (err.message || String(err)));
   }
-};
+  };
 
 
 // Sub-component to safely consume Stream Video contexts/hooks
