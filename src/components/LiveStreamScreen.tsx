@@ -4256,9 +4256,9 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-                        audio.onended = () => {
-              listenAndRespond(speakText);
-            };
+           audio.onended = () => {
+  listenAndRespond(speakText);
+};
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
           })
@@ -4332,9 +4332,9 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-                        audio.onended = () => {
-              listenAndRespond(speakText);
-            };
+              audio.onended = () => {
+  listenAndRespond(speakText);
+};
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
           })
