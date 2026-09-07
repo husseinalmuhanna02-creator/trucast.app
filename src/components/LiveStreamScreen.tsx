@@ -81,6 +81,7 @@ const listenAndRespond = async (
   handleAIChatFn?: (text: string) => Promise<string>,
   notifyFn?: (msg: string) => void
 ) => {
+  alert("تم استدعاء الدالة بنجاح!");
   const showLog = (msg: string) => {
     console.log(msg);
     if (notifyFn) notifyFn(msg);
