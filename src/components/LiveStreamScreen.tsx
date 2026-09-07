@@ -86,10 +86,10 @@ const listenAndRespond = async (
     if (notifyFn) notifyFn(msg);
   };
 
-  showLog("🎤 جاري بدء الاستماع...");
+  showLog("🎙️ جاري بدء الاستماع...");
 
   try {
-    // طلب صلاحية المايك من أندرويد
+    // 1. طلب صلاحية المايك من نظام أندرويد
     try {
       const perm = await SpeechRecognition.checkPermissions();
       if (perm.speechRecognition !== "granted") {
@@ -101,7 +101,7 @@ const listenAndRespond = async (
 
     showLog("🎙️ المايك مفتوح.. تحدث الآن!");
 
-    // تشغيل المايك الأصلي لأندرويد
+    // 2. تشغيل ميزة التعرف الصوتي الخاصة بأندرويد
     const result = await SpeechRecognition.start({
       language: "ar-SA",
       maxResults: 1,
@@ -112,18 +112,21 @@ const listenAndRespond = async (
 
     if (result && result.matches && result.matches.length > 0) {
       const userSpeech = result.matches[0];
-      showLog("🗣️ تم التقاط كلامك: " + userSpeech);
+      showLog("🎤 تم التقاط كلامك: " + userSpeech);
 
       if (typeof handleAIChatFn === "function") {
         showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
         const aiReply = await handleAIChatFn(userSpeech);
-        speakFn(aiReply);
+        if (speakFn) speakFn(aiReply);
       }
+    } else {
+      alert("⚠️ لم يتم التعرف على الصوت، حاول مرة أخرى.");
     }
   } catch (err: any) {
-    alert("⚠️ تنبيه المايك: " + (err.message || String(err)));
+    alert("❌ خطأ في المايك: " + (err.message || String(err)));
   }
 };
+
 
 // Sub-component to safely consume Stream Video contexts/hooks
 const LiveStreamContent = ({ 
