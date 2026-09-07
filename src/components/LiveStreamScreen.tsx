@@ -101,7 +101,7 @@ const listenAndRespond = async (
 
       recognition.onerror = async (event: any) => {
         showLog("⚠️ جاري التحويل للمحرك الأصلي...");
-        await tryCapacitorSpeech(speakFn, handleAIChatFn, showLog);
+        await tryCapacitorSpeech(speakFn, showLog, handleAIChatFn);
       };
 
       recognition.onresult = async (event: any) => {
@@ -123,7 +123,7 @@ const listenAndRespond = async (
       return;
     }
 
-    await tryCapacitorSpeech(speakFn, handleAIChatFn, showLog);
+    await tryCapacitorSpeech(speakFn, showLog, handleAIChatFn);
 
   } catch (err: any) {
     showLog("❌ خطأ في المايك: " + (err.message || String(err)));
@@ -132,8 +132,8 @@ const listenAndRespond = async (
 
 const tryCapacitorSpeech = async (
   speakFn: (text: string) => void,
-  handleAIChatFn?: (text: string) => Promise<string>,
-  showLog: (msg: string) => void
+  showLog: (msg: string) => void,
+  handleAIChatFn?: (text: string) => Promise<string>
 ) => {
   try {
     const check = await SpeechRecognition.checkPermissions();
@@ -175,6 +175,7 @@ const tryCapacitorSpeech = async (
     showLog("❌ فشل تشغيل الصوت: " + (e.message || String(e)));
   }
 };
+
 
 
 
