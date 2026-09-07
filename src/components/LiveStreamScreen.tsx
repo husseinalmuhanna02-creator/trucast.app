@@ -4295,9 +4295,10 @@ onClick={() => {
             const audio = new Audio(audioUrl);
             (window as any).aiAudio = audio;
 
-              audio.onended = () => {
-  listenAndRespond(speakText, handleAIChat, notify);
-};
+                      audio.onended = () => {
+          alert("انتهى الصوت! جاري محاولة فتح المايك...");
+          listenAndRespond(speakText, handleAIChat, notify);
+        };
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
           })
