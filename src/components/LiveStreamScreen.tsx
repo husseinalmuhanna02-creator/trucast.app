@@ -4350,7 +4350,7 @@ onClick={() => {
    {/* كارت ضيف الذكاء الاصطناعي النشط في البث */}
 {activeAIGuest && (
   <div className="fixed top-24 left-4 z-[1000] flex flex-col items-center justify-center animate-in zoom-in-95 duration-300">
-    <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${activeAIGuest.color} p-1 shadow-2xl flex items-center justify-center relative border-2 border-white/20`}>
+    <div onClick={() => listenAndRespond(speakText, handleAIChat, notify)} className={`w-24 h-24 rounded-full bg-gradient-to-tr ${activeAIGuest.color} p-1 shadow-2xl flex items-center justify-center relative cursor-pointer`}>
       <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-3xl shadow-inner">
         {activeAIGuest.avatar}
       </div>
