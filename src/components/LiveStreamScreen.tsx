@@ -81,7 +81,6 @@ const listenAndRespond = async (
   handleAIChatFn?: (text: string) => Promise<string>,
   notifyFn?: (msg: string) => void
 ) => {
-  alert("تم استدعاء الدالة بنجاح!");
   const showLog = (msg: string) => {
     console.log(msg);
     if (notifyFn) notifyFn(msg);
@@ -90,11 +89,10 @@ const listenAndRespond = async (
   showLog("🎤 جاري بدء الاستماع...");
 
   try {
-    // 1. التحقق من إذن المايك في الأندرويد
+    // طلب صلاحية المايك من أندرويد
     try {
       const perm = await SpeechRecognition.checkPermissions();
       if (perm.speechRecognition !== "granted") {
-        showLog("🎙️ طلب إذن استخدام المايك...");
         await SpeechRecognition.requestPermissions();
       }
     } catch (e) {
@@ -103,7 +101,7 @@ const listenAndRespond = async (
 
     showLog("🎙️ المايك مفتوح.. تحدث الآن!");
 
-    // 2. تشغيل المايك الأصلي لأندرويد (تظهر نافذة الاستماع من جوجل)
+    // تشغيل المايك الأصلي لأندرويد
     const result = await SpeechRecognition.start({
       language: "ar-SA",
       maxResults: 1,
@@ -111,6 +109,22 @@ const listenAndRespond = async (
       popup: true,
       partialResults: false,
     });
+
+    if (result && result.matches && result.matches.length > 0) {
+      const userSpeech = result.matches[0];
+      showLog("🗣️ تم التقاط كلامك: " + userSpeech);
+
+      if (typeof handleAIChatFn === "function") {
+        showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
+        const aiReply = await handleAIChatFn(userSpeech);
+        speakFn(aiReply);
+      }
+    }
+  } catch (err: any) {
+    alert("⚠️ تنبيه المايك: " + (err.message || String(err)));
+  }
+};
+
 
     // 3. عند انتهاء الكلام، يتم إرسال النص للذكاء الاصطناعي
     if (result && result.matches && result.matches.length > 0) {
