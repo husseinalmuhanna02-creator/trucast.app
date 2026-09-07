@@ -89,94 +89,45 @@ const listenAndRespond = async (
   showLog("🎤 جاري بدء الاستماع...");
 
   try {
-    const WebSpeech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-    if (WebSpeech) {
-      const recognition = new WebSpeech();
-      recognition.lang = "ar-SA";
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      recognition.onstart = () => showLog("🎙️ المايك مفتوح.. اتكلم الآن!");
-
-      recognition.onerror = async (event: any) => {
-        showLog("⚠️ جاري التحويل للمحرك الأصلي...");
-        await tryCapacitorSpeech(speakFn, showLog, handleAIChatFn);
-      };
-
-      recognition.onresult = async (event: any) => {
-        const userSpeech = event.results[0][0].transcript;
-        showLog("🗣️ تم التقاط كلامك: " + userSpeech);
-
-        if (handleAIChatFn) {
-          try {
-            showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
-            const aiReply = await handleAIChatFn(userSpeech);
-            speakFn(aiReply);
-          } catch (err: any) {
-            showLog("❌ خطأ الذكاء الاصطناعي: " + (err.message || err));
-          }
-        }
-      };
-
-      recognition.start();
-      return;
+    // 1. التحقق من إذن المايك في الأندرويد
+    try {
+      const perm = await SpeechRecognition.checkPermissions();
+      if (perm.speechRecognition !== "granted") {
+        showLog("🎙️ طلب إذن استخدام المايك...");
+        await SpeechRecognition.requestPermissions();
+      }
+    } catch (e) {
+      console.warn("Permission check skipped:", e);
     }
 
-    await tryCapacitorSpeech(speakFn, showLog, handleAIChatFn);
+    showLog("🎙️ المايك مفتوح.. تحدث الآن!");
 
+    // 2. تشغيل المايك الأصلي لأندرويد (تظهر نافذة الاستماع من جوجل)
+    const result = await SpeechRecognition.start({
+      language: "ar-SA",
+      maxResults: 1,
+      prompt: "تحدث الآن...",
+      popup: true,
+      partialResults: false,
+    });
+
+    // 3. عند انتهاء الكلام، يتم إرسال النص للذكاء الاصطناعي
+    if (result && result.matches && result.matches.length > 0) {
+      const userSpeech = result.matches[0];
+      showLog("🗣️ تم التقاط كلامك: " + userSpeech);
+
+      if (handleAIChatFn) {
+        showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
+        const aiReply = await handleAIChatFn(userSpeech);
+        speakFn(aiReply);
+      }
+    } else {
+      showLog("⚠️ لم يتم التعرف على الصوت، حاول مرة أخرى.");
+    }
   } catch (err: any) {
     showLog("❌ خطأ في المايك: " + (err.message || String(err)));
   }
 };
-
-const tryCapacitorSpeech = async (
-  speakFn: (text: string) => void,
-  showLog: (msg: string) => void,
-  handleAIChatFn?: (text: string) => Promise<string>
-) => {
-  try {
-    const check = await SpeechRecognition.checkPermissions();
-    if (check.speechRecognition !== "granted") {
-      await SpeechRecognition.requestPermissions();
-    }
-
-    let userText = "";
-    const partialListener = await SpeechRecognition.addListener("partialResults", (data: any) => {
-      if (data.matches && data.matches.length > 0) {
-        userText = data.matches[0];
-      }
-    });
-
-    const stateListener = await SpeechRecognition.addListener("listeningState", async (event: any) => {
-      const status = event.status || event.state;
-      if (status === "stopped" || status === "idle") {
-        await partialListener.remove();
-        await stateListener.remove();
-
-        if (userText && userText.trim().length > 0) {
-          showLog("🗣️ تم التقاط كلامك: " + userText);
-          if (handleAIChatFn) {
-            showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
-            const aiReply = await handleAIChatFn(userText);
-            speakFn(aiReply);
-          }
-        }
-      }
-    });
-
-    await SpeechRecognition.start({
-      language: "ar-SA",
-      maxResults: 1,
-      partialResults: true,
-      popup: true,
-    });
-  } catch (e: any) {
-    showLog("❌ فشل تشغيل الصوت: " + (e.message || String(e)));
-  }
-};
-
-
 
 
 // Sub-component to safely consume Stream Video contexts/hooks
