@@ -81,91 +81,101 @@ const listenAndRespond = async (
   handleAIChatFn?: (text: string) => Promise<string>,
   notifyFn?: (msg: string) => void
 ) => {
+  const showLog = (msg: string) => {
+    console.log(msg);
+    if (notifyFn) notifyFn(msg);
+  };
+
+  showLog("🎤 جاري بدء الاستماع...");
+
   try {
-    const isNative = typeof (window as any).Capacitor !== "undefined" && (window as any).Capacitor.isNativePlatform();
+    const WebSpeech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-    if (notifyFn) notifyFn("🎤 جاري تشغيل المايك للاستماع لك...");
-
-    if (isNative) {
-      // 📱 الأندرويد الأصلي (Capacitor)
-      const perm = await SpeechRecognition.checkPermissions();
-      if (perm.speechRecognition !== "granted") {
-        await SpeechRecognition.requestPermissions();
-      }
-
-      let userText = "";
-
-      const partialListener = await SpeechRecognition.addListener("partialResults", (data: any) => {
-        if (data.matches && data.matches.length > 0) {
-          userText = data.matches[0];
-        }
-      });
-
-      const stateListener = await SpeechRecognition.addListener("listeningState", async (event: any) => {
-        const status = event.status || event.state;
-        if (status === "stopped" || status === "idle") {
-          await partialListener.remove();
-          await stateListener.remove();
-
-          if (userText && userText.trim().length > 0) {
-            if (notifyFn) notifyFn("🗣️ تم التقاط كلامك: " + userText);
-            if (handleAIChatFn) {
-              try {
-                if (notifyFn) notifyFn("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
-                const aiReply = await handleAIChatFn(userText);
-                speakFn(aiReply);
-              } catch (err: any) {
-                if (notifyFn) notifyFn("❌ خطأ الذكاء الاصطناعي: " + err.message);
-              }
-            }
-          }
-        }
-      });
-
-      await SpeechRecognition.start({
-        language: "ar-SA",
-        maxResults: 1,
-        partialResults: true,
-        popup: false,
-      });
-
-    } else {
-      // 🌐 المتصفح (Web Fallback)
-      const WebSpeech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!WebSpeech) {
-        if (notifyFn) notifyFn("❌ المايك غير مدعوم في هذا المتصفح");
-        return;
-      }
-
+    if (WebSpeech) {
       const recognition = new WebSpeech();
       recognition.lang = "ar-SA";
+      recognition.continuous = false;
       recognition.interimResults = false;
 
-      recognition.onerror = (event: any) => {
-        if (notifyFn) notifyFn("❌ خطأ المايك: " + event.error);
+      recognition.onstart = () => showLog("🎙️ المايك مفتوح.. اتكلم الآن!");
+
+      recognition.onerror = async (event: any) => {
+        showLog("⚠️ جاري التحويل للمحرك الأصلي...");
+        await tryCapacitorSpeech(speakFn, handleAIChatFn, showLog);
       };
 
       recognition.onresult = async (event: any) => {
         const userSpeech = event.results[0][0].transcript;
-        if (notifyFn) notifyFn("🗣️ تم التقاط كلامك: " + userSpeech);
+        showLog("🗣️ تم التقاط كلامك: " + userSpeech);
 
         if (handleAIChatFn) {
           try {
-            if (notifyFn) notifyFn("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
+            showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
             const aiReply = await handleAIChatFn(userSpeech);
             speakFn(aiReply);
           } catch (err: any) {
-            if (notifyFn) notifyFn("❌ خطأ الذكاء الاصطناعي: " + err.message);
+            showLog("❌ خطأ الذكاء الاصطناعي: " + (err.message || err));
           }
         }
       };
 
       recognition.start();
+      return;
     }
+
+    await tryCapacitorSpeech(speakFn, handleAIChatFn, showLog);
+
   } catch (err: any) {
-    if (notifyFn) notifyFn("❌ خطأ في المايك: " + err.message);
+    showLog("❌ خطأ في المايك: " + (err.message || String(err)));
   }
 };
+
+const tryCapacitorSpeech = async (
+  speakFn: (text: string) => void,
+  handleAIChatFn?: (text: string) => Promise<string>,
+  showLog: (msg: string) => void
+) => {
+  try {
+    const check = await SpeechRecognition.checkPermissions();
+    if (check.speechRecognition !== "granted") {
+      await SpeechRecognition.requestPermissions();
+    }
+
+    let userText = "";
+    const partialListener = await SpeechRecognition.addListener("partialResults", (data: any) => {
+      if (data.matches && data.matches.length > 0) {
+        userText = data.matches[0];
+      }
+    });
+
+    const stateListener = await SpeechRecognition.addListener("listeningState", async (event: any) => {
+      const status = event.status || event.state;
+      if (status === "stopped" || status === "idle") {
+        await partialListener.remove();
+        await stateListener.remove();
+
+        if (userText && userText.trim().length > 0) {
+          showLog("🗣️ تم التقاط كلامك: " + userText);
+          if (handleAIChatFn) {
+            showLog("🤖 الذكاء الاصطناعي يعالج الإجابة...");
+            const aiReply = await handleAIChatFn(userText);
+            speakFn(aiReply);
+          }
+        }
+      }
+    });
+
+    await SpeechRecognition.start({
+      language: "ar-SA",
+      maxResults: 1,
+      partialResults: true,
+      popup: true,
+    });
+  } catch (e: any) {
+    showLog("❌ فشل تشغيل الصوت: " + (e.message || String(e)));
+  }
+};
+
 
 
 // Sub-component to safely consume Stream Video contexts/hooks
