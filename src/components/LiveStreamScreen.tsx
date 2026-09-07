@@ -4192,18 +4192,18 @@ const isMainCamEnabled = isMainLocal
             </div>
           </div>
           <button
-            type="button"
-onClick={() => listenAndRespond(speakText, handleAIChat, notify)}
-            
-  setActiveAIGuest({ name: "علي", avatar: "👨‍💼", color: "from-blue-600 to-indigo-700" });
-  setShowAIGuestModal(false);
+  type="button"
+  onClick={() => {
+    setActiveAIGuest({ name: "علي", avatar: "👨‍💼", color: "from-blue-600 to-indigo-700" });
+    setShowAIGuestModal(false);
 
-  if (typeof triggerToast === 'function') {
-    triggerToast("تم انضمام علي إلى البث المباشر! 🎙️");
-  }
+    if (typeof triggerToast === 'function') {
+      triggerToast("تم انضمام علي إلى البث المباشر 🎙️");
+    }
 
     try {
       const text = "السلام عليكم ورحمة الله، معكم علي، أهلاً بكم في البث المباشر";
+
       const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448";
       const host = "streamlined-edge-tts.p.rapidapi.com";
       const voice = "ar-SA-HamedNeural";
