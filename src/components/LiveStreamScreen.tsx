@@ -4220,6 +4220,7 @@ onClick={() => {
             (window as any).aiAudio = audio;
 
            audio.onended = () => {
+  alert("انتهى الصوت! جاري محاولة فتح المايك...");
   listenAndRespond(speakText, handleAIChat, notify);
 };
 
