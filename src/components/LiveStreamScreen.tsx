@@ -4257,7 +4257,7 @@ onClick={() => {
             (window as any).aiAudio = audio;
 
            audio.onended = () => {
-  listenAndRespond(speakText);
+  listenAndRespond(speakText, handleAIChat, notify);
 };
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
@@ -4333,7 +4333,7 @@ onClick={() => {
             (window as any).aiAudio = audio;
 
               audio.onended = () => {
-  listenAndRespond(speakText);
+  listenAndRespond(speakText, handleAIChat, notify);
 };
 
             audio.play().catch((e) => notify("❌ خطأ مشغل الصوت: " + e.message));
