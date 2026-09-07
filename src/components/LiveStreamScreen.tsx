@@ -4193,7 +4193,8 @@ const isMainCamEnabled = isMainLocal
           </div>
           <button
             type="button"
-onClick={() => {
+onClick={() => listenAndRespond(speakText, handleAIChat, notify)}
+            
   setActiveAIGuest({ name: "علي", avatar: "👨‍💼", color: "from-blue-600 to-indigo-700" });
   setShowAIGuestModal(false);
 
@@ -4234,7 +4235,6 @@ onClick={() => {
             (window as any).aiAudio = audio;
 
            audio.onended = () => {
-  alert("انتهى الصوت! جاري محاولة فتح المايك...");
   listenAndRespond(speakText, handleAIChat, notify);
 };
 
