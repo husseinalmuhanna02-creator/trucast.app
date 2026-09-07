@@ -76,9 +76,15 @@ import { StreamAudioPlayer } from './StreamAudioPlayer';
 import { SpeechRecognition } from '@capgo/capacitor-speech-recognition';
 
 // دالة الاستماع الصوتية المحدثة عبر أندرويد
-const listenAndRespond = async (speakFn: (text: string) => void) => {
+const listenAndRespond = async (
+  speakFn: (text: string) => void,
+  handleAIChatFn?: (text: string) => Promise<string>,
+  notifyFn?: (msg: string) => void
+) => {
   try {
     const isNative = typeof (window as any).Capacitor !== "undefined" && (window as any).Capacitor.isNativePlatform();
+
+    if (notifyFn) notifyFn("🎤 جاري تشغيل المايك للاستماع لك...");
 
     if (isNative) {
       // 📱 الأندرويد الأصلي (Capacitor)
@@ -87,18 +93,14 @@ const listenAndRespond = async (speakFn: (text: string) => void) => {
         await SpeechRecognition.requestPermissions();
       }
 
-      if (typeof triggerToast === "function") triggerToast("🎤 جاري تشغيل المايك للاستماع لك...");
-
       let userText = "";
 
-      // الاستماع للنتائج
       const partialListener = await SpeechRecognition.addListener("partialResults", (data: any) => {
         if (data.matches && data.matches.length > 0) {
           userText = data.matches[0];
         }
       });
 
-      // عند انتهاء المستخدم من الكلام
       const stateListener = await SpeechRecognition.addListener("listeningState", async (event: any) => {
         const status = event.status || event.state;
         if (status === "stopped" || status === "idle") {
@@ -106,14 +108,14 @@ const listenAndRespond = async (speakFn: (text: string) => void) => {
           await stateListener.remove();
 
           if (userText && userText.trim().length > 0) {
-            if (typeof triggerToast === "function") triggerToast("🗣️ تم التقاط كلامك: " + userText);
-            if (typeof handleAIChat === "function") {
+            if (notifyFn) notifyFn("🗣️ تم التقاط كلامك: " + userText);
+            if (handleAIChatFn) {
               try {
-                if (typeof triggerToast === "function") triggerToast("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
-                const aiReply = await handleAIChat(userText);
+                if (notifyFn) notifyFn("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
+                const aiReply = await handleAIChatFn(userText);
                 speakFn(aiReply);
               } catch (err: any) {
-                if (typeof notify === "function") notify("❌ خطأ الذكاء الاصطناعي: " + err.message);
+                if (notifyFn) notifyFn("❌ خطأ الذكاء الاصطناعي: " + err.message);
               }
             }
           }
@@ -131,31 +133,29 @@ const listenAndRespond = async (speakFn: (text: string) => void) => {
       // 🌐 المتصفح (Web Fallback)
       const WebSpeech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!WebSpeech) {
-        if (typeof notify === "function") notify("❌ المايك غير مدعوم في هذا المتصفح");
+        if (notifyFn) notifyFn("❌ المايك غير مدعوم في هذا المتصفح");
         return;
       }
-
-      if (typeof triggerToast === "function") triggerToast("🎤 جاري تشغيل المايك للاستماع لك...");
 
       const recognition = new WebSpeech();
       recognition.lang = "ar-SA";
       recognition.interimResults = false;
 
       recognition.onerror = (event: any) => {
-        if (typeof notify === "function") notify("❌ خطأ المايك: " + event.error);
+        if (notifyFn) notifyFn("❌ خطأ المايك: " + event.error);
       };
 
       recognition.onresult = async (event: any) => {
         const userSpeech = event.results[0][0].transcript;
-        if (typeof notify === "function") notify("🗣️ تم التقاط كلامك: " + userSpeech);
+        if (notifyFn) notifyFn("🗣️ تم التقاط كلامك: " + userSpeech);
 
-        if (typeof handleAIChat === "function") {
+        if (handleAIChatFn) {
           try {
-            if (typeof notify === "function") notify("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
-            const aiReply = await handleAIChat(userSpeech);
+            if (notifyFn) notifyFn("🤖 ...الذكاء الاصطناعي يعالج الإجابة");
+            const aiReply = await handleAIChatFn(userSpeech);
             speakFn(aiReply);
           } catch (err: any) {
-            if (typeof notify === "function") notify("❌ خطأ الذكاء الاصطناعي: " + err.message);
+            if (notifyFn) notifyFn("❌ خطأ الذكاء الاصطناعي: " + err.message);
           }
         }
       };
@@ -163,7 +163,7 @@ const listenAndRespond = async (speakFn: (text: string) => void) => {
       recognition.start();
     }
   } catch (err: any) {
-    if (typeof notify === "function") notify("❌ خطأ في المايك: " + err.message);
+    if (notifyFn) notifyFn("❌ خطأ في المايك: " + err.message);
   }
 };
 
