@@ -4350,7 +4350,7 @@ onClick={() => {
    {/* كارت ضيف الذكاء الاصطناعي النشط في البث */}
 {activeAIGuest && (
   <div className="fixed top-24 left-4 z-[1000] flex flex-col items-center justify-center animate-in zoom-in-95 duration-300">
-    <div onClick={() => listenAndRespond(speakText, handleAIChat, notify)} className={`w-24 h-24 rounded-full bg-gradient-to-tr ${activeAIGuest.color} p-1 shadow-2xl flex items-center justify-center relative cursor-pointer`}>
+    <div onClick={() => { const notify = (msg: string) => { if (typeof triggerToast === 'function') triggerToast(msg); }; const speakText = (speechText: string) => { const apiKey = "295b0ebb93msh1725a62bfd6ba4fp137c42jsn80f3f7623448"; const host = "streamlined-edge-tts.p.rapidapi.com"; const voice = activeAIGuest?.name === "علي" ? "ar-SA-HamedNeural" : "ar-SA-ZariyahNeural"; fetch(`https://${host}/tts?text=${encodeURIComponent(speechText)}&voice=${voice}`, { headers: { "x-rapidapi-key": apiKey, "x-rapidapi-host": host } }).then(res => res.blob()).then(blob => { if ((window as any).aiAudio) (window as any).aiAudio.pause(); const audio = new Audio(URL.createObjectURL(blob)); (window as any).aiAudio = audio; audio.onended = () => listenAndRespond(speakText, handleAIChat, notify); audio.play().catch(e => notify("❌ خطأ مشغل الصوت: " + e.message)); }); }; listenAndRespond(speakText, handleAIChat, notify); }} className={`w-24 h-24 rounded-full bg-gradient-to-tr ${activeAIGuest.color} p-1 shadow-2xl flex items-center justify-center relative cursor-pointer`}>
       <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-3xl shadow-inner">
         {activeAIGuest.avatar}
       </div>
